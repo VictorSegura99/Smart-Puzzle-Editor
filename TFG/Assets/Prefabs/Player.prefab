@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1475582783135237113}
   - component: {fileID: 1726809891263963489}
   m_Layer: 0
-  m_Name: New Sprite
+  m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3963510178615926443}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.005, y: -0.586, z: 0}
-  m_LocalScale: {x: 2.617116, y: 1.0642092, z: 0.8065678}
+  m_LocalPosition: {x: 0, y: -0.586, z: 0.1}
+  m_LocalScale: {x: 2.75, y: 1, z: 0.8}
   m_Children: []
   m_Father: {fileID: 5692554206831474237}
   m_RootOrder: 0
@@ -316,7 +316,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.094769865, y: -0.12726235}
+  m_Offset: {x: -0.094769865, y: -0.6082461}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -327,7 +327,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6479977, y: 1.2003708}
+  m_Size: {x: 0.6479977, y: 0.23840332}
   m_EdgeRadius: 0
 --- !u!114 &5692554207821035380
 MonoBehaviour:

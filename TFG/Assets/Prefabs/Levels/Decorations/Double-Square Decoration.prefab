@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6118815307688222632}
   - component: {fileID: 6118815307688222615}
-  - component: {fileID: 6110260787817137029}
+  - component: {fileID: 7463173977111408025}
   m_Layer: 0
   m_Name: Double-Square Decoration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &6118815307688222632
 Transform:
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &6110260787817137029
+--- !u!61 &7463173977111408025
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,7 +96,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0031744242, y: 0.36039507}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -107,5 +107,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0063488, y: 0.27920985}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
