@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5692554206831474237}
   - component: {fileID: 5692554206831474227}
-  - component: {fileID: 5692554206831474236}
+  - component: {fileID: 1035959814}
   m_Layer: 0
-  m_Name: engineer-run_0
+  m_Name: Engineer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5692554206831474238}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09, y: -0.13, z: 0.1}
+  m_LocalPosition: {x: -0.09, y: -0.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5692554207821035381}
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2014134814907195045, guid: 1d505724637c5e54e92c09b770bfdc75, type: 3}
+  m_Sprite: {fileID: 4436806697332472292, guid: a9e0f990071c41e4ebf1b51ba2885f21, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,7 +83,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &5692554206831474236
+--- !u!95 &1035959814
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -93,7 +93,7 @@ Animator:
   m_GameObject: {fileID: 5692554206831474238}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: dd7fb25c29106024d95ed4866d45090b, type: 2}
+  m_Controller: {fileID: 9100000, guid: b0964ebeaae960f45aeed06ae788d520, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

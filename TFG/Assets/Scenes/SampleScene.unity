@@ -8936,30 +8936,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e1c75111a5622254ab6e19e6d7c59051, type: 3}
---- !u!1 &1035959813 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5692554206831474238, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
-  m_PrefabInstance: {fileID: 5692554207847450683}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1035959814
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035959813}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b0964ebeaae960f45aeed06ae788d520, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1061436374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18354,14 +18330,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5692554206831474236, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: b0964ebeaae960f45aeed06ae788d520, type: 2}
-    - target: {fileID: 5692554207346995271, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035376, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_Name
       value: Player
@@ -18410,8 +18378,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5692554206831474236, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
 --- !u!1001 &6118815307154868360
 PrefabInstance:
