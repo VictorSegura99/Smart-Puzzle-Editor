@@ -39,7 +39,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Moving
+  m_Name: OPENING
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -171,7 +171,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Opened
+  m_Name: OPEN
   m_Speed: 0
   m_CycleOffset: 1
   m_Transitions:
@@ -220,7 +220,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Closing
+  m_Name: CLOSING
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

@@ -16,6 +16,7 @@ public class DoorOpening : MonoBehaviour
 
     Animator animator;
     SpriteRenderer upper_door_sprite;
+    BoxCollider2D main_collider;
 
     Door_State state = Door_State.CLOSED;
 
@@ -24,28 +25,27 @@ public class DoorOpening : MonoBehaviour
     {
         animator = transform.GetChild(0).GetComponent<Animator>();
         upper_door_sprite = upper_door.GetComponent<SpriteRenderer>();
+        main_collider = GetComponents<BoxCollider2D>()[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(state)
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(state.ToString()))
         {
-            case Door_State.OPEN:
-                if (!upper_door_sprite.enabled)
-                {
-                    upper_door_sprite.enabled = true;
-                }
-                break;
-            case Door_State.OPENING:
-                break;
-            case Door_State.CLOSED:
-                break;
-            case Door_State.CLOSING:
-                break;
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("OPEN"))
+            {
+                upper_door_sprite.enabled = true;
+                main_collider.enabled = false;
+                state = Door_State.OPEN;
+            }
+            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("CLOSED")) 
+            {
+                state = Door_State.CLOSED;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if ((state == Door_State.OPEN || state == Door_State.CLOSED) && Input.GetKeyDown(KeyCode.Space))
         {
             OpenDoors(IsDoorClosed());
         }
@@ -62,6 +62,8 @@ public class DoorOpening : MonoBehaviour
             state = Door_State.CLOSING;
         }
 
+        upper_door_sprite.enabled = false;
+        main_collider.enabled = true;
         animator.SetInteger("State", (int)state);
     }
 
