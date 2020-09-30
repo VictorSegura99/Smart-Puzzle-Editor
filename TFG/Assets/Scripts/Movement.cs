@@ -33,9 +33,10 @@ public class Movement : MonoBehaviour
         // Get Input
         Vector2 KB_direction = HandleKeyboardMovement();
         Vector2 GP_direction = HandleControllerMovement();
+        Vector2 GP_Arrows_direction = HandleGPArrowsMovement();
 
-        Vector2 direction = new Vector2(Mathf.Clamp(KB_direction.x + GP_direction.x, -speed, speed), Mathf.Clamp(KB_direction.y + GP_direction.y, -speed, speed)).normalized * speed;
-
+        Vector2 direction = new Vector2(KB_direction.x + GP_direction.x + GP_Arrows_direction.x, KB_direction.y + GP_direction.y + GP_Arrows_direction.y).normalized * speed;
+        
         // Flip Sprites
         if (direction.x < 0 && !engineer_sprite.flipX)
         {
@@ -66,31 +67,59 @@ public class Movement : MonoBehaviour
     {
         Vector2 direction = new Vector2();
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             direction.y += speed;
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             direction.y -= speed;
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             direction.x -= speed;
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             direction.x += speed;
         }
 
-        return direction;
+        return direction.normalized;
     }
 
     Vector2 HandleControllerMovement()
     {
-        return (new Vector2(GamePad.GetState(0).ThumbSticks.Left.X, GamePad.GetState(0).ThumbSticks.Left.Y)) * speed;
+        return new Vector2(GamePad.GetState(0).ThumbSticks.Left.X, GamePad.GetState(0).ThumbSticks.Left.Y).normalized;
+    }
+
+    Vector2 HandleGPArrowsMovement()
+    {
+        GamePadState state = GamePad.GetState(0);
+        Vector2 direction = new Vector2();
+
+        if (state.DPad.Up == ButtonState.Pressed)
+        {
+            direction.y += speed;
+        }
+
+        if (state.DPad.Down == ButtonState.Pressed)
+        {
+            direction.y -= speed;
+        }
+
+        if (state.DPad.Left == ButtonState.Pressed)
+        {
+            direction.x -= speed;
+        }
+
+        if (state.DPad.Right == ButtonState.Pressed)
+        {
+            direction.x += speed;
+        }
+
+        return direction.normalized;
     }
 }
