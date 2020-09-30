@@ -8,6 +8,7 @@ public class BoxBehaviour : MonoBehaviour
 {
     // Components
     Animator anim;
+    AudioSource sfx;
 
     // Inspector Variables
     public bool is_static = false;
@@ -31,6 +32,7 @@ public class BoxBehaviour : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        sfx = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -44,6 +46,8 @@ public class BoxBehaviour : MonoBehaviour
         {
             Vector2 direction = new Vector2();
             Vector2 offset = new Vector2();
+            can_move = false;
+            StartCoroutine(MoveReset());
 
             if (GO.name == "North")
             {
@@ -80,8 +84,7 @@ public class BoxBehaviour : MonoBehaviour
                         {
                             if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= 1.5f)
                             {
-                                trigger_dir = TRIGGER_DIRECTION.IDLE;
-                                Debug.Log("VA A CHOCAR!!!");
+                                StopMove();
                                 return;
                             }
                             break;
@@ -90,8 +93,7 @@ public class BoxBehaviour : MonoBehaviour
                         {
                             if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= 1.5f)
                             {
-                                trigger_dir = TRIGGER_DIRECTION.IDLE;
-                                Debug.Log("VA A CHOCAR!!!");
+                                StopMove();
                                 return;
                             }
                             break;
@@ -100,8 +102,7 @@ public class BoxBehaviour : MonoBehaviour
                         {
                             if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= 1.5f)
                             {
-                                trigger_dir = TRIGGER_DIRECTION.IDLE;
-                                Debug.Log("VA A CHOCAR!!!");
+                                StopMove();
                                 return;
                             }
                             break;
@@ -110,8 +111,7 @@ public class BoxBehaviour : MonoBehaviour
                         {
                             if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= 1.5f)
                             {
-                                trigger_dir = TRIGGER_DIRECTION.IDLE;
-                                Debug.Log("VA A CHOCAR!!!");
+                                StopMove();
                                 return;
                             }
                             break;
@@ -120,9 +120,7 @@ public class BoxBehaviour : MonoBehaviour
             }
 
             GO.transform.GetChild(0).gameObject.SetActive(true);
-            can_move = false;
             anim.SetInteger("Direction", (int)trigger_dir);
-
         }
     }
 
@@ -147,7 +145,6 @@ public class BoxBehaviour : MonoBehaviour
         trigger_dir = TRIGGER_DIRECTION.IDLE;
         anim.SetInteger("Direction", (int)trigger_dir);
         anim.SetTrigger("Stopped");
-        StartCoroutine(MoveReset());
     }
 
     IEnumerator MoveReset()
@@ -160,5 +157,12 @@ public class BoxBehaviour : MonoBehaviour
         }
 
         can_move = true;
+    }
+
+    void StopMove()
+    {
+        trigger_dir = TRIGGER_DIRECTION.IDLE;
+        sfx.Play();
+        Debug.Log("VA A CHOCAR!!!");
     }
 }
