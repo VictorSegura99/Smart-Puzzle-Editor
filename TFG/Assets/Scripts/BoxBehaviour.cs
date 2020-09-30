@@ -129,16 +129,16 @@ public class BoxBehaviour : MonoBehaviour
         switch(trigger_dir)
         {
             case TRIGGER_DIRECTION.NORTH:
-                transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
+                transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
                 break;
             case TRIGGER_DIRECTION.EAST:
-                transform.GetChild(5).GetChild(0).gameObject.SetActive(false);
-                break;
-            case TRIGGER_DIRECTION.WEST:
                 transform.GetChild(4).GetChild(0).gameObject.SetActive(false);
                 break;
-            case TRIGGER_DIRECTION.SOUTH:
+            case TRIGGER_DIRECTION.WEST:
                 transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
+                break;
+            case TRIGGER_DIRECTION.SOUTH:
+                transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
                 break;
         }
 

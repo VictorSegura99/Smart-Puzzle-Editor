@@ -15,7 +15,6 @@ public class DoorOpening : MonoBehaviour
     }
 
     Animator animator;
-    SpriteRenderer upper_door_sprite;
     BoxCollider2D main_collider;
 
     Door_State state = Door_State.CLOSED;
@@ -24,7 +23,6 @@ public class DoorOpening : MonoBehaviour
     void Start()
     {
         animator = transform.GetChild(0).GetComponent<Animator>();
-        upper_door_sprite = upper_door.GetComponent<SpriteRenderer>();
         main_collider = GetComponents<BoxCollider2D>()[0];
     }
 
@@ -35,7 +33,6 @@ public class DoorOpening : MonoBehaviour
         {
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("OPEN"))
             {
-                upper_door_sprite.enabled = true;
                 main_collider.enabled = false;
                 state = Door_State.OPEN;
             }
@@ -62,7 +59,6 @@ public class DoorOpening : MonoBehaviour
             state = Door_State.CLOSING;
         }
 
-        upper_door_sprite.enabled = false;
         main_collider.enabled = true;
         animator.SetInteger("State", (int)state);
     }
