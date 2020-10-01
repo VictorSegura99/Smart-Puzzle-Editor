@@ -1,11 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class DoorOpening : MonoBehaviour
 {
-    public GameObject upper_door;
+    // Components
+    Animator animator;
+    BoxCollider2D main_collider;
 
+    // Inspector Variables
+
+    // Internal Variables
     enum Door_State
     {
         CLOSED,
@@ -14,10 +20,10 @@ public class DoorOpening : MonoBehaviour
         CLOSING
     }
 
-    Animator animator;
-    BoxCollider2D main_collider;
-
     Door_State state = Door_State.CLOSED;
+
+    [HideInInspector]
+    public bool door_opened_lock = false;
 
     void Awake()
     {
@@ -54,7 +60,11 @@ public class DoorOpening : MonoBehaviour
 
     public void OpenDoors(bool open)
     {
-        if(open)
+        float moment = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+
+        main_collider.enabled = !open;
+
+        if (open)
         {
             state = Door_State.OPENING;
         }
@@ -63,17 +73,15 @@ public class DoorOpening : MonoBehaviour
             state = Door_State.CLOSING;
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("CLOSING") && state == Door_State.OPENING)
-        {
-            animator.Play("OPENING");
-        }
-        else if(animator.GetCurrentAnimatorStateInfo(0).IsName("OPENING") && state == Door_State.CLOSING)
-        {
-            animator.Play("CLOSING");
-        }
-
-        main_collider.enabled = !open;
         animator.SetInteger("State", (int)state);
+
+        if (!animator.GetCurrentAnimatorStateInfo(0).IsName(state.ToString()))
+        {
+            if (moment > 0 && moment < 1)
+            {
+                animator.Play(state.ToString(), 0, 1 - moment);
+            }
+        }
     }
 
     public bool IsDoorClosed()

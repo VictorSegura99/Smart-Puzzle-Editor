@@ -70,9 +70,16 @@ public class PlatformBox : MonoBehaviour
     void Activate(bool is_active)
     {
         activated_sprite.enabled = is_active;
-        if (!is_active != door.IsDoorClosed())
+
+        if (!door.door_opened_lock)
         {
             door.OpenDoors(is_active);
         }
+
+        if (!constant_pressure_needed)
+        {
+            door.door_opened_lock = true;
+        }
+
     }
 }

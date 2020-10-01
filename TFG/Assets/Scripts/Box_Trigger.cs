@@ -14,7 +14,7 @@ public class Box_Trigger : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.gameObject.name == "Player" && collision.GetComponent<Rigidbody2D>().velocity.magnitude != 0)
         {
             transform.parent.GetComponent<BoxBehaviour>().Triggered(gameObject);
         }
