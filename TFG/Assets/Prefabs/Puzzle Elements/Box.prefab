@@ -19443,7 +19443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   is_static: 0
-  time_to_reset: 1
+  time_to_reset: 0
 --- !u!95 &311413847
 Animator:
   serializedVersion: 3

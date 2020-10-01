@@ -18055,6 +18055,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5420667464648276979, guid: 37c937fafbc829e429f305e1ed876de2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6089939528506300430, guid: 37c937fafbc829e429f305e1ed876de2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2
@@ -18785,6 +18789,10 @@ PrefabInstance:
     - target: {fileID: 6555172588368820187, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
       propertyPath: m_Name
       value: Platform_Circle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6555172588368820187, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
