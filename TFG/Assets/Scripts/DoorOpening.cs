@@ -19,11 +19,16 @@ public class DoorOpening : MonoBehaviour
 
     Door_State state = Door_State.CLOSED;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         animator = transform.GetChild(0).GetComponent<Animator>();
         main_collider = GetComponents<BoxCollider2D>()[0];
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -33,7 +38,6 @@ public class DoorOpening : MonoBehaviour
         {
             if (animator.GetCurrentAnimatorStateInfo(0).IsName("OPEN"))
             {
-                main_collider.enabled = false;
                 state = Door_State.OPEN;
             }
             else if (animator.GetCurrentAnimatorStateInfo(0).IsName("CLOSED")) 
@@ -48,7 +52,7 @@ public class DoorOpening : MonoBehaviour
         }
     }
 
-    void OpenDoors(bool open)
+    public void OpenDoors(bool open)
     {
         if(open)
         {
@@ -59,11 +63,20 @@ public class DoorOpening : MonoBehaviour
             state = Door_State.CLOSING;
         }
 
-        main_collider.enabled = true;
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("CLOSING") && state == Door_State.OPENING)
+        {
+            animator.Play("OPENING");
+        }
+        else if(animator.GetCurrentAnimatorStateInfo(0).IsName("OPENING") && state == Door_State.CLOSING)
+        {
+            animator.Play("CLOSING");
+        }
+
+        main_collider.enabled = !open;
         animator.SetInteger("State", (int)state);
     }
 
-    bool IsDoorClosed()
+    public bool IsDoorClosed()
     {
         if (state == Door_State.CLOSED) 
         {
