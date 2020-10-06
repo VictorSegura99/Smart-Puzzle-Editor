@@ -49,6 +49,8 @@ public class BoxBehaviour : MonoBehaviour
             can_move = false;
             StartCoroutine(MoveReset());
 
+            // Checks the name of th trigger activated to set the direction
+            // that the box has to move.
             if (GO.name == "North")
             {
                 trigger_dir = TRIGGER_DIRECTION.NORTH;
@@ -74,8 +76,9 @@ public class BoxBehaviour : MonoBehaviour
                 offset = new Vector2(-1, 0);
             }
 
+            // Checking if the box can move:
+            // Launch a ray in the move direction and check if there is any collider.
             RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x + offset.x, transform.position.y + offset.y), direction);
-
             if (hit.collider != null && !hit.collider.isTrigger)
             {
                 switch (trigger_dir)
@@ -126,6 +129,7 @@ public class BoxBehaviour : MonoBehaviour
 
     void Stop()
     {
+        // Deactivates the particles systems.
         switch(trigger_dir)
         {
             case TRIGGER_DIRECTION.NORTH:
@@ -162,7 +166,10 @@ public class BoxBehaviour : MonoBehaviour
     void StopMove()
     {
         trigger_dir = TRIGGER_DIRECTION.IDLE;
-        sfx.Play();
-        Debug.Log("VA A CHOCAR!!!");
+
+        if (!sfx.isPlaying)
+        {
+            sfx.Play();
+        }
     }
 }
