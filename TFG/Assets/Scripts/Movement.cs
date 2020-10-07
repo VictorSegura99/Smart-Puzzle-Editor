@@ -1,23 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 using XInputDotNetPure;
 
 public class Movement : MonoBehaviour
 {
+    // Components
+    Rigidbody2D rb;
+    SpriteRenderer engineer_sprite;
+    Animator anim;
+    Transform shadow;
+
+    // Inspector Variables
+    public float speed = 3;
+
+    // Internal Variables
     enum Player_States
     {
         IDLE,
         RUN
     }
 
-    Rigidbody2D rb;
-    public float speed = 3;
-    SpriteRenderer engineer_sprite;
     Player_States player_state = Player_States.IDLE;
-    Animator anim;
-    Transform shadow;
+
+    // Timer for Hold R to Reset
+    float time_start = 0.0f;
+    float time_to_hold = 2.0f;
+    bool R_hold = false;
 
     private void Start()
     {
@@ -25,6 +34,34 @@ public class Movement : MonoBehaviour
         anim = transform.GetChild(0).GetComponent<Animator>();
         engineer_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
         shadow = transform.GetChild(0).GetChild(0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            time_start = Time.realtimeSinceStartup;
+            R_hold = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.R))
+        {
+            R_hold = false;
+        }
+
+        if (R_hold)
+        {
+            if (time_start + time_to_hold <= Time.realtimeSinceStartup)
+            {
+                time_start = Time.realtimeSinceStartup;
+                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     // Update is called once per frame
