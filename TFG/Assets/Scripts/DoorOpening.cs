@@ -52,10 +52,12 @@ public class DoorOpening : MonoBehaviour
             }
         }
 
-        if ((state == Door_State.OPEN || state == Door_State.CLOSED) && Input.GetKeyDown(KeyCode.Space))
-        {
-            OpenDoors(IsDoorClosed());
-        }
+        // DEBUG:
+        // Open/Close door
+        //if ((state == Door_State.OPEN || state == Door_State.CLOSED) && Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    OpenDoors(IsDoorClosed());
+        //}
     }
 
     public void OpenDoors(bool open)
