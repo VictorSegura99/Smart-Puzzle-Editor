@@ -6,6 +6,7 @@ public class Portal : MonoBehaviour
 {
     // Components
     Animator anim;
+    Portal_Manager manager;
 
     // Inspector variables
 
@@ -15,6 +16,7 @@ public class Portal : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        manager = transform.parent.GetComponent<Portal_Manager>();
     }
 
     // Update is called once per frame
@@ -33,5 +35,15 @@ public class Portal : MonoBehaviour
         //        anim.SetTrigger("Open");
         //    }
         //}
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Player") && !collision.CompareTag("Moving_Box"))
+        {
+            return;
+        }
+
+        manager.PortalTriggered(this, collision);
     }
 }
