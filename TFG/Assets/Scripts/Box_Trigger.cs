@@ -6,11 +6,11 @@ public class Box_Trigger : MonoBehaviour
 {
     public enum Box_Trigger_Side
     {
+        NONE,
         NORTH,
         SOUTH,
-        EAST,
         WEST,
-        NONE
+        EAST    
     }
 
     public Box_Trigger_Side side = Box_Trigger_Side.NONE;
@@ -57,6 +57,6 @@ public class Box_Trigger : MonoBehaviour
                     return;
                 }
         }
-        transform.parent.GetComponent<BoxBehaviour>().Triggered(gameObject);
+        transform.parent.GetComponent<BoxBehaviour>().MovementTriggered(gameObject, side);
     }
 }

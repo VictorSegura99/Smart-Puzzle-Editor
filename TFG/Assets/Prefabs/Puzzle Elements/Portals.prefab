@@ -87,6 +87,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Green Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 5119872496252949833, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
+      propertyPath: m_TagString
+      value: Portal
+      objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949835, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_FlipX
       value: 1
@@ -165,6 +169,10 @@ PrefabInstance:
     - target: {fileID: 3507033057122539965, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_Name
       value: Purple Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 3507033057122539965, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
+      propertyPath: m_TagString
+      value: Portal
       objectReference: {fileID: 0}
     - target: {fileID: 7407682794861303588, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_LocalPosition.x

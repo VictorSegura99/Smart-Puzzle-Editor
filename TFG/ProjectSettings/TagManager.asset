@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Moving_Box
+  - Portal
   layers:
   - Default
   - TransparentFX
