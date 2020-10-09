@@ -18432,26 +18432,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 465769819623868278, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 8.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 465769819623868278, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 7.46
-      objectReference: {fileID: 0}
-    - target: {fileID: 1668119917329661179, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_FlipX
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1668119917329661180, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1668119917329661180, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.5
-      objectReference: {fileID: 0}
     - target: {fileID: 1668119918239313714, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
       propertyPath: m_Name
       value: Portals
@@ -18499,10 +18479,6 @@ PrefabInstance:
     - target: {fileID: 1668119918239313715, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1720133866082635390, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
-      propertyPath: m_FlipX
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fbc9ccf856181b4aab3d8527ce8b6de, type: 3}
@@ -19076,11 +19052,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035381, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -3.781
       objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035381, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.047
       objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035381, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_LocalPosition.z

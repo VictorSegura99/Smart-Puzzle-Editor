@@ -20,8 +20,10 @@ public class Movement : MonoBehaviour
         IDLE,
         RUN
     }
-
     Player_States player_state = Player_States.IDLE;
+
+    [HideInInspector]
+    public Vector2 direction = new Vector3();
 
     // Timer for Hold R to Reset
     float time_start = 0.0f;
@@ -38,6 +40,8 @@ public class Movement : MonoBehaviour
 
     private void Update()
     {
+        // TODO: Create GameManager
+        // {
         if (Input.GetKeyDown(KeyCode.R))
         {
             time_start = Time.realtimeSinceStartup;
@@ -62,6 +66,7 @@ public class Movement : MonoBehaviour
         {
             Application.Quit();
         }
+        // }
     }
 
     // Update is called once per frame
@@ -72,7 +77,7 @@ public class Movement : MonoBehaviour
         Vector2 GP_direction = HandleControllerMovement();
         Vector2 GP_Arrows_direction = HandleGPArrowsMovement();
 
-        Vector2 direction = new Vector2(KB_direction.x + GP_direction.x + GP_Arrows_direction.x, KB_direction.y + GP_direction.y + GP_Arrows_direction.y).normalized * speed;
+        direction = new Vector2(KB_direction.x + GP_direction.x + GP_Arrows_direction.x, KB_direction.y + GP_direction.y + GP_Arrows_direction.y).normalized * speed;
         
         // Flip Sprites
         if (direction.x < 0 && !engineer_sprite.flipX)

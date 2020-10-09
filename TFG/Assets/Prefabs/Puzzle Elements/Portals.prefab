@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Green_Portal: {fileID: 1668119917329661177}
   Purple_Portal: {fileID: 5769292078104906223}
+  cool_time: 1
 --- !u!70 &5817632925928296903
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -60,8 +61,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.18}
-  m_Size: {x: 0.3, y: 1.5}
+  m_Offset: {x: -0.072626114, y: -0.18}
+  m_Size: {x: 0.18038082, y: 1.5}
   m_Direction: 0
 --- !u!114 &8092308866998370267
 MonoBehaviour:
@@ -86,13 +87,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Green Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 5119872496252949835, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949836, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949836, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949836, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_LocalPosition.z
@@ -130,6 +135,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5119872496252949837, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.0649503
+      objectReference: {fileID: 0}
+    - target: {fileID: 5119872496252949837, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
+      propertyPath: m_Size.x
+      value: 0.1700994
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
 --- !u!1 &1668119917329661177 stripped
@@ -155,11 +168,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7407682794861303588, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 8.25
       objectReference: {fileID: 0}
     - target: {fileID: 7407682794861303588, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 7.46
       objectReference: {fileID: 0}
     - target: {fileID: 7407682794861303588, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_LocalPosition.z
