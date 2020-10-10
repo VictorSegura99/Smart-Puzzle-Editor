@@ -36,11 +36,11 @@ public class Portal_Manager : MonoBehaviour
             time = Time.realtimeSinceStartup;
             if (which_is == Green_Portal.GetComponent<Portal>())
             {
-                collider.transform.position = new Vector3(Purple_Portal.transform.position.x, Purple_Portal.transform.position.y - 0.75f, Purple_Portal.transform.position.z);
+                collider.transform.position += Purple_Portal.transform.position - Green_Portal.transform.position;
             }
             else
             {
-                collider.transform.position = new Vector3(Green_Portal.transform.position.x, Green_Portal.transform.position.y - 0.75f, Green_Portal.transform.position.z);
+                collider.transform.position += Green_Portal.transform.position - Purple_Portal.transform.position;
             }
         }
     }

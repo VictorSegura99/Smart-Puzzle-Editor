@@ -13,10 +13,11 @@ public class BoxBehaviour : MonoBehaviour
     // Inspector Variables
     public bool is_static = false;
     public float time_to_reset = 1.5f;
+    public float raycast_lenght = 1.25f;
 
     // Internal Variables
     bool can_move = true;
-
+    bool repeat_anim = false;
 
     // Start is called before the first frame update
     void Start()
@@ -32,14 +33,14 @@ public class BoxBehaviour : MonoBehaviour
 
     public void MovementTriggered(GameObject GO, Box_Trigger.Box_Trigger_Side side)
     {
-        if (!is_static && can_move)
+        if (!is_static && can_move && anim.GetCurrentAnimatorStateInfo(0).IsName("IDLE"))
         {
             Vector2 direction = new Vector2();
             Vector2 offset = new Vector2();
             can_move = false;
             StartCoroutine(MoveReset());
 
-            // Checks the name of th trigger activated to set the direction
+            // Checks the name of the trigger activated to set the direction
             // that the box has to move.
             switch (side)
             {
@@ -55,16 +56,16 @@ public class BoxBehaviour : MonoBehaviour
                         offset = new Vector2(0, 1);
                         break;
                     }
-                case Box_Trigger.Box_Trigger_Side.EAST:
-                    {
-                        direction = new Vector2(-1, 0);
-                        offset = new Vector2(-1, 0);
-                        break;
-                    }
                 case Box_Trigger.Box_Trigger_Side.WEST:
                     {
                         direction = new Vector2(1, 0);
                         offset = new Vector2(1, 0);
+                        break;
+                    }
+                case Box_Trigger.Box_Trigger_Side.EAST:
+                    {
+                        direction = new Vector2(-1, 0);
+                        offset = new Vector2(-1, 0);
                         break;
                     }
             }
@@ -78,7 +79,7 @@ public class BoxBehaviour : MonoBehaviour
                 {
                     case Box_Trigger.Box_Trigger_Side.NORTH:
                         {
-                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= 1.5f)
+                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -87,7 +88,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.SOUTH:
                         {
-                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= 1.5f)
+                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -96,7 +97,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.WEST:
                         {
-                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= 1.5f)
+                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -105,10 +106,48 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.EAST:
                         {
-                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= 1.5f)
+                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
+                            }
+                            break;
+                        }
+                }
+            }
+            else if (hit.collider.CompareTag("Portal"))
+            {
+                switch (side)
+                {
+                    case Box_Trigger.Box_Trigger_Side.NORTH:
+                        {
+                            if (Mathf.Abs((transform.position.y - hit.collider.transform.position.y)) <= raycast_lenght)
+                            {
+                                side += 4;
+                            }
+                            break;
+                        }
+                    case Box_Trigger.Box_Trigger_Side.SOUTH:
+                        {
+                            if (Mathf.Abs((hit.collider.transform.position.y - transform.position.y)) <= raycast_lenght)
+                            {
+                                side += 4;
+                            }
+                            break;
+                        }
+                    case Box_Trigger.Box_Trigger_Side.WEST:
+                        {
+                            if (Mathf.Abs((hit.collider.transform.position.x - transform.position.x)) <= raycast_lenght)
+                            {
+                                side += 4;
+                            }
+                            break;
+                        }
+                    case Box_Trigger.Box_Trigger_Side.EAST:
+                        {
+                            if (Mathf.Abs((transform.position.x - hit.collider.transform.position.x)) <= raycast_lenght)
+                            {
+                                side += 4;
                             }
                             break;
                         }
@@ -161,6 +200,14 @@ public class BoxBehaviour : MonoBehaviour
         if (!sfx.isPlaying)
         {
             sfx.Play();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Portal") && !repeat_anim) 
+        {
+            repeat_anim = true;
         }
     }
 }

@@ -10,7 +10,7 @@ public class Box_Trigger : MonoBehaviour
         NORTH,
         SOUTH,
         WEST,
-        EAST    
+        EAST   
     }
 
     public Box_Trigger_Side side = Box_Trigger_Side.NONE;
@@ -35,6 +35,11 @@ public class Box_Trigger : MonoBehaviour
     {
         switch (side)
         {
+            case Box_Trigger_Side.NONE:
+                {
+                    Debug.Log("No side selected for the Box Trigger");
+                    return;
+                }
             case Box_Trigger_Side.NORTH:
                 if (collision.GetComponent<Movement>().direction.y >= 0)
                     return;
@@ -43,20 +48,16 @@ public class Box_Trigger : MonoBehaviour
                 if (collision.GetComponent<Movement>().direction.y <= 0)
                     return;
                 break;
-            case Box_Trigger_Side.EAST:
-                if (collision.GetComponent<Movement>().direction.x >= 0)
-                    return;
-                break;
             case Box_Trigger_Side.WEST:
                 if (collision.GetComponent<Movement>().direction.x <= 0)
                     return;
                 break;
-            case Box_Trigger_Side.NONE:
-                {
-                    Debug.Log("No side selected for the Box Trigger");
+            case Box_Trigger_Side.EAST:
+                if (collision.GetComponent<Movement>().direction.x >= 0)
                     return;
-                }
+                break;
         }
+
         transform.parent.GetComponent<BoxBehaviour>().MovementTriggered(gameObject, side);
     }
 }
