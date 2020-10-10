@@ -18239,10 +18239,46 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 88060243082273377, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060243082273377, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060243082273378, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1486129978982572785, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
+    - target: {fileID: 88060243082273378, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060243082273378, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_FlipY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060243082273378, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_DrawMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 88060243082273379, guid: b15c297e8515a854ca5c859da5301887, type: 3}
       propertyPath: m_Name
       value: Platform_Box
       objectReference: {fileID: 0}
+    - target: {fileID: 88060244766152921, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060244766152927, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 88060244766152927, guid: b15c297e8515a854ca5c859da5301887, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 4921703691929891931, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b15c297e8515a854ca5c859da5301887, type: 3}
 --- !u!1001 &589040776363831054
@@ -19350,6 +19386,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6555172588368820185, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8358594457986123227, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
     - target: {fileID: 6555172588368820186, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
       propertyPath: door_to_link
       value: 
@@ -19358,6 +19398,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Platform_Circle
       objectReference: {fileID: 0}
+    - target: {fileID: 6555172589297123100, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -8779270398788875974, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 762e9472a3bbfde4b98ed665b4c8706a, type: 3}
 --- !u!1001 &7184518908382123338
