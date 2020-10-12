@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using XInputDotNetPure;
 
-public class Movement : MonoBehaviour
+public class Player_Controller : MonoBehaviour
 {
     // Components
     Rigidbody2D rb;
@@ -24,6 +24,8 @@ public class Movement : MonoBehaviour
 
     [HideInInspector]
     public Vector2 direction = new Vector3();
+
+    bool input_blocked = false;
 
     // Timer for Hold R to Reset
     float time_start = 0.0f;
@@ -66,43 +68,51 @@ public class Movement : MonoBehaviour
         {
             Application.Quit();
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            BlockInput(!IsInputBlocked());
+        }
         // }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Get Input
-        Vector2 KB_direction = HandleKeyboardMovement();
-        Vector2 GP_direction = HandleControllerMovement();
-        Vector2 GP_Arrows_direction = HandleGPArrowsMovement();
+        if (!input_blocked)
+        {
+            // Get Input
+            Vector2 KB_direction = HandleKeyboardMovement();
+            Vector2 GP_direction = HandleControllerMovement();
+            Vector2 GP_Arrows_direction = HandleGPArrowsMovement();
 
-        direction = new Vector2(KB_direction.x + GP_direction.x + GP_Arrows_direction.x, KB_direction.y + GP_direction.y + GP_Arrows_direction.y).normalized * speed;
-        
-        // Flip Sprites
-        if (direction.x < 0 && !engineer_sprite.flipX)
-        {
-            engineer_sprite.flipX = true;
-        }
-        else if (direction.x > 0 && engineer_sprite.flipX)
-        {
-            engineer_sprite.flipX = false;
-        }
+            direction = new Vector2(KB_direction.x + GP_direction.x + GP_Arrows_direction.x, KB_direction.y + GP_direction.y + GP_Arrows_direction.y).normalized * speed;
 
-        // Animations Control
-        if (direction != Vector2.zero && player_state != Player_States.RUN)
-        {
-            player_state = Player_States.RUN;
-            shadow.localScale = new Vector3(3, 1, 0.8f);
-        }
-        else if (direction == Vector2.zero && player_state != Player_States.IDLE)
-        {
-            player_state = Player_States.IDLE;
-            shadow.localScale = new Vector3(2.75f, 1, 0.8f);
-        }
+            // Flip Sprites
+            if (direction.x < 0 && !engineer_sprite.flipX)
+            {
+                engineer_sprite.flipX = true;
+            }
+            else if (direction.x > 0 && engineer_sprite.flipX)
+            {
+                engineer_sprite.flipX = false;
+            }
 
-        anim.SetInteger("State", (int)player_state);
-        rb.velocity = direction;
+            // Animations Control
+            if (direction != Vector2.zero && player_state != Player_States.RUN)
+            {
+                player_state = Player_States.RUN;
+                shadow.localScale = new Vector3(3, 1, 0.8f);
+            }
+            else if (direction == Vector2.zero && player_state != Player_States.IDLE)
+            {
+                player_state = Player_States.IDLE;
+                shadow.localScale = new Vector3(2.75f, 1, 0.8f);
+            }
+
+            anim.SetInteger("State", (int)player_state);
+            rb.velocity = direction;
+        }
     }
 
     Vector2 HandleKeyboardMovement()
@@ -163,5 +173,15 @@ public class Movement : MonoBehaviour
         }
 
         return direction.normalized;
+    }
+
+    public void BlockInput(bool block)
+    {
+        input_blocked = block;
+    }
+
+    public bool IsInputBlocked()
+    {
+        return input_blocked;
     }
 }

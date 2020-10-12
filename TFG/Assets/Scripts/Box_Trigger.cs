@@ -41,19 +41,19 @@ public class Box_Trigger : MonoBehaviour
                     return;
                 }
             case Box_Trigger_Side.NORTH:
-                if (collision.GetComponent<Movement>().direction.y >= 0)
+                if (collision.GetComponent<Player_Controller>().direction.y >= 0)
                     return;
                 break;
             case Box_Trigger_Side.SOUTH:
-                if (collision.GetComponent<Movement>().direction.y <= 0)
+                if (collision.GetComponent<Player_Controller>().direction.y <= 0)
                     return;
                 break;
             case Box_Trigger_Side.WEST:
-                if (collision.GetComponent<Movement>().direction.x <= 0)
+                if (collision.GetComponent<Player_Controller>().direction.x <= 0)
                     return;
                 break;
             case Box_Trigger_Side.EAST:
-                if (collision.GetComponent<Movement>().direction.x >= 0)
+                if (collision.GetComponent<Player_Controller>().direction.x >= 0)
                     return;
                 break;
         }

@@ -5351,30 +5351,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &838359716 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2639940602847888411, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-  m_PrefabInstance: {fileID: 1582017401}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &838359717
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 838359716}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ed1d1cb63d27bd840b450b5afac21db3, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &890219333
 GameObject:
   m_ObjectHideFlags: 0
@@ -15300,43 +15276,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2639940602847888411, guid: eeb28e076ef204942b1899541962ab92, type: 3}
       propertyPath: m_Name
-      value: Cake Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446266, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446266, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.62
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446266, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446266, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446267, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: ea424553e53cf0b4ab52425b9e8f2ace, type: 3}
-    - target: {fileID: 2639940603557446267, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_Size.x
-      value: 3.88
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446267, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_Size.y
-      value: 3.17
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446267, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2639940603557446267, guid: eeb28e076ef204942b1899541962ab92, type: 3}
-      propertyPath: m_FlipX
-      value: 0
+      value: Puzzle Menu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeb28e076ef204942b1899541962ab92, type: 3}
