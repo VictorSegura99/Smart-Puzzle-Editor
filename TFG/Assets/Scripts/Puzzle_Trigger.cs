@@ -48,6 +48,7 @@ public class Puzzle_Trigger : MonoBehaviour
             yield return null;
         }
 
+        GameObject.Find("Levels_UI").GetComponent<UI_Manager>().ShowYouWinMenu();
         Destroy(gameObject);
     }
 }

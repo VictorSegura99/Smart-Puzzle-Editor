@@ -64,10 +64,10 @@ public class Player_Controller : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    Application.Quit();
+        //}
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -178,6 +178,10 @@ public class Player_Controller : MonoBehaviour
     public void BlockInput(bool block)
     {
         input_blocked = block;
+        rb.velocity = Vector2.zero;
+        player_state = Player_States.IDLE;
+        shadow.localScale = new Vector3(2.75f, 1, 0.8f);
+        anim.SetInteger("State", (int)player_state);
     }
 
     public bool IsInputBlocked()
