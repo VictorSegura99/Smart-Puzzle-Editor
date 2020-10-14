@@ -27,11 +27,6 @@ public class Player_Controller : MonoBehaviour
 
     bool input_blocked = false;
 
-    // Timer for Hold R to Reset
-    float time_start = 0.0f;
-    float time_to_hold = 2.0f;
-    bool R_hold = false;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -42,38 +37,7 @@ public class Player_Controller : MonoBehaviour
 
     private void Update()
     {
-        // TODO: Create GameManager
-        // {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            time_start = Time.realtimeSinceStartup;
-            R_hold = true;
-        }
 
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            R_hold = false;
-        }
-
-        if (R_hold)
-        {
-            if (time_start + time_to_hold <= Time.realtimeSinceStartup)
-            {
-                time_start = Time.realtimeSinceStartup;
-                UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-            }
-        }
-
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //{
-        //    Application.Quit();
-        //}
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BlockInput(!IsInputBlocked());
-        }
-        // }
     }
 
     // Update is called once per frame
