@@ -15,12 +15,18 @@ public class PauseMenuButtons : MonoBehaviour
 
     private void Start()
     {
-        manager = GameObject.Find("Levels_UI").GetComponent<UI_Manager>();
+        if (GameObject.Find("Levels_UI").GetComponent<UI_Manager>())
+        {
+            manager = GameObject.Find("Levels_UI").GetComponent<UI_Manager>();
+        }
     }
 
     public void ResumeGame()
     {
-        manager.ResumeGame();
+        if (manager != null)
+        {
+            manager.ResumeGame();
+        }
     }
 
     public void ResetPuzzle()

@@ -12,46 +12,30 @@ public class PlatformBox : MonoBehaviour
     public bool is_pressed = false;
     public bool constant_pressure_needed = true;
 
-    public enum ELEMENT_LINKED
-    {
-        DOOR,
-        PORTAL,
-        NONE
-    }
-    [SerializeField]
-    ELEMENT_LINKED element = ELEMENT_LINKED.NONE;
-
     // Internal Variables
     DoorOpening door;
     Portal_Manager portal;
 
     void Awake()
     {
-        activated_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        switch (element)
-        {
-            case ELEMENT_LINKED.DOOR:
-                {
-                    if (element_linked.GetComponent<DoorOpening>() != null)
-                    {
-                        door = element_linked.GetComponent<DoorOpening>();
-                    }
-                    break;
-                }
-            case ELEMENT_LINKED.PORTAL:
-                {
-                    if (element_linked.GetComponent<Portal_Manager>() != null)
-                    {
-                        portal = element_linked.GetComponent<Portal_Manager>();
-                    }
-                    break;
-                }
-        }
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        activated_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
+
+        if (element_linked.GetComponent<DoorOpening>() != null)
+        {
+            door = element_linked.GetComponent<DoorOpening>();
+        }
+        else if (element_linked.GetComponent<Portal_Manager>() != null)
+        {
+            portal = element_linked.GetComponent<Portal_Manager>();
+        }
+
+
         if (door != null)
         {
             if (is_pressed)
@@ -102,18 +86,13 @@ public class PlatformBox : MonoBehaviour
     {
         activated_sprite.enabled = is_active;
 
-        switch (element)
+        if (door != null)
         {
-            case ELEMENT_LINKED.DOOR:
-                {
-                    door.OpenDoors(is_active);
-                    break;   
-                }
-            case ELEMENT_LINKED.PORTAL:
-                {
-                    portal.ChangeState(is_active);
-                    break;
-                }
+            door.OpenDoors(is_active);
+        }
+        else if (portal != null)
+        {
+            portal.ChangeState(is_active);
         }
 
         if (!constant_pressure_needed)
