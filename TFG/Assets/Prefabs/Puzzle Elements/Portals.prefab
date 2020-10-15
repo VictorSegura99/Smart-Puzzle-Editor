@@ -61,8 +61,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.5}
-  m_Size: {x: 0.1, y: 1}
+  m_Offset: {x: 0, y: -0.52056414}
+  m_Size: {x: 0.1, y: 0.59112823}
   m_Direction: 0
 --- !u!114 &8092308866998370267
 MonoBehaviour:
@@ -149,11 +149,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949837, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_Offset.y
-      value: -0.5
+      value: -0.5341341
       objectReference: {fileID: 0}
     - target: {fileID: 5119872496252949837, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
       propertyPath: m_Size.y
-      value: 1
+      value: 0.61826813
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 201614a195a44ac4387dc1ca38ae88ae, type: 3}
@@ -225,6 +225,10 @@ PrefabInstance:
     - target: {fileID: 7407682794861303588, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603278045203521068, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}
+      propertyPath: m_FlipX
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: caf9787ba88d4aa4fb5c9e65bba16090, type: 3}

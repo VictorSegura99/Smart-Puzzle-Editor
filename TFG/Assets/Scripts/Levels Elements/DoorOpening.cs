@@ -19,9 +19,6 @@ public class DoorOpening : MonoBehaviour
 
     Door_State state = Door_State.CLOSED;
 
-    [HideInInspector]
-    public bool door_opened_lock = false;
-
     void Awake()
     {
         animator = transform.GetChild(0).GetComponent<Animator>();
@@ -48,13 +45,6 @@ public class DoorOpening : MonoBehaviour
                 state = Door_State.CLOSED;
             }
         }
-
-        // DEBUG:
-        // Open/Close door
-        //if ((state == Door_State.OPEN || state == Door_State.CLOSED) && Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    OpenDoors(IsDoorClosed());
-        //}
     }
 
     public void OpenDoors(bool open)

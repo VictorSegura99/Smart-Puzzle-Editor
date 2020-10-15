@@ -8,36 +8,67 @@ public class PlatformBox : MonoBehaviour
     SpriteRenderer activated_sprite;
 
     // Inspector Variables
-    public GameObject door_to_link;
+    public GameObject element_linked;
     public bool is_pressed = false;
     public bool constant_pressure_needed = true;
 
+    public enum ELEMENT_LINKED
+    {
+        DOOR,
+        PORTAL,
+        NONE
+    }
+    [SerializeField]
+    ELEMENT_LINKED element = ELEMENT_LINKED.NONE;
+
     // Internal Variables
     DoorOpening door;
+    Portal_Manager portal;
 
     void Awake()
     {
         activated_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        door = door_to_link.GetComponent<DoorOpening>();
+        switch (element)
+        {
+            case ELEMENT_LINKED.DOOR:
+                {
+                    if (element_linked.GetComponent<DoorOpening>() != null)
+                    {
+                        door = element_linked.GetComponent<DoorOpening>();
+                    }
+                    break;
+                }
+            case ELEMENT_LINKED.PORTAL:
+                {
+                    if (element_linked.GetComponent<Portal_Manager>() != null)
+                    {
+                        portal = element_linked.GetComponent<Portal_Manager>();
+                    }
+                    break;
+                }
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (is_pressed)
+        if (door != null)
         {
-            activated_sprite.enabled = true;
-            if (door.IsDoorClosed())
+            if (is_pressed)
             {
-                door.OpenDoors(is_pressed);
+                activated_sprite.enabled = true;
+                if (door.IsDoorClosed())
+                {
+                    door.OpenDoors(is_pressed);
+                }
             }
-        }  
-        else
-        {
-            activated_sprite.enabled = false;
-            if (!door.IsDoorClosed())
+            else
             {
-                door.OpenDoors(is_pressed);
+                activated_sprite.enabled = false;
+                if (!door.IsDoorClosed())
+                {
+                    door.OpenDoors(is_pressed);
+                }
             }
         }
     }
@@ -71,15 +102,23 @@ public class PlatformBox : MonoBehaviour
     {
         activated_sprite.enabled = is_active;
 
-        if (!door.door_opened_lock)
+        switch (element)
         {
-            door.OpenDoors(is_active);
+            case ELEMENT_LINKED.DOOR:
+                {
+                    door.OpenDoors(is_active);
+                    break;   
+                }
+            case ELEMENT_LINKED.PORTAL:
+                {
+                    portal.ChangeState(is_active);
+                    break;
+                }
         }
 
         if (!constant_pressure_needed)
         {
-            door.door_opened_lock = true;
+            enabled = false;
         }
-
     }
 }

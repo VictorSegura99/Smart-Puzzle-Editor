@@ -749,7 +749,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 45}
-    m_Scale: {x: 2.5, y: 2.18, z: 1}
+    m_Scale: {x: 0.82, y: 0.64, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -4875,8 +4875,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1577664049
+  m_SortingLayer: 3
   m_SortingOrder: 2
   m_RenderMode: 0
   m_SortMode: 0
@@ -4913,6 +4913,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7471031301700882396}
   - component: {fileID: 4831408708295446881}
+  - component: {fileID: 6386381441051549959}
+  - component: {fileID: 4810926391684690265}
   m_Layer: 0
   m_Name: Puzzle Win
   m_TagString: Untagged
@@ -4955,3 +4957,32 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6386381441051549959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471031301700882399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cf52768ba94714479028310ff57b9b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  time_to_fade: 0.5
+--- !u!70 &4810926391684690265
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7471031301700882399}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.31546283}
+  m_Size: {x: 2.46, y: 3.0909257}
+  m_Direction: 0

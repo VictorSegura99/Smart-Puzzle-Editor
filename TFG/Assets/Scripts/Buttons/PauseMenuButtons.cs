@@ -8,6 +8,7 @@ public class PauseMenuButtons : MonoBehaviour
     // Components
 
     // Inspector Variables
+    public string next_scene;
 
     // Internal Variables
     UI_Manager manager;
@@ -35,6 +36,11 @@ public class PauseMenuButtons : MonoBehaviour
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    public void NextScene()
+    {
+        ChangeScene(next_scene);
     }
 
     void ChangeScene(string scene_name)

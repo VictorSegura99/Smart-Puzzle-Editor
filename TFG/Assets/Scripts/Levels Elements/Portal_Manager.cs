@@ -44,4 +44,18 @@ public class Portal_Manager : MonoBehaviour
             }
         }
     }
+
+    public void ChangeState(bool want_to_open)
+    {
+        if(want_to_open)
+        {
+            Green_Portal.GetComponent<Portal>().Open();
+            Purple_Portal.GetComponent<Portal>().Open();
+        }
+        else
+        {
+            Green_Portal.GetComponent<Portal>().Close();
+            Purple_Portal.GetComponent<Portal>().Close();
+        }
+    }
 }
