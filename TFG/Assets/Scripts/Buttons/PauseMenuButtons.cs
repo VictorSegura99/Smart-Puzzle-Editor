@@ -15,7 +15,7 @@ public class PauseMenuButtons : MonoBehaviour
 
     private void Start()
     {
-        if (GameObject.Find("Levels_UI").GetComponent<UI_Manager>())
+        if (GameObject.Find("Levels_UI") != null)
         {
             manager = GameObject.Find("Levels_UI").GetComponent<UI_Manager>();
         }
