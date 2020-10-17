@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using XInputDotNetPure;
 
 public class UI_Manager : MonoBehaviour
@@ -10,15 +12,26 @@ public class UI_Manager : MonoBehaviour
     Animator youwin_anim;
     Player_Controller player;
 
+    // Elements to change Alpha in PuzzleContinue Fade
+    Text[] text_to_fade;
 
     // Inspector Variables
     public GameObject YouWin_Menu;
     public GameObject Pause_Menu;
-
+    public GameObject Start_Puzzle_Continue_Menu;
+    public bool start_puzzlepiece_menu = false;
 
     // Internal Variables
     GamePadState controller_current_state;
     GamePadState controller_last_frame_state;
+    bool can_puzzlecontinue_continue = false;
+
+    // Timer for PuzzleMenu Continue
+    [SerializeField]
+    float seconds_wait_puzzlemenu_continue = 2.0f;
+    [SerializeField]
+    float seconds_fade_puzzlemenu_continue = 1.0f;
+    float puzzlemenu_timer_start = 0.0f;
 
     // Timer for Hold R to Reset
     float time_start = 0.0f;
@@ -31,7 +44,8 @@ public class UI_Manager : MonoBehaviour
     {
         NONE,
         PAUSE,
-        YOU_WIN
+        YOU_WIN,
+        PUZZLEPIECE
     }
     Active_Menu current_menu = Active_Menu.NONE;
 
@@ -42,12 +56,26 @@ public class UI_Manager : MonoBehaviour
         player = GameObject.Find("Player").GetComponent<Player_Controller>();
         Pause_Menu.SetActive(false);
         controller_current_state = GamePad.GetState(0);
+
+        if (start_puzzlepiece_menu)
+        {
+            Start_Puzzle_Continue_Menu.SetActive(true);
+            Time.timeScale = 0;
+            current_menu = Active_Menu.PUZZLEPIECE;
+            text_to_fade = Start_Puzzle_Continue_Menu.GetComponentsInChildren<Text>();
+            puzzlemenu_timer_start = Time.realtimeSinceStartup;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         ManageMenuInput();
+
+        if (start_puzzlepiece_menu)
+        {
+            HandlePuzzleContinueMenu();
+        }
     }
 
     public void ShowYouWinMenu()
@@ -58,44 +86,57 @@ public class UI_Manager : MonoBehaviour
 
     public void HideYouWinMenu()
     {
-        ChangeMenuState(Active_Menu.NONE);
+        current_menu = Active_Menu.NONE;
         youwin_anim.SetTrigger("Exit");
-    }
-
-    void ChangeMenuState(Active_Menu new_menu)
-    {
-        if (current_menu != new_menu)
-        {
-            current_menu = new_menu;
-            //if (new_menu != Active_Menu.NONE)
-            //{
-            //    if (!player.IsInputBlocked())
-            //    {
-            //        player.BlockInput(true);
-            //    }
-            //}
-            //else
-            //{
-            //    if (player.IsInputBlocked())
-            //    {
-            //        player.BlockInput(false);
-            //    }
-            //}
-        }
     }
 
     public void PauseGame()
     {
         Time.timeScale = 0;
-        ChangeMenuState(Active_Menu.PAUSE);
+        current_menu = Active_Menu.PAUSE;
         Pause_Menu.SetActive(true);
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1;
-        ChangeMenuState(Active_Menu.NONE);
+        current_menu = Active_Menu.NONE;
         Pause_Menu.SetActive(false);
+    }
+
+    void HandlePuzzleContinueMenu()
+    {
+        if (Time.realtimeSinceStartup > puzzlemenu_timer_start + seconds_wait_puzzlemenu_continue)
+        {
+            start_puzzlepiece_menu = false;
+            StartCoroutine(FadePuzzleContinueSpace());
+        }
+    }
+
+    IEnumerator FadePuzzleContinueSpace()
+    {
+        puzzlemenu_timer_start = Time.realtimeSinceStartup;
+        while (Time.realtimeSinceStartup < puzzlemenu_timer_start + seconds_fade_puzzlemenu_continue)
+        {
+            float t = (Time.realtimeSinceStartup - puzzlemenu_timer_start) / seconds_fade_puzzlemenu_continue;
+
+            // Int i starts in 1 to skip the main text: Touch (PuzzlePiece) to win!
+            for (int i = 1; i < text_to_fade.Length; ++i)
+            {
+                text_to_fade[i].color = new Color(text_to_fade[i].color.r, text_to_fade[i].color.g, text_to_fade[i].color.b, t);
+            }
+
+            yield return null;
+        }
+
+        can_puzzlecontinue_continue = true;
+    }
+
+    void QuitPuzzleContinueMenu()
+    {
+        Time.timeScale = 1;
+        Start_Puzzle_Continue_Menu.SetActive(false);
+        current_menu = Active_Menu.NONE;
     }
 
     void ManageMenuInput()
@@ -160,6 +201,14 @@ public class UI_Manager : MonoBehaviour
                     //{
                     //    HideYouWinMenu();
                     //}
+                    break;
+                }
+            case Active_Menu.PUZZLEPIECE:
+                {
+                    if (Input.GetKeyDown(KeyCode.Space) && can_puzzlecontinue_continue)
+                    {
+                        QuitPuzzleContinueMenu();
+                    }
                     break;
                 }
         }

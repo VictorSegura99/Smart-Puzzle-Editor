@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 1216203679
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2055573650630585492, guid: 3dd99a8cbb076a745ae1f4d60de8777c, type: 3}
+  m_Sprite: {fileID: -1486129978982572785, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3be770e7e865cc4685442daa6e83aec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  door_to_link: {fileID: 0}
+  element_linked: {fileID: 0}
   is_pressed: 0
   constant_pressure_needed: 1
 --- !u!61 &88060243082273383
@@ -197,7 +197,7 @@ SpriteRenderer:
   m_SortingLayerID: 1216203679
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3409169114882801791, guid: 3dd99a8cbb076a745ae1f4d60de8777c, type: 3}
+  m_Sprite: {fileID: 4921703691929891931, guid: 9d7a9317b547b5843bd2cf603bf8aa84, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
