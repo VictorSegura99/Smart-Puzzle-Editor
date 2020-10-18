@@ -316,6 +316,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6709303496678780719, guid: b79705fa442bb7744b75f129218bd002, type: 3}
+      propertyPath: next_scene
+      value: Lvl2
+      objectReference: {fileID: 0}
     - target: {fileID: 6709303497462100313, guid: b79705fa442bb7744b75f129218bd002, type: 3}
       propertyPath: start_puzzlepiece_menu
       value: 1
