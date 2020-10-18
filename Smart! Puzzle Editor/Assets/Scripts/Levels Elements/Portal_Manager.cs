@@ -13,20 +13,31 @@ public class Portal_Manager : MonoBehaviour
     GameObject Purple_Portal;
     [SerializeField]
     float cool_time = 1.0f;
+    [SerializeField]
+    bool start_open = false;
 
     // Internal Variables
     float time = 0.0f;
+    bool is_first_frame = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (is_first_frame)
+        {
+            is_first_frame = false;
+            if (start_open)
+            {
+                Green_Portal.GetComponent<Portal>().Open();
+                Purple_Portal.GetComponent<Portal>().Open();
+            }
+        }
     }
 
     public void PortalTriggered(Portal which_is, Collider2D collider)
@@ -47,7 +58,7 @@ public class Portal_Manager : MonoBehaviour
 
     public void ChangeState(bool want_to_open)
     {
-        if(want_to_open)
+        if (want_to_open)
         {
             Green_Portal.GetComponent<Portal>().Open();
             Purple_Portal.GetComponent<Portal>().Open();
