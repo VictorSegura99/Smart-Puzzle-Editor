@@ -408,6 +408,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Levels_UI
       objectReference: {fileID: 0}
+    - target: {fileID: 6709303497462100390, guid: b79705fa442bb7744b75f129218bd002, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b79705fa442bb7744b75f129218bd002, type: 3}
 --- !u!1001 &76731574
@@ -5729,7 +5733,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035381, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5692554207821035381, guid: 0e3026a8a1bede5469fe199e63315664, type: 3}
       propertyPath: m_LocalPosition.y

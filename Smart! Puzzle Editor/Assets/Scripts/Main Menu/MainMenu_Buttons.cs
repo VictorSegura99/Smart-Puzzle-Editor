@@ -28,4 +28,13 @@ public class MainMenu_Buttons : MonoBehaviour
         Application.Quit();
     }
 
+    public void OpenTutorialMenu()
+    {
+        GameObject.Find("Canvas").GetComponent<Main_Menu_Manager>().ChangeMenu(Main_Menu_Manager.Menu_States.TUTORIAL);
+    }
+
+    public void ContactMe()
+    {
+        Application.OpenURL("www.victorsegurablanco.com");
+    }
 }

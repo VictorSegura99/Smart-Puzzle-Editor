@@ -12,7 +12,7 @@ public class Main_Menu_Manager : MonoBehaviour
     public GameObject tutorial_menu;
 
     // Internal Variables
-    enum Menu_States
+    public enum Menu_States
     {
         MAIN,
         TUTORIAL,
@@ -28,13 +28,29 @@ public class Main_Menu_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        switch (current_state)
+        {
+            case Menu_States.MAIN:
+                {
+                    break;
+                }
+            case Menu_States.TUTORIAL:
+                {
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        ChangeMenu(Menu_States.MAIN);
+                    }
+                    break;
+                }
+        }
     }
 
-    void ChangeMenu(Menu_States state_to_change)
+    public void ChangeMenu(Menu_States state_to_change)
     {
         if (current_state != state_to_change)
         {
+            current_state = state_to_change;
+
             switch (state_to_change)
             {
                 case Menu_States.MAIN:
