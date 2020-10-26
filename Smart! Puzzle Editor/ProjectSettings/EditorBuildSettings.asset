@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Puzzles Tutorial/Lvl4.unity
     guid: 655b034ce3a208d4bb92c2d4e34d608b
+  - enabled: 1
+    path: Assets/Scenes/Puzzles Tutorial/Lvl5.unity
+    guid: 49fb628ce6162f24eb12c584744a0206
   m_configObjects: {}
