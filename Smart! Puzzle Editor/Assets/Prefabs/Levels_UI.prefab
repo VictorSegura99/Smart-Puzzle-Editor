@@ -571,7 +571,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Early Test Release 0.1
+  m_Text: Smart Prototype
 --- !u!1 &6709303496247605773
 GameObject:
   m_ObjectHideFlags: 0
