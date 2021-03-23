@@ -8,11 +8,20 @@ public class TileButton : MonoBehaviour
     {
         Ground,
         VerticalWall,
-        HorizontalWall
+        HorizontalWall,
+        LUCorner,
+        LDCorner,
+        RUCorner,
+        RDCorner,
+
+        None = -1
     }
 
-    public void TileSelected(int tileNumber)
+    [SerializeField]
+    Tiles tileType = Tiles.None;
+
+    public void TileSelected()
     {
-        PuzzleEditorController.instance.TileToPaintSelected((Tiles)tileNumber);
+        PuzzleEditorController.instance.TileToPaintSelected(tileType);
     }
 }

@@ -28,9 +28,16 @@ public class PuzzleEditorController : MonoBehaviour
     Tile verticalWallTile;
     [SerializeField]
     Tile horizontalWallTile;
+    [SerializeField]
+    Tile LUCornerTile;
+    [SerializeField]
+    Tile LDCornerTile;
+    [SerializeField]
+    Tile RUCornerTile;
+    [SerializeField]
+    Tile RDCornerTile;
 
     Tilemap desiredTM;
-    Tilemap eraseTM;
     Tile currentSelectedTile;
     Vector3Int previousCoordinate;
 
@@ -60,31 +67,29 @@ public class PuzzleEditorController : MonoBehaviour
         if (Input.GetMouseButton(0) && currentSelectedTile != blankCursorTile)
         {
             desiredTM.SetTile(mousePos, currentSelectedTile);
+
+            if (desiredTM != baseTM)
+            {
+                baseTM.SetTile(mousePos, null);
+            }
+
+            if (desiredTM != collidable)
+            {
+                collidable.SetTile(mousePos, null);
+            }
         }
 
-        if (Input.GetMouseButtonDown(1)) 
+        if (Input.GetMouseButton(1))
         {
             if (collidable.GetTile(mousePos))
             {
-                eraseTM = collidable;
+                collidable.SetTile(mousePos, null);
             }
-            else if (baseTM.GetTile(mousePos))
-            {
-                eraseTM = baseTM;
-            }
-        }
 
-        if (Input.GetMouseButton(1) && eraseTM)
-        {
-            if (eraseTM.GetTile(mousePos))
+            if (baseTM.GetTile(mousePos))
             {
-                eraseTM.SetTile(mousePos, null);
+                baseTM.SetTile(mousePos, null);
             }
-        }
-
-        if(Input.GetMouseButtonUp(1))
-        {
-            eraseTM = null;
         }
     }
 
@@ -102,6 +107,22 @@ public class PuzzleEditorController : MonoBehaviour
                 break;
             case TileButton.Tiles.HorizontalWall:
                 currentSelectedTile = horizontalWallTile;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.LUCorner:
+                currentSelectedTile = LUCornerTile;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.LDCorner:
+                currentSelectedTile = LDCornerTile;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.RUCorner:
+                currentSelectedTile = RUCornerTile;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.RDCorner:
+                currentSelectedTile = RDCornerTile;
                 desiredTM = collidable;
                 break;
         }
