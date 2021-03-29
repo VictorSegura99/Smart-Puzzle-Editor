@@ -5,6 +5,15 @@ using UnityEngine.EventSystems;
 
 public class ElementButtonController : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    enum Elements
+    {
+        Menus,
+        Tiles,
+        Elements
+    }
+
+    [SerializeField]
+    Elements element = Elements.Tiles;
     [SerializeField]
     UIEditorManager.Menus menuToOpen = UIEditorManager.Menus.None;
 
@@ -28,13 +37,17 @@ public class ElementButtonController : MonoBehaviour, IPointerClickHandler, IPoi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (menuToOpen != UIEditorManager.Menus.None)
+        switch (element)
         {
-            UIEditorManager.instance.ChangeMenu(menuToOpen);
-        }
-        else
-        {
-            GetComponent<TileButton>().TileSelected();
+            case Elements.Menus:
+                UIEditorManager.instance.ChangeMenu(menuToOpen);
+                break;
+            case Elements.Tiles:
+                GetComponent<TileButton>().TileSelected();
+                break;
+            case Elements.Elements:
+                GetComponent<PuzzleElementButton>().ElementSelected();
+                break;
         }
     }
 

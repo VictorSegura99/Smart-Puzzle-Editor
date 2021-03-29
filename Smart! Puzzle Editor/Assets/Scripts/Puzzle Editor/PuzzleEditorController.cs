@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,13 +8,19 @@ public class PuzzleEditorController : MonoBehaviour
 {
     static public PuzzleEditorController instance;
 
+    public enum ElementsSelected
+    {
+        Tile,
+        Element,
+
+        None = -1
+    }
+
     [Header("External Elements")]
-    [SerializeField]
-    Camera cam;
+    public Camera cam;
 
     [Header("Tilemaps")]
-    [SerializeField]
-    Tilemap baseTM;
+    public Tilemap baseTM;
     [SerializeField]
     Tilemap collidable;
     [SerializeField]
@@ -24,6 +31,8 @@ public class PuzzleEditorController : MonoBehaviour
     Tile blankCursorTile;
     [SerializeField]
     Tile groundTile;
+    [SerializeField]
+    Tile darkGroundTile;
     [SerializeField]
     Tile verticalWallTile;
     [SerializeField]
@@ -36,10 +45,31 @@ public class PuzzleEditorController : MonoBehaviour
     Tile RUCornerTile;
     [SerializeField]
     Tile RDCornerTile;
+    [SerializeField]
+    Tile DeadEndUp;
+    [SerializeField]
+    Tile DeadEndDown;
+    [SerializeField]
+    Tile DeadEndRight;
+    [SerializeField]
+    Tile DeadEndLeft;
+    [SerializeField]
+    Tile DeadContinuousLeft;
+    [SerializeField]
+    Tile DeadContinuousRight;
+    [SerializeField]
+    Tile DeadContinuousUp;
+    [SerializeField]
+    Tile DeadContinuousDown;
 
     Tilemap desiredTM;
     Tile currentSelectedTile;
     Vector3Int previousCoordinate;
+    bool mouseBlockedByUI = false;
+    GameObject currentPuzzleElementSelected = null;
+    
+    [HideInInspector]
+    public ElementsSelected elementSelected = ElementsSelected.None;
 
     private void Awake()
     {
@@ -55,40 +85,62 @@ public class PuzzleEditorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
-
-        if (mousePos != previousCoordinate)
+        if (!mouseBlockedByUI)
         {
-            HLTilemap.SetTile(previousCoordinate, null);
-            HLTilemap.SetTile(mousePos, currentSelectedTile);
-            previousCoordinate = mousePos;
-        }
+            Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
 
-        if (Input.GetMouseButton(0) && currentSelectedTile != blankCursorTile)
-        {
-            desiredTM.SetTile(mousePos, currentSelectedTile);
-
-            if (desiredTM != baseTM)
+            if (mousePos != previousCoordinate)
             {
-                baseTM.SetTile(mousePos, null);
+                HLTilemap.SetTile(previousCoordinate, null);
+                HLTilemap.SetTile(mousePos, currentSelectedTile);
+                previousCoordinate = mousePos;
             }
 
-            if (desiredTM != collidable)
+            switch (elementSelected)
             {
-                collidable.SetTile(mousePos, null);
-            }
-        }
+                case ElementsSelected.Tile:
 
-        if (Input.GetMouseButton(1))
-        {
-            if (collidable.GetTile(mousePos))
-            {
-                collidable.SetTile(mousePos, null);
+                    if (Input.GetMouseButton(0) && currentSelectedTile != blankCursorTile)
+                    {
+                        desiredTM.SetTile(mousePos, currentSelectedTile);
+
+                        if (desiredTM != baseTM)
+                        {
+                            baseTM.SetTile(mousePos, null);
+                        }
+
+                        if (desiredTM != collidable)
+                        {
+                            collidable.SetTile(mousePos, null);
+                        }
+                    }
+                    break;
+
+                case ElementsSelected.Element:
+
+                    if (Input.GetMouseButton(0) && currentPuzzleElementSelected)
+                    {
+                        currentPuzzleElementSelected.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
+                        currentPuzzleElementSelected = null;
+                        elementSelected = ElementsSelected.None;
+                    }
+                    break;
+
+                case ElementsSelected.None:
+                    break;
             }
 
-            if (baseTM.GetTile(mousePos))
+            if (Input.GetMouseButton(1))
             {
-                baseTM.SetTile(mousePos, null);
+                if (collidable.GetTile(mousePos))
+                {
+                    collidable.SetTile(mousePos, null);
+                }
+
+                if (baseTM.GetTile(mousePos))
+                {
+                    baseTM.SetTile(mousePos, null);
+                }
             }
         }
     }
@@ -99,6 +151,10 @@ public class PuzzleEditorController : MonoBehaviour
         {
             case TileButton.Tiles.Ground:
                 currentSelectedTile = groundTile;
+                desiredTM = baseTM;
+                break;
+            case TileButton.Tiles.DarkGround:
+                currentSelectedTile = darkGroundTile;
                 desiredTM = baseTM;
                 break;
             case TileButton.Tiles.VerticalWall:
@@ -125,6 +181,82 @@ public class PuzzleEditorController : MonoBehaviour
                 currentSelectedTile = RDCornerTile;
                 desiredTM = collidable;
                 break;
+            case TileButton.Tiles.DeadEndUp:
+                currentSelectedTile = DeadEndUp;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadEndDown:
+                currentSelectedTile = DeadEndDown;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadEndRight:
+                currentSelectedTile = DeadEndRight;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadEndLeft:
+                currentSelectedTile = DeadEndLeft;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadContinuousLeft:
+                currentSelectedTile = DeadContinuousLeft;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadContinuousRight:
+                currentSelectedTile = DeadContinuousRight;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadContinuousUp:
+                currentSelectedTile = DeadContinuousUp;
+                desiredTM = collidable;
+                break;
+            case TileButton.Tiles.DeadContinuousDown:
+                currentSelectedTile = DeadContinuousDown;
+                desiredTM = collidable;
+                break;
         }
+
+        elementSelected = ElementsSelected.Tile;
+    }
+
+    public void BlockMouse(bool block)
+    {
+        mouseBlockedByUI = block;
+
+        if (block)
+        {
+            HLTilemap.SetTile(previousCoordinate, null);
+            previousCoordinate = new Vector3Int(-999, -999, -999);
+            if (currentPuzzleElementSelected != null)
+            {
+                currentPuzzleElementSelected.SetActive(false);
+            }
+        }
+        else
+        {
+            if (currentPuzzleElementSelected != null)
+            {
+                currentPuzzleElementSelected.SetActive(true);
+            }
+        }
+    }
+
+    public void PuzzleElementSelected(GameObject GO)
+    {
+        if (currentPuzzleElementSelected != null)
+        {
+            Destroy(currentPuzzleElementSelected);
+        }
+
+        if (GO != null)
+        {
+            currentPuzzleElementSelected = Instantiate(GO);
+            if (mouseBlockedByUI)
+            {
+                currentPuzzleElementSelected.SetActive(false);
+            }
+        }
+
+        currentSelectedTile = blankCursorTile;
+        elementSelected = ElementsSelected.Element;
     }
 }

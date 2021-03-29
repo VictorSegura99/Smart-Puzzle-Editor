@@ -13,6 +13,7 @@ public class UIEditorManager : MonoBehaviour
         Groups,
         Grounds,
         Walls,
+        PuzzleElements,
 
         None = -1
     }
@@ -24,6 +25,8 @@ public class UIEditorManager : MonoBehaviour
     GameObject groundsMenu;
     [SerializeField]
     GameObject wallsMenu;
+    [SerializeField]
+    GameObject puzzleElementsMenu;
 
     [Header("Menus Pages")]
     [SerializeField]
@@ -67,6 +70,9 @@ public class UIEditorManager : MonoBehaviour
                     case Menus.Walls:
                         wallsMenu.SetActive(false);
                         break;
+                    case Menus.PuzzleElements:
+                        puzzleElementsMenu.SetActive(false);
+                        break;
                 }
 
                 groupsMenu.SetActive(true);
@@ -78,6 +84,10 @@ public class UIEditorManager : MonoBehaviour
             case Menus.Walls:
                 groupsMenu.SetActive(false);
                 wallsMenu.SetActive(true);
+                break;
+            case Menus.PuzzleElements:
+                groupsMenu.SetActive(false);
+                puzzleElementsMenu.SetActive(true);
                 break;
         }
 
