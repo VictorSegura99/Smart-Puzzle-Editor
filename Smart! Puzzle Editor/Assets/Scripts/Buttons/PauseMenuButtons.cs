@@ -11,13 +11,13 @@ public class PauseMenuButtons : MonoBehaviour
     public string next_scene;
 
     // Internal Variables
-    UI_Manager manager;
+    UIManager manager;
 
     private void Start()
     {
         if (GameObject.Find("Levels_UI") != null)
         {
-            manager = GameObject.Find("Levels_UI").GetComponent<UI_Manager>();
+            manager = GameObject.Find("Levels_UI").GetComponent<UIManager>();
         }
     }
 

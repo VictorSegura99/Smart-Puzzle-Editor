@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Moving_Box
   - Portal
+  - Tilemap
+  - Placeholder
   layers:
   - Default
   - TransparentFX

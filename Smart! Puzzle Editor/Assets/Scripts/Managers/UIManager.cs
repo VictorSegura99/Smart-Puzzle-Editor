@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using XInputDotNetPure;
 
-public class UI_Manager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
+    static public UIManager instance;
+
     // Components
     Animator youwin_anim;
     Player_Controller player;
@@ -49,11 +51,15 @@ public class UI_Manager : MonoBehaviour
     }
     Active_Menu current_menu = Active_Menu.NONE;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         youwin_anim = YouWin_Menu.GetComponent<Animator>();
-        player = GameObject.Find("Player").GetComponent<Player_Controller>();
         Pause_Menu.SetActive(false);
         controller_current_state = GamePad.GetState(0);
 

@@ -4,7 +4,7 @@ public class DoorOpening : MonoBehaviour
 {
     // Components
     Animator animator;
-    BoxCollider2D main_collider;
+    Collider2D main_collider;
 
     // Inspector Variables
 
@@ -21,8 +21,8 @@ public class DoorOpening : MonoBehaviour
 
     void Awake()
     {
-        animator = transform.GetChild(0).GetComponent<Animator>();
-        main_collider = GetComponents<BoxCollider2D>()[0];
+        animator = GetComponent<Animator>();
+        main_collider = GetComponents<Collider2D>()[0];
     }
 
     // Start is called before the first frame update
@@ -75,11 +75,6 @@ public class DoorOpening : MonoBehaviour
 
     public bool IsDoorClosed()
     {
-        if (state == Door_State.CLOSED) 
-        {
-            return true;
-        }
-
-        return false;
+        return state == Door_State.CLOSED;
     }
 }

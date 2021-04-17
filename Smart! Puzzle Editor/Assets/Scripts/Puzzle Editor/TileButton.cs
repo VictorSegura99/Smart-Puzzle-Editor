@@ -22,6 +22,8 @@ public class TileButton : MonoBehaviour
         DeadContinuousRight,
         DeadContinuousUp,
         DeadContinuousDown,
+        RotatingCylinder,
+        lightsPanel,
 
         None = -1
     }

@@ -1,25 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PuzzleElementPlaceHolder : MonoBehaviour
 {
+    public enum PuzzleElementType
+    {
+        Puzzle,
+        Player,
+        PlatformBox,
+        PlatformCircle,
+        Doors,
+        MovingBox,
+
+        None = -1
+    }
+
     public enum States
     {
         InLevel,
         Selected
     }
-    
-    [SerializeField]
-    GameObject realObject;
-    [SerializeField]
-    Canvas canvas;
 
-    States state = States.Selected;
+    public PuzzleElementType PEType = PuzzleElementType.None;
+    [SerializeField]
+    protected GameObject realObject;
+    public  Canvas canvas;
+    [SerializeField]
+    bool addOffset = true;
+    [SerializeField]
+    Vector3 cursorOffset = new Vector3(0.5f, 0.5f);
+    public Image closingCanvas;
+
+    protected States state = States.Selected;
 
     private void Start()
     {
+        LevelManager.instance.replacingCallbacks.AddListener(Replace);
+        LevelManager.instance.reActivatePE.AddListener(Activate);
+
         canvas.worldCamera = PuzzleEditorController.instance.cam;
+        closingCanvas.raycastTarget = false;
+
+        if (LevelManager.instance.mode == LevelManager.LevelMode.Play)
+        {
+            Replace();
+        }
     }
 
     private void Update()
@@ -27,19 +54,23 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
         if (state == States.Selected)
         {
             Vector3 position = PuzzleEditorController.instance.baseTM.WorldToCell(PuzzleEditorController.instance.cam.ScreenToWorldPoint(Input.mousePosition));
-            position.x += 0.5f;
-            position.y += 0.5f;
+
+            if (addOffset)
+            {
+                position += cursorOffset;
+            }
+
             transform.position = position;
         }
     }
 
-    public void Replace()
+    virtual public void Replace()
     {
-        Instantiate(realObject, transform.position, realObject.transform.rotation);
-        Destroy(gameObject);
+        Instantiate(realObject, transform.position, realObject.transform.rotation, LevelManager.instance.mainElementsPlay);
+        gameObject.SetActive(false);
     }
 
-    public void ChangeState(States newState)
+    virtual public void ChangeState(States newState)
     {
         switch (newState)
         {
@@ -56,27 +87,38 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
         state = newState;
     }
 
-    private void OnMouseDown()
+    protected virtual void OnMouseDown()
     {
-        if (state == States.InLevel)
+        if (PuzzleEditorController.instance.GetCurrentTool() == PuzzleEditorController.Tools.Arrow)
         {
-            canvas.gameObject.SetActive(true);
-        }
-        else
-        {
-            canvas.gameObject.SetActive(false);
+            if (state == States.InLevel)
+            {
+                canvas.gameObject.SetActive(true);
+                closingCanvas.raycastTarget = true;
+            }
+            else
+            {
+                canvas.gameObject.SetActive(false);
+            }
         }
     }
 
-    public void MoveObject()
+    virtual public void MoveObject()
     {
         ChangeState(States.Selected);
-        PuzzleEditorController.instance.PuzzleElementSelected(gameObject);
+        PuzzleEditorController.instance.PuzzleElementSelected(gameObject, false);
+        canvas.gameObject.SetActive(false);
+    }
+
+    virtual public void DeleteObject()
+    {
+        LevelManager.instance.reActivatePE.RemoveListener(Activate);
+        LevelManager.instance.replacingCallbacks.RemoveListener(Replace);
         Destroy(gameObject);
     }
 
-    public void DeleteObject()
+    void Activate()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(true);
     }
 }

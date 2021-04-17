@@ -37,38 +37,47 @@ public class ElementButtonController : MonoBehaviour, IPointerClickHandler, IPoi
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        switch (element)
+        if (UIEditorManager.instance.mainPanel.interactable)
         {
-            case Elements.Menus:
-                UIEditorManager.instance.ChangeMenu(menuToOpen);
-                break;
-            case Elements.Tiles:
-                GetComponent<TileButton>().TileSelected();
-                break;
-            case Elements.Elements:
-                GetComponent<PuzzleElementButton>().ElementSelected();
-                break;
+            switch (element)
+            {
+                case Elements.Menus:
+                    UIEditorManager.instance.ChangeMenu(menuToOpen);
+                    break;
+                case Elements.Tiles:
+                    GetComponent<TileButton>().TileSelected();
+                    break;
+                case Elements.Elements:
+                    GetComponent<PuzzleElementButton>().ElementSelected();
+                    break;
+            }
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (currentScaling != null)
+        if (UIEditorManager.instance.mainPanel.interactable)
         {
-            StopCoroutine(currentScaling);
-        }
+            if (currentScaling != null)
+            {
+                StopCoroutine(currentScaling);
+            }
 
-        currentScaling = StartCoroutine(Scale(1.05f));
+            currentScaling = StartCoroutine(Scale(1.05f));
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (currentScaling != null)
+        if (UIEditorManager.instance.mainPanel.interactable)
         {
-            StopCoroutine(currentScaling);
-        }
+            if (currentScaling != null)
+            {
+                StopCoroutine(currentScaling);
+            }
 
-        currentScaling = StartCoroutine(Scale(1));
+            currentScaling = StartCoroutine(Scale(1));
+        }
     }
 
     IEnumerator Scale(float scale)

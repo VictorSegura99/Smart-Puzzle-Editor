@@ -26,6 +26,11 @@ public class PlatformBox : MonoBehaviour
     {
         activated_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
+        if (!element_linked)
+        {
+            return;
+        }
+
         if (element_linked.GetComponent<DoorOpening>() != null)
         {
             door = element_linked.GetComponent<DoorOpening>();

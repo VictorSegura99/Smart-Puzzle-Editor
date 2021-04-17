@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 953911022}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7927773248095296352}
   - {fileID: 1063666341}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 5167747112168907504}
   m_Layer: 0
   m_Name: Puzzle Piece PlaceHolder
-  m_TagString: Untagged
+  m_TagString: Placeholder
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -500,7 +500,7 @@ Transform:
   m_GameObject: {fileID: 6840312930082069748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 953911023}
   m_Father: {fileID: 0}
@@ -571,6 +571,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   realObject: {fileID: 7471031301700882399, guid: 8f029d6d3b49baf41be838d406003775, type: 3}
   canvas: {fileID: 953911026}
+  addOffset: 1
+  cursorOffset: {x: 0.5, y: 0.5, z: 0}
+  closingCanvas: {fileID: 3028967901934570488}
 --- !u!61 &5167747112168907504
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -588,14 +591,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.91, y: 3.17}
+    oldSize: {x: 0.97, y: 1.0566666}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.91, y: 3.17}
+  m_Size: {x: 1, y: 1.17}
   m_EdgeRadius: 0
 --- !u!1 &7155055329119518149
 GameObject:

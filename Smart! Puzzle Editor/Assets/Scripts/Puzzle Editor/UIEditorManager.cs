@@ -19,6 +19,9 @@ public class UIEditorManager : MonoBehaviour
     }
 
     [Header("Menus")]
+    public CanvasGroup mainPanel;
+    public CanvasGroup toolsPanel;
+    public GameObject saveLoadMenu;
     [SerializeField]
     GameObject groupsMenu;
     [SerializeField]
@@ -124,5 +127,18 @@ public class UIEditorManager : MonoBehaviour
     public void ReturnGroupsMenu()
     {
         ChangeMenu(Menus.Groups);
+    }
+
+    public void BlockPanelsUIRaycast(bool block)
+    {
+        if (mainPanel.interactable != !block)
+        {
+            mainPanel.interactable = !block;
+        }
+
+        if (toolsPanel.interactable != !block)
+        {
+            toolsPanel.interactable = !block;
+        }
     }
 }
