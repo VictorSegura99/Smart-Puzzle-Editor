@@ -18,6 +18,8 @@ public class LinkElementPlaceholder : PuzzleElementPlaceHolder
     [HideInInspector]
     public GameObject objectGenerated;
 
+    Vector3 oldPos;
+
     public override void Replace()
     {
         switch (type)
@@ -81,13 +83,21 @@ public class LinkElementPlaceholder : PuzzleElementPlaceHolder
             if (state == States.InLevel)
             {
                 canvas.gameObject.SetActive(true);
-                closingCanvas.raycastTarget = true;
 
                 if (elementLinked)
                 {
+                    if (buttonText.text != "Unlink")
+                    {
+                        buttonText.text = "Unlink";
+                    }
+
+                    if (elementLinked.GetComponent<LinkElementPlaceholder>().buttonText.text != "Unlink")
+                    {
+                        elementLinked.GetComponent<LinkElementPlaceholder>().buttonText.text = "Unlink";
+                    }
+
                     LinkElementPlaceholder LEP = elementLinked.GetComponent<LinkElementPlaceholder>();
                     LEP.canvas.gameObject.SetActive(true);
-                    if (LEP.closingCanvas.raycastTarget) LEP.closingCanvas.raycastTarget = false;
 
                     PuzzleEditorController.instance.ShowPath(this);
                 }
@@ -105,11 +115,12 @@ public class LinkElementPlaceholder : PuzzleElementPlaceHolder
 
         if (newState == States.InLevel && elementLinked)
         {
-            PuzzleEditorController.instance.MovedLinkingObject(this);
+            PuzzleEditorController.instance.MovedLinkingObject(this, oldPos);
         }
     }
     public override void MoveObject()
     {
+        oldPos = transform.position;
         base.MoveObject();
 
         if (elementLinked)

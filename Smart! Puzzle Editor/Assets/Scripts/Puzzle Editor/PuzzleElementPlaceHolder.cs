@@ -31,7 +31,7 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
     bool addOffset = true;
     [SerializeField]
     Vector3 cursorOffset = new Vector3(0.5f, 0.5f);
-    public Image closingCanvas;
+    //public Image closingCanvas;
 
     protected States state = States.Selected;
 
@@ -41,7 +41,6 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
         LevelManager.instance.reActivatePE.AddListener(Activate);
 
         canvas.worldCamera = PuzzleEditorController.instance.cam;
-        closingCanvas.raycastTarget = false;
 
         if (LevelManager.instance.mode == LevelManager.LevelMode.Play)
         {
@@ -94,7 +93,6 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
             if (state == States.InLevel)
             {
                 canvas.gameObject.SetActive(true);
-                closingCanvas.raycastTarget = true;
             }
             else
             {

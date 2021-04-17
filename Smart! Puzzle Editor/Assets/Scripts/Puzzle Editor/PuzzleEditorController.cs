@@ -33,8 +33,7 @@ public class PuzzleEditorController : MonoBehaviour
     public Tilemap collidable;
     [SerializeField]
     Tilemap HLTilemap;
-    [SerializeField]
-    Tilemap pathLinks;
+    public Tilemap pathLinks;
 
     [Header("Cursors")]
     [SerializeField]
@@ -61,12 +60,12 @@ public class PuzzleEditorController : MonoBehaviour
     bool mouseBlockedByUI = false;
     GameObject currentPuzzleElementSelected = null;
 
-    Dictionary<GameObject, LinkElementPlaceholder.LinkElementType> linkingObjects = new Dictionary<GameObject, LinkElementPlaceholder.LinkElementType>();
-    LinkElementPlaceholder elementToLink;
-    Dictionary<GameObject, List<Vector3Int>> linkingPaths = new Dictionary<GameObject, List<Vector3Int>>();
-    GameObject currentActivatorShowed;
+    [HideInInspector]
+    public Dictionary<GameObject, LinkElementPlaceholder.LinkElementType> linkingObjects = new Dictionary<GameObject, LinkElementPlaceholder.LinkElementType>();
+    [HideInInspector]
+    public GameObject currentActivatorShowed = null;
+    LinkElementPlaceholder currentLinkingObject = null;
 
-    Function currentFunction = Function.Painting;
     Tools currentTool = Tools.Arrow;
     int previousTool = 0;
 
@@ -103,8 +102,6 @@ public class PuzzleEditorController : MonoBehaviour
         {
             case Tools.Arrow:
 
-                if (currentFunction == Function.Painting)
-                {
                     if (mousePos != previousCoordinate)
                     {
                         HLTilemap.SetTile(previousCoordinate, null);
@@ -131,7 +128,6 @@ public class PuzzleEditorController : MonoBehaviour
                         Destroy(currentPuzzleElementSelected);
                         currentPuzzleElementSelected = null;
                     }
-                }
 
                 break;
             case Tools.Brush:
@@ -180,7 +176,6 @@ public class PuzzleEditorController : MonoBehaviour
                     currentSelectedTile = allTiles.blankCursorTile;
                     previousCoordinate = new Vector3Int(-999, -999, -999);
                 }
-
 
                 break;
             case Tools.Eraser:
@@ -388,7 +383,7 @@ public class PuzzleEditorController : MonoBehaviour
                 currentPuzzleElementSelected.SetActive(false);
             }
         }
-        else if(!instantiate)
+        else if (!instantiate)
         {
             currentPuzzleElementSelected = GO;
         }
@@ -445,100 +440,112 @@ public class PuzzleEditorController : MonoBehaviour
 
     public void LinkElement(LinkElementPlaceholder GOToLink)
     {
-        if (currentFunction == Function.Linking)
+        if (currentLinkingObject)
         {
-            // Cancel Linking
-            if (GOToLink == elementToLink)
+            // Different Link types, link
+            if (currentLinkingObject.type != GOToLink.type)
             {
-                GOToLink.buttonText.text = "Link";
+                if (!GOToLink.elementLinked)
+                {
+                    GOToLink.elementLinked = currentLinkingObject.gameObject;
+                    currentLinkingObject.buttonText.text = "Unlink";
+                    currentLinkingObject.elementLinked = GOToLink.gameObject;
+                    GOToLink.buttonText.text = "Unlink";
+                    currentLinkingObject.ShowCanvas(true);
+                    currentLinkingObject = null;
+
+                    foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
+                    {
+                        LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
+                        if (LEP != GOToLink && LEP != GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>())
+                            LEP.ShowCanvas(false);
+                    }
+
+                    GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : GOToLink.elementLinked.gameObject;
+                    currentActivatorShowed = activator;
+                    DrawLine(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+                }
+                else
+                {
+                    currentLinkingObject.ShowCanvas(false);
+                    currentLinkingObject = null;
+
+                    LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
+                    anotherLep.ShowCanvas(true);
+                    anotherLep.elementLinked = null;
+                    anotherLep.buttonText.text = "Link";
+
+                    GOToLink.elementLinked = null;
+                    GOToLink.buttonText.text = "Link";
+                }
             }
-            // Linking Elements
             else
             {
-                GOToLink.buttonText.text = "Unlink";
-                elementToLink.buttonText.text = "Unlink";
-
-                GOToLink.elementLinked = elementToLink.gameObject;
-                elementToLink.elementLinked = GOToLink.gameObject;
-
-                GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : elementToLink.gameObject;
-
-                linkingPaths.Add(activator, TileMapPathfinding.FindPathCoordinates(CoordPosToInt(GOToLink.transform.position), CoordPosToInt(elementToLink.transform.position)));
-            }
-
-            ChangeCurrentFunction(Function.Painting);
-            elementToLink = null;
-
-            foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
-            {
-                LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
-                LEP.ShowCanvas(false);
-            }
-
-            return;
-        }
-        // Unlink Elements
-        else if (GOToLink.elementLinked != null)
-        {
-            LinkElementPlaceholder unlinkedLEP = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
-            unlinkedLEP.closingCanvas.raycastTarget = true;
-            unlinkedLEP.elementLinked = null;
-            unlinkedLEP.buttonText.text = "Link";
-
-            GOToLink.elementLinked = null;
-            GOToLink.buttonText.text = "Link";
-
-            GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : unlinkedLEP.gameObject;
-
-            ClearPath(FindPath(activator));
-            linkingPaths.Remove(activator);
-            currentActivatorShowed = null;
-
-            return;
-        }
-
-        ChangeTool(0);
-
-        LinkElementPlaceholder.LinkElementType heteroType = GOToLink.type == LinkElementPlaceholder.LinkElementType.Receiver ?
-            LinkElementPlaceholder.LinkElementType.Activator : LinkElementPlaceholder.LinkElementType.Receiver;
-
-        bool elementsToLink = false;
-
-        foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
-        {
-            if (linkingGO.Value == heteroType)
-            {
-                LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
-
-                if (!LEP.elementLinked)
+                // Same Link types different objects, substitute
+                if (currentLinkingObject != GOToLink)
                 {
-                    LEP.ShowCanvas(true);
-                    if (LEP.closingCanvas.raycastTarget) LEP.closingCanvas.raycastTarget = false;
-                    if (!elementsToLink) elementsToLink = true;
+                    currentLinkingObject.buttonText.text = "Link";
+                    GOToLink.buttonText.text = "Cancel";
+                    currentLinkingObject = GOToLink;
+                }
+                // Same object, cancel linking process
+                else
+                {
+                    currentLinkingObject.buttonText.text = "Link";
+                    currentLinkingObject = null;
+
+                    HideAllInspectors();
                 }
             }
         }
-
-        if (elementsToLink)
+        else
         {
-            ChangeCurrentFunction(Function.Linking);
-            elementToLink = GOToLink;
-            GOToLink.buttonText.text = "Cancel";
-            GOToLink.closingCanvas.raycastTarget = false;
+            // The element is linked, unlink
+            if (GOToLink.elementLinked)
+            {
+                LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
+                anotherLep.elementLinked = null;
+                anotherLep.buttonText.text = "Link";
+
+                GOToLink.elementLinked = null;
+                GOToLink.buttonText.text = "Link";
+
+                currentActivatorShowed = null;
+                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(GOToLink.transform.position), V3Helper.V3ToV3Int(anotherLep.transform.position)));
+            }
+            // No element Linked, start linking
+            else
+            {
+                currentLinkingObject = GOToLink;
+                currentLinkingObject.buttonText.text = "Cancel";
+
+                foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
+                {
+                    LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
+                    if (LEP != GOToLink && !LEP.elementLinked && LEP.type != GOToLink.type)
+                        LEP.ShowCanvas(true);
+                }
+            }
         }
     }
 
-    public void MovedLinkingObject(LinkElementPlaceholder LEP)
+    public void MovedLinkingObject(LinkElementPlaceholder LEP, Vector3 oldPos)
     {
         GameObject activator = LEP.type == LinkElementPlaceholder.LinkElementType.Activator ? LEP.gameObject : LEP.elementLinked.gameObject;
 
-        ClearPath(FindPath(activator));
-        linkingPaths.Remove(activator);
+        if (currentActivatorShowed)
+        {
+            if (activator != LEP.gameObject)
+            {
+                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(oldPos)));
+            }
+            else
+            {
+                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(oldPos), V3Helper.V3ToV3Int(LEP.elementLinked.transform.position)));
+            }
+        }
 
-        List<Vector3Int> newPath = TileMapPathfinding.FindPathCoordinates(CoordPosToInt(LEP.transform.position), CoordPosToInt(LEP.elementLinked.transform.position));
-
-        linkingPaths.Add(activator, newPath);
-        DrawLine(newPath);
+        DrawLine(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
         currentActivatorShowed = activator;
         LEP.canvas.gameObject.SetActive(true);
         LEP.elementLinked.GetComponent<LinkElementPlaceholder>().canvas.gameObject.SetActive(true);
@@ -546,12 +553,10 @@ public class PuzzleEditorController : MonoBehaviour
 
     public void DeleteLinkingObject(LinkElementPlaceholder LGO)
     {
-        if (LGO.elementLinked)
+        if (LGO.elementLinked && currentActivatorShowed)
         {
-            GameObject activator = LGO.type == LinkElementPlaceholder.LinkElementType.Activator ? LGO.gameObject : LGO.elementLinked.gameObject;
-
-            ClearPath(FindPath(activator));
-            linkingPaths.Remove(activator);
+            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(LGO.transform.position), V3Helper.V3ToV3Int(LGO.elementLinked.transform.position)));
+            currentActivatorShowed = null;
         }
 
         if (linkingObjects.ContainsKey(LGO.gameObject))
@@ -560,28 +565,11 @@ public class PuzzleEditorController : MonoBehaviour
         }
     }
 
-    public void ChangeCurrentFunction(Function newFunction)
-    {
-        switch (newFunction)
-        {
-            case Function.Painting:
-                UIEditorManager.instance.BlockPanelsUIRaycast(false);
-                break;
-            case Function.Linking:
-                UIEditorManager.instance.BlockPanelsUIRaycast(true);
-                break;
-            case Function.None:
-                break;
-        }
-
-        currentFunction = newFunction;
-    }
-
     public void ShowPath(LinkElementPlaceholder elementClicked)
     {
         if (currentActivatorShowed)
         {
-            ClearPath(FindPath(currentActivatorShowed));
+            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(currentActivatorShowed.transform.position), V3Helper.V3ToV3Int(currentActivatorShowed.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
         }
 
         foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> pair in linkingObjects)
@@ -597,31 +585,15 @@ public class PuzzleEditorController : MonoBehaviour
         GameObject activator = elementClicked.type == LinkElementPlaceholder.LinkElementType.Activator ? elementClicked.gameObject : elementClicked.elementLinked.gameObject;
 
         currentActivatorShowed = activator;
-        DrawLine(FindPath(activator));
+        DrawLine(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
     }
 
     public void HidePath(LinkElementPlaceholder elementClicked)
     {
         GameObject activator = elementClicked.type == LinkElementPlaceholder.LinkElementType.Activator ? elementClicked.gameObject : elementClicked.elementLinked.gameObject;
 
-        if (activator == currentActivatorShowed)
-        {
-            ClearPath(FindPath(activator));
-            currentActivatorShowed = null;
-        }
-    }
-
-    List<Vector3Int> FindPath(GameObject activator)
-    {
-        foreach (KeyValuePair<GameObject, List<Vector3Int>> paths in linkingPaths)
-        {
-            if (paths.Key == activator)
-            {
-                return paths.Value;
-            }
-        }
-
-        return null;
+        ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(currentActivatorShowed.transform.position), V3Helper.V3ToV3Int(currentActivatorShowed.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+        currentActivatorShowed = null;
     }
 
     void DrawLine(List<Vector3Int> path)
@@ -693,16 +665,12 @@ public class PuzzleEditorController : MonoBehaviour
         }
     }
 
-    Vector3Int CoordPosToInt(Vector3 pos)
-    {
-        return new Vector3Int(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
-    }
-
     public void ClearCurrentPath()
     {
         if (currentActivatorShowed)
         {
-            ClearPath(FindPath(currentActivatorShowed));
+            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(currentActivatorShowed.transform.position), V3Helper.V3ToV3Int(currentActivatorShowed.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+            currentActivatorShowed = null;
         }
     }
 
@@ -714,6 +682,8 @@ public class PuzzleEditorController : MonoBehaviour
             if (LEP.canvas.gameObject.activeSelf)
                 LEP.canvas.gameObject.SetActive(false);
         }
+
+        ClearCurrentPath();
     }
 }
 

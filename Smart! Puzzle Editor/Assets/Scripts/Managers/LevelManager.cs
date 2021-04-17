@@ -115,32 +115,12 @@ public class LevelManager : MonoBehaviour
             {
                 Destroy(mainElementsEditor.GetChild(i).gameObject);
             }
+
+            PuzzleEditorController.instance.linkingObjects.Clear();
+            PuzzleEditorController.instance.baseTM.ClearAllTiles();
+            PuzzleEditorController.instance.collidable.ClearAllTiles();
+            PuzzleEditorController.instance.pathLinks.ClearAllTiles();
             // -----------------------------------------------------------
-
-            // Clearing Tilemaps -----------------------------------------
-            Tilemap b = PuzzleEditorController.instance.baseTM;
-            foreach (var pos in b.cellBounds.allPositionsWithin)
-            {
-                Vector3Int iPos = new Vector3Int(pos.x, pos.y, pos.z);
-
-                if (b.HasTile(iPos))
-                {
-                    b.SetTile(iPos, null);
-                }
-            }
-
-            Tilemap c = PuzzleEditorController.instance.collidable;
-            foreach (var pos in c.cellBounds.allPositionsWithin)
-            {
-                Vector3Int iPos = new Vector3Int(pos.x, pos.y, pos.z);
-
-                if (c.HasTile(iPos))
-                {
-                    c.SetTile(iPos, null);
-                }
-            }
-            // -----------------------------------------------------------
-
 
             Level level = LevelBuilder.LoadLevel(levelNameField.text);
 
@@ -173,26 +153,36 @@ public class LevelManager : MonoBehaviour
                         break;
                 }
 
-                go.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
+                if (go)
+                    go.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
 
                 LinkElementPlaceholder LEP = go.GetComponent<LinkElementPlaceholder>();
-                if (ED.elementLinkedPos != -1 && LEP)
+                if (LEP)
                 {
-                    foreach (KeyValuePair<GameObject, int> previousElement in elementsToLink)
+                    var linkingObjects = PuzzleEditorController.instance.linkingObjects;
+                    if (!linkingObjects.ContainsKey(go))
                     {
-                        if (i == previousElement.Value)
-                        {
-                            previousElement.Key.GetComponent<LinkElementPlaceholder>().elementLinked = go;
-                            LEP.elementLinked = previousElement.Key;
-
-                            elementsToLink.Remove(previousElement.Key);
-                            break;
-                        }
+                        linkingObjects.Add(go, LEP.type);
                     }
 
-                    if (!LEP.elementLinked)
+                    if (ED.elementLinkedPos != -1)
                     {
-                        elementsToLink.Add(go, ED.elementLinkedPos);
+                        foreach (KeyValuePair<GameObject, int> previousElement in elementsToLink)
+                        {
+                            if (i == previousElement.Value)
+                            {
+                                previousElement.Key.GetComponent<LinkElementPlaceholder>().elementLinked = go;
+                                LEP.elementLinked = previousElement.Key;
+
+                                elementsToLink.Remove(previousElement.Key);
+                                break;
+                            }
+                        }
+
+                        if (!LEP.elementLinked)
+                        {
+                            elementsToLink.Add(go, ED.elementLinkedPos);
+                        }
                     }
                 }
             }
@@ -203,13 +193,13 @@ public class LevelManager : MonoBehaviour
             for (int i = 0; i < level.groundTiles.Count; ++i)
             {
                 TileData TD = level.groundTiles[i];
-                b.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
+                PuzzleEditorController.instance.baseTM.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
             }
 
             for (int i = 0; i < level.collidableTiles.Count; ++i)
             {
                 TileData TD = level.collidableTiles[i];
-                c.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
+                PuzzleEditorController.instance.collidable.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
             }
         }
     }
