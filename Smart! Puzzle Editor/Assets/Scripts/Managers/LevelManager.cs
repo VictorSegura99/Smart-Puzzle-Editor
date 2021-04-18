@@ -129,27 +129,28 @@ public class LevelManager : MonoBehaviour
             for (int i = 0; i < level.levelElements.Count; ++i)
             {
                 ElementData ED = level.levelElements[i];
+                Vector3 pos = new Vector3(ED.posX, ED.posY, ED.posZ);
                 GameObject go = null;
 
                 switch (ED.type)
                 {
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.Puzzle:
-                        go = Instantiate(puzzlePH, ED.position, puzzlePH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(puzzlePH, pos, puzzlePH.transform.rotation, mainElementsEditor);
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.Player:
-                        go = Instantiate(playerPH, ED.position, playerPH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(playerPH, pos, playerPH.transform.rotation, mainElementsEditor);
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformBox:
-                        go = Instantiate(platformBoxPH, ED.position, platformBoxPH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(platformBoxPH, pos, platformBoxPH.transform.rotation, mainElementsEditor);
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformCircle:
-                        go = Instantiate(platformCirclePH, ED.position, platformCirclePH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(platformCirclePH, pos, platformCirclePH.transform.rotation, mainElementsEditor);
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.Doors:
-                        go = Instantiate(doorsPH, ED.position, doorsPH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(doorsPH, pos, doorsPH.transform.rotation, mainElementsEditor);
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.MovingBox:
-                        go = Instantiate(movingBoxPH, ED.position, movingBoxPH.transform.rotation, mainElementsEditor);
+                        go = Instantiate(movingBoxPH, pos, movingBoxPH.transform.rotation, mainElementsEditor);
                         break;
                 }
 
@@ -193,13 +194,15 @@ public class LevelManager : MonoBehaviour
             for (int i = 0; i < level.groundTiles.Count; ++i)
             {
                 TileData TD = level.groundTiles[i];
-                PuzzleEditorController.instance.baseTM.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
+                Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
+                PuzzleEditorController.instance.baseTM.SetTile(pos, GetTileFromInt(TD.id, allTiles));
             }
 
             for (int i = 0; i < level.collidableTiles.Count; ++i)
             {
                 TileData TD = level.collidableTiles[i];
-                PuzzleEditorController.instance.collidable.SetTile(TD.position, GetTileFromInt(TD.id, allTiles));
+                Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
+                PuzzleEditorController.instance.collidable.SetTile(pos, GetTileFromInt(TD.id, allTiles));
             }
         }
     }

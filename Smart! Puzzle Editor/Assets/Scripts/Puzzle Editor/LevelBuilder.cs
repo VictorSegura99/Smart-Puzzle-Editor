@@ -30,13 +30,13 @@ public static class LevelBuilder
                     }
                 }
 
-                levelTS.levelElements.Add(new ElementData(gameObjects[i].transform.position, (int)LEP.PEType, refPos));
+                levelTS.levelElements.Add(new ElementData(gameObjects[i].transform.position.x, gameObjects[i].transform.position.y, gameObjects[i].transform.position.z, (int)LEP.PEType, refPos));
             }
             else
             {
                 PuzzleElementPlaceHolder PEP = gameObjects[i].GetComponent<PuzzleElementPlaceHolder>();
 
-                levelTS.levelElements.Add(new ElementData(gameObjects[i].transform.position, (int)PEP.PEType, -1));
+                levelTS.levelElements.Add(new ElementData(gameObjects[i].transform.position.x, gameObjects[i].transform.position.y, gameObjects[i].transform.position.z, (int)PEP.PEType, -1));
             }
         }
 
@@ -46,7 +46,7 @@ public static class LevelBuilder
 
             if (ground.HasTile(iPos))
             {
-                levelTS.groundTiles.Add(new TileData(iPos, CheckTile(ground.GetTile(iPos))));
+                levelTS.groundTiles.Add(new TileData(iPos.x, iPos.y, iPos.z, CheckTile(ground.GetTile(iPos))));
             }
         }
 
@@ -56,18 +56,16 @@ public static class LevelBuilder
 
             if (collidable.HasTile(iPos))
             {
-                levelTS.collidableTiles.Add(new TileData(iPos, CheckTile(collidable.GetTile(iPos))));
+                levelTS.collidableTiles.Add(new TileData(iPos.x, iPos.y, iPos.z, CheckTile(collidable.GetTile(iPos))));
             }
         }
-
-        string levelJson = JsonUtility.ToJson(levelTS, true);
 
         if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Data")))
         {
             Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Data"));
         }
 
-        File.WriteAllText(Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle"), levelJson);
+        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle"), levelTS);
     }
 
     static public Level LoadLevel(string levelName)
@@ -76,7 +74,7 @@ public static class LevelBuilder
 
         if (File.Exists(path))
         {
-            return JsonUtility.FromJson<Level>(File.ReadAllText(path));
+            return BinarySaveSystem.LoadFile<Level>(path);
         }
 
         return null;
@@ -176,12 +174,16 @@ public class Level
 [System.Serializable]
 public class TileData
 {
-    public Vector3Int position;
+    public int posX;
+    public int posY;
+    public int posZ;
     public int id = -1;
 
-    public TileData(Vector3Int pos, int id)
+    public TileData(int X, int Y, int Z, int id)
     {
-        position = pos;
+        posX = X;
+        posY = Y;
+        posZ = Z;
         this.id = id;
     }
 }
@@ -189,14 +191,18 @@ public class TileData
 [System.Serializable]
 public class ElementData
 {
-    public Vector3 position;
+    public float posX;
+    public float posY;
+    public float posZ;
     public int type;
     // Position on Serialized ElementData List where the linked gameobject is
     public int elementLinkedPos;
 
-    public ElementData(Vector3 pos, int elementType, int elementLinkedPos)
+    public ElementData(float X, float Y, float Z, int elementType, int elementLinkedPos)
     {
-        position = pos;
+        posX = X;
+        posY = Y;
+        posZ = Z;
         type = elementType;
         this.elementLinkedPos = elementLinkedPos;
     }
