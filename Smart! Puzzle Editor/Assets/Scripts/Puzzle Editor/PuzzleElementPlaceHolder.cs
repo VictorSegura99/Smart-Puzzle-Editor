@@ -119,4 +119,12 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
+    public void ShowCanvas(bool show)
+    {
+        if (show != canvas.gameObject.activeSelf)
+        {
+            canvas.gameObject.SetActive(show);
+        }
+    }
 }

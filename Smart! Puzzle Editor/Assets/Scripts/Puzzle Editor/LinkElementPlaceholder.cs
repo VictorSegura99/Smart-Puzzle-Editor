@@ -68,14 +68,6 @@ public class LinkElementPlaceholder : PuzzleElementPlaceHolder
         base.DeleteObject();
     }
 
-    public void ShowCanvas(bool show)
-    {
-        if (show != canvas.gameObject.activeSelf)
-        {
-            canvas.gameObject.SetActive(show);
-        }
-    }
-
     protected override void OnMouseDown()
     {
         if (PuzzleEditorController.instance.GetCurrentTool() == PuzzleEditorController.Tools.Arrow)

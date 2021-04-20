@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
+using UnityEngine.U2D;
 
 public class LevelManager : MonoBehaviour
 {
@@ -11,12 +12,15 @@ public class LevelManager : MonoBehaviour
 
     public enum LevelMode
     {
+        SelectingSize,
         Editor,
         Play
     }
 
-    public LevelMode mode = LevelMode.Editor;
+    public LevelMode mode = LevelMode.SelectingSize;
 
+    [SerializeField]
+    PixelPerfectCamera cam;
     [HideInInspector]
     public UnityEvent replacingCallbacks;
     [HideInInspector]
@@ -50,45 +54,52 @@ public class LevelManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIEditorManager.instance.mainPanel.gameObject.SetActive(mode == LevelMode.Editor);
-        UIEditorManager.instance.toolsPanel.gameObject.SetActive(mode == LevelMode.Editor);
-        UIEditorManager.instance.saveLoadMenu.SetActive(mode == LevelMode.Editor);
-        UIManager.instance.gameObject.SetActive(mode == LevelMode.Play);
-        buttonText.transform.parent.parent.gameObject.SetActive(mode == LevelMode.Editor);
+        ChangeMode(mode);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ChangeMode(LevelMode newMode)
     {
-        
+        switch (newMode)
+        {
+            case LevelMode.SelectingSize:
+                break;
+            case LevelMode.Editor:
+                buttonText.text = "PLAY MODE";
+
+                reActivatePE.Invoke();
+                for (int i = 0; i < mainElementsPlay.childCount; ++i)
+                {
+                    Destroy(mainElementsPlay.GetChild(i).gameObject);
+                }
+                break;
+            case LevelMode.Play:
+                replacingCallbacks.Invoke();
+                PuzzleEditorController.instance.ClearCurrentPath();
+                PuzzleEditorController.instance.HideAllInspectors();
+                buttonText.text = "STOP PLAY";
+                break;
+        }
+
+        UIEditorManager.instance.selectingSizeMenu.SetActive(newMode == LevelMode.SelectingSize);
+        UIEditorManager.instance.mainPanel.gameObject.SetActive(newMode == LevelMode.Editor);
+        UIEditorManager.instance.toolsPanel.gameObject.SetActive(newMode == LevelMode.Editor);
+        UIEditorManager.instance.saveLoadMenu.SetActive(newMode == LevelMode.Editor);
+        UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
+        buttonText.transform.parent.parent.gameObject.SetActive(newMode == LevelMode.Editor);
+        PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
+
+        mode = newMode;
     }
 
     public void StartPlayMode()
     {
-        mode = mode == LevelMode.Editor ? LevelMode.Play : LevelMode.Editor;
-
-        UIEditorManager.instance.mainPanel.gameObject.SetActive(mode == LevelMode.Editor);
-        UIEditorManager.instance.toolsPanel.gameObject.SetActive(mode == LevelMode.Editor);
-        UIEditorManager.instance.saveLoadMenu.SetActive(mode == LevelMode.Editor);
-        UIManager.instance.gameObject.SetActive(mode == LevelMode.Play);
-
-        if (mode == LevelMode.Play)
+        if (mode == LevelMode.Editor)
         {
-            replacingCallbacks.Invoke();
-            PuzzleEditorController.instance.ClearCurrentPath();
-            PuzzleEditorController.instance.HideAllInspectors();
-            buttonText.text = "STOP PLAY";
+            ChangeMode(LevelMode.Play);
+            return;
         }
-        else
-        {
-            buttonText.text = "PLAY MODE";
 
-            reActivatePE.Invoke();
-            for (int i = 0; i < mainElementsPlay.childCount; ++i)
-            {
-                Destroy(mainElementsPlay.GetChild(i).gameObject);
-            }
-        }
+        ChangeMode(LevelMode.Editor);
     }
 
     public void SaveLevel()
@@ -270,5 +281,23 @@ public class LevelManager : MonoBehaviour
         }
 
         return tile;
+    }
+
+    public void SetMapSize(int size)
+    {
+        switch (size)
+        {
+            case 8:
+                break;
+            case 16:
+                cam.assetsPPU = 12;
+                break;
+            case 24:
+                cam.assetsPPU = 8;
+                break;
+        }
+
+        PuzzleEditorController.instance.SetSize(size);
+        ChangeMode(LevelMode.Editor);
     }
 }

@@ -9,7 +9,9 @@ public class Player_Controller : MonoBehaviour
     Rigidbody2D rb;
     SpriteRenderer engineer_sprite;
     Animator anim;
+    [SerializeField]
     Transform shadow;
+    Vector3 originalShadowScale;
 
     // Inspector Variables
     public float speed = 3;
@@ -32,7 +34,8 @@ public class Player_Controller : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = transform.GetChild(0).GetComponent<Animator>();
         engineer_sprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        shadow = transform.GetChild(0).GetChild(0);
+
+        originalShadowScale = shadow.localScale;
     }
 
     private void Update()
@@ -66,12 +69,14 @@ public class Player_Controller : MonoBehaviour
             if (direction != Vector2.zero && player_state != Player_States.RUN)
             {
                 player_state = Player_States.RUN;
-                shadow.localScale = new Vector3(3, 1, 0.8f);
+                Vector3 scale = originalShadowScale;
+                scale.x *= 1.05f;
+                shadow.localScale = scale;
             }
             else if (direction == Vector2.zero && player_state != Player_States.IDLE)
             {
                 player_state = Player_States.IDLE;
-                shadow.localScale = new Vector3(2.75f, 1, 0.8f);
+                shadow.localScale = originalShadowScale;
             }
 
             anim.SetInteger("State", (int)player_state);

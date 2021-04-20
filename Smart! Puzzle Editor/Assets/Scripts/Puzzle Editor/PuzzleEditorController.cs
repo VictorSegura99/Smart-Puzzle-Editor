@@ -29,11 +29,13 @@ public class PuzzleEditorController : MonoBehaviour
     public Camera cam;
 
     [Header("Tilemaps")]
+    public int levelSize = 16;
     public Tilemap baseTM;
     public Tilemap collidable;
     [SerializeField]
     Tilemap HLTilemap;
     public Tilemap pathLinks;
+    public Tilemap sizeLimit;
 
     [Header("Cursors")]
     [SerializeField]
@@ -102,32 +104,39 @@ public class PuzzleEditorController : MonoBehaviour
         {
             case Tools.Arrow:
 
-                    if (mousePos != previousCoordinate)
+                if (mousePos != previousCoordinate)
+                {
+                    HLTilemap.SetTile(previousCoordinate, null);
+                    if (sizeLimit.HasTile(mousePos))
                     {
-                        HLTilemap.SetTile(previousCoordinate, null);
                         HLTilemap.SetTile(mousePos, allTiles.blankArrowToolTile);
                         previousCoordinate = mousePos;
                     }
-
-                    if (Input.GetMouseButton(0) && currentPuzzleElementSelected)
+                    else
                     {
-                        currentPuzzleElementSelected.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
+                        previousCoordinate = new Vector3Int(-999, -999, -999);
+                    }
+                }
 
-                        LinkElementPlaceholder LEP = currentPuzzleElementSelected.GetComponent<LinkElementPlaceholder>();
-                        if (LEP)
-                        {
-                            if (!linkingObjects.ContainsKey(currentPuzzleElementSelected))
-                                linkingObjects.Add(currentPuzzleElementSelected, LEP.type);
-                        }
+                if (Input.GetMouseButton(0) && currentPuzzleElementSelected && sizeLimit.HasTile(mousePos))
+                {
+                    currentPuzzleElementSelected.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
 
-                        currentPuzzleElementSelected = null;
+                    LinkElementPlaceholder LEP = currentPuzzleElementSelected.GetComponent<LinkElementPlaceholder>();
+                    if (LEP)
+                    {
+                        if (!linkingObjects.ContainsKey(currentPuzzleElementSelected))
+                            linkingObjects.Add(currentPuzzleElementSelected, LEP.type);
                     }
 
-                    if (Input.GetMouseButton(1) && currentPuzzleElementSelected)
-                    {
-                        Destroy(currentPuzzleElementSelected);
-                        currentPuzzleElementSelected = null;
-                    }
+                    currentPuzzleElementSelected = null;
+                }
+
+                if (Input.GetMouseButton(1) && currentPuzzleElementSelected)
+                {
+                    Destroy(currentPuzzleElementSelected);
+                    currentPuzzleElementSelected = null;
+                }
 
                 break;
             case Tools.Brush:
@@ -135,12 +144,19 @@ public class PuzzleEditorController : MonoBehaviour
                 if (mousePos != previousCoordinate)
                 {
                     HLTilemap.SetTile(previousCoordinate, null);
-                    HLTilemap.SetTile(mousePos, currentSelectedTile);
-                    previousCoordinate = mousePos;
+                    if (sizeLimit.HasTile(mousePos))
+                    {
+                        HLTilemap.SetTile(mousePos, currentSelectedTile);
+                        previousCoordinate = mousePos;
+                    }
+                    else
+                    {
+                        previousCoordinate = new Vector3Int(-999, -999, -999);
+                    }
                 }
 
                 // Paint Tiles
-                if (Input.GetMouseButton(0) && currentSelectedTile != allTiles.blankCursorTile)
+                if (Input.GetMouseButton(0) && currentSelectedTile != allTiles.blankCursorTile && sizeLimit.HasTile(mousePos))
                 {
                     desiredTM.SetTile(mousePos, currentSelectedTile);
 
@@ -183,8 +199,16 @@ public class PuzzleEditorController : MonoBehaviour
                 if (mousePos != previousCoordinate)
                 {
                     HLTilemap.SetTile(previousCoordinate, null);
-                    HLTilemap.SetTile(mousePos, allTiles.blankArrowToolTile);
-                    previousCoordinate = mousePos;
+                    HLTilemap.SetTile(previousCoordinate, null);
+                    if (sizeLimit.HasTile(mousePos))
+                    {
+                        HLTilemap.SetTile(mousePos, allTiles.blankArrowToolTile);
+                        previousCoordinate = mousePos;
+                    }
+                    else
+                    {
+                        previousCoordinate = new Vector3Int(-999, -999, -999);
+                    }
                 }
 
                 if (Input.GetMouseButton(0))
@@ -211,8 +235,15 @@ public class PuzzleEditorController : MonoBehaviour
                 if (mousePos != previousCoordinate)
                 {
                     HLTilemap.SetTile(previousCoordinate, null);
-                    HLTilemap.SetTile(mousePos, allTiles.blankArrowToolTile);
-                    previousCoordinate = mousePos;
+                    if (sizeLimit.HasTile(mousePos))
+                    {
+                        HLTilemap.SetTile(mousePos, allTiles.blankArrowToolTile);
+                        previousCoordinate = mousePos;
+                    }
+                    else
+                    {
+                        previousCoordinate = new Vector3Int(-999, -999, -999);
+                    }
                 }
 
                 if (Input.GetMouseButtonUp(0))
@@ -685,12 +716,24 @@ public class PuzzleEditorController : MonoBehaviour
 
         ClearCurrentPath();
     }
+
+    public void SetSize(int size)
+    {
+        for (int i = (int)(-size * 0.5f); i < size * 0.5f; ++i)
+        {
+            for (int j = (int)(-size * 0.5f); j < size * 0.5f; ++j)
+            {
+                sizeLimit.SetTile(new Vector3Int(i, j, 0), allTiles.sizeLimitTile);
+            }
+        }
+    }
 }
 
 [Serializable]
 public class AllTiles
 {
     public Tile blankArrowToolTile;
+    public Tile sizeLimitTile;
     public Tile blankCursorTile;
     public Tile groundTile;
     public Tile darkGroundTile;

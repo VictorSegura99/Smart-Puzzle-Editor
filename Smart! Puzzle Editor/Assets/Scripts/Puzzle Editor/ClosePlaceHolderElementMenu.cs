@@ -9,7 +9,10 @@ public class ClosePlaceHolderElementMenu : MonoBehaviour, IPointerDownHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            PuzzleEditorController.instance.HideAllInspectors();
+            if (transform.parent.parent.GetComponent<LinkElementPlaceholder>())
+                PuzzleEditorController.instance.HideAllInspectors();
+            else
+                transform.parent.parent.GetComponent<PuzzleElementPlaceHolder>().ShowCanvas(false);
         }
     }
 }

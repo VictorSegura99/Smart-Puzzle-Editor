@@ -19,6 +19,7 @@ public class UIEditorManager : MonoBehaviour
     }
 
     [Header("Menus")]
+    public GameObject selectingSizeMenu;
     public CanvasGroup mainPanel;
     public CanvasGroup toolsPanel;
     public GameObject saveLoadMenu;
