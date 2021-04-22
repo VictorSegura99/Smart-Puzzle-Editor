@@ -6,9 +6,11 @@ using System.IO;
 
 public static class LevelBuilder
 {
-    static public void SaveLevel(string levelName, List<GameObject> gameObjects, Tilemap ground, Tilemap collidable)
+    static public void SaveLevel(string levelName, int levelSize, List<GameObject> gameObjects, Tilemap ground, Tilemap collidable)
     {
         Level levelTS = new Level();
+
+        levelTS.size = levelSize;
 
         for (int i = 0; i < gameObjects.Count; ++i)
         {

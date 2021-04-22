@@ -11,6 +11,8 @@ public class BoxBehaviour : MonoBehaviour
     AudioSource sfx;
 
     // Inspector Variables
+    [SerializeField]
+    ParticleSystem[] particles;
     public bool is_static = false;
     public float time_to_reset = 1.5f;
     public float raycast_lenght = 1.25f;
@@ -18,12 +20,18 @@ public class BoxBehaviour : MonoBehaviour
     // Internal Variables
     bool can_move = true;
     bool repeat_anim = false;
+    Box_Trigger.Box_Trigger_Side lastSide;
 
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         sfx = GetComponent<AudioSource>();
+
+        for (int i = 0; i < particles.Length; ++i)
+        {
+            particles[i].Stop();
+        }
     }
 
     // Update is called once per frame
@@ -31,7 +39,7 @@ public class BoxBehaviour : MonoBehaviour
     {
     }
 
-    public void MovementTriggered(GameObject GO, Box_Trigger.Box_Trigger_Side side)
+    public void MovementTriggered(Box_Trigger.Box_Trigger_Side side)
     {
         if (!is_static && can_move && anim.GetCurrentAnimatorStateInfo(0).IsName("IDLE"))
         {
@@ -115,7 +123,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                 }
             }
-            else if (hit.collider.CompareTag("Portal"))
+            else if (hit.collider && hit.collider.CompareTag("Portal"))
             {
                 switch (side)
                 {
@@ -154,7 +162,8 @@ public class BoxBehaviour : MonoBehaviour
                 }
             }
 
-            GO.transform.GetChild(0).gameObject.SetActive(true);
+            lastSide = side;
+            particles[(int)side].Play();
             anim.SetInteger("Direction", (int)side);
         }
     }
@@ -162,24 +171,9 @@ public class BoxBehaviour : MonoBehaviour
     void Stop()
     {
         // Deactivates the particles systems.
-        if (transform.GetChild(1).GetChild(0).gameObject.activeSelf)
-        {
-            transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-        }
-        else if(transform.GetChild(4).GetChild(0).gameObject.activeSelf)
-        {
-            transform.GetChild(4).GetChild(0).gameObject.SetActive(false);
-        }
-        else if (transform.GetChild(3).GetChild(0).gameObject.activeSelf)
-        {
-            transform.GetChild(3).GetChild(0).gameObject.SetActive(false);
-        }
-        else if(transform.GetChild(2).GetChild(0).gameObject.activeSelf)
-        {
-            transform.GetChild(2).GetChild(0).gameObject.SetActive(false);
-        }
+        particles[(int)lastSide].Stop();
 
-        anim.SetInteger("Direction", 0);
+        anim.SetInteger("Direction", -1);
         anim.SetTrigger("Stopped");
     }
 

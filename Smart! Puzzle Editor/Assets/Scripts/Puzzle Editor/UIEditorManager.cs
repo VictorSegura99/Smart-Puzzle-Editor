@@ -23,6 +23,7 @@ public class UIEditorManager : MonoBehaviour
     public CanvasGroup mainPanel;
     public CanvasGroup toolsPanel;
     public GameObject saveLoadMenu;
+    public GameObject resetLevelMenu;
     [SerializeField]
     GameObject groupsMenu;
     [SerializeField]

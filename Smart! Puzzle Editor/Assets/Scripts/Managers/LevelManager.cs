@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -84,6 +85,7 @@ public class LevelManager : MonoBehaviour
         UIEditorManager.instance.mainPanel.gameObject.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.toolsPanel.gameObject.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.saveLoadMenu.SetActive(newMode == LevelMode.Editor);
+        UIEditorManager.instance.resetLevelMenu.SetActive(newMode == LevelMode.Editor);
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
         buttonText.transform.parent.parent.gameObject.SetActive(newMode == LevelMode.Editor);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
@@ -113,7 +115,7 @@ public class LevelManager : MonoBehaviour
                 gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
             }
 
-            LevelBuilder.SaveLevel(levelNameField.text, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+            LevelBuilder.SaveLevel(levelNameField.text, PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
         }
     }
 
@@ -131,6 +133,7 @@ public class LevelManager : MonoBehaviour
             PuzzleEditorController.instance.baseTM.ClearAllTiles();
             PuzzleEditorController.instance.collidable.ClearAllTiles();
             PuzzleEditorController.instance.pathLinks.ClearAllTiles();
+            PuzzleEditorController.instance.sizeLimit.ClearAllTiles();
             // -----------------------------------------------------------
 
             Level level = LevelBuilder.LoadLevel(levelNameField.text);
@@ -201,6 +204,9 @@ public class LevelManager : MonoBehaviour
 
             // Tiles
             AllTiles allTiles = PuzzleEditorController.instance.allTiles;
+
+            PuzzleEditorController.instance.SetSize(level.size);
+            SetCameraSize(level.size);
 
             for (int i = 0; i < level.groundTiles.Count; ++i)
             {
@@ -285,9 +291,17 @@ public class LevelManager : MonoBehaviour
 
     public void SetMapSize(int size)
     {
-        switch (size)
+        SetCameraSize(size);
+        PuzzleEditorController.instance.SetSize(size);
+        ChangeMode(LevelMode.Editor);
+    }
+
+    public void SetCameraSize(int tilesSize)
+    {
+        switch (tilesSize)
         {
             case 8:
+                cam.assetsPPU = 16;
                 break;
             case 16:
                 cam.assetsPPU = 12;
@@ -296,8 +310,10 @@ public class LevelManager : MonoBehaviour
                 cam.assetsPPU = 8;
                 break;
         }
+    }
 
-        PuzzleEditorController.instance.SetSize(size);
-        ChangeMode(LevelMode.Editor);
+    public void ResetLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

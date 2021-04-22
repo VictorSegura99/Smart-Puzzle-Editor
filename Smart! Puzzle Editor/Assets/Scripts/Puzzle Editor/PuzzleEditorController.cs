@@ -94,6 +94,31 @@ public class PuzzleEditorController : MonoBehaviour
 
         Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
 
+        // Change Tools Keyboard Controls -------------------------------------------
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ChangeTool((int)Tools.Dropper);
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ChangeTool((int)Tools.Eraser);
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ChangeTool((int)Tools.Brush);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ChangeTool((int)Tools.Arrow);
+        }
+
+        // --------------------------------------------------------------------------
+
+
         // Change Tool to EyeDropper
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
@@ -726,6 +751,8 @@ public class PuzzleEditorController : MonoBehaviour
                 sizeLimit.SetTile(new Vector3Int(i, j, 0), allTiles.sizeLimitTile);
             }
         }
+
+        levelSize = size;
     }
 }
 

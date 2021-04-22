@@ -6,7 +6,7 @@ public class Box_Trigger : MonoBehaviour
 {
     public enum Box_Trigger_Side
     {
-        NONE,
+        NONE = -1,
         NORTH,
         SOUTH,
         WEST,
@@ -17,7 +17,7 @@ public class Box_Trigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.CompareTag("Player"))
         {
             CheckPlayerCollision(collision);
         }
@@ -25,7 +25,7 @@ public class Box_Trigger : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Player")
+        if (collision.CompareTag("Player"))
         {
             CheckPlayerCollision(collision);
         }
@@ -58,6 +58,6 @@ public class Box_Trigger : MonoBehaviour
                 break;
         }
 
-        transform.parent.GetComponent<BoxBehaviour>().MovementTriggered(gameObject, side);
+        transform.parent.GetComponent<BoxBehaviour>().MovementTriggered(side);
     }
 }
