@@ -3,7 +3,9 @@ Smart! is a little prototype made by Víctor Segura Blanco.
 Smart! Puzzle Editor is Work In Progress and is being developed at this moment. 
 
 Website: https://victorsegura99.github.io/Personal_Website
+
 Github: https://github.com/VictorSegura99
+
 LinkedIn: https://www.linkedin.com/in/victorsegurablanco/
 
 -------------------------------
