@@ -9,18 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu_PreAlpha.unity
     guid: 241380e55e371384e98ae4adc3e812e0
   - enabled: 1
-    path: Assets/Scenes/Puzzles Tutorial/Lvl2.unity
-    guid: 5c944ac337725704989c96c79c8e8434
-  - enabled: 1
-    path: Assets/Scenes/Puzzles Tutorial/Lvl1.unity
-    guid: a653a61bf80d52d44a419b222b87e05b
-  - enabled: 1
-    path: Assets/Scenes/Puzzles Tutorial/Lvl3.unity
-    guid: 72f51693335ca81428e56e2b68e5fbcb
-  - enabled: 1
-    path: Assets/Scenes/Puzzles Tutorial/Lvl4.unity
-    guid: 655b034ce3a208d4bb92c2d4e34d608b
-  - enabled: 1
-    path: Assets/Scenes/Puzzles Tutorial/Lvl5.unity
-    guid: 49fb628ce6162f24eb12c584744a0206
+    path: Assets/Scenes/Editor/PuzzleEditor.unity
+    guid: 97a1c3dea0da6c04d8a683724f5aa356
   m_configObjects: {}

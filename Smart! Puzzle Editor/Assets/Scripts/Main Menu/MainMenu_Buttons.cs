@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu_Buttons : MonoBehaviour
 {
@@ -33,8 +34,14 @@ public class MainMenu_Buttons : MonoBehaviour
         GameObject.Find("Canvas").GetComponent<Main_Menu_Manager>().ChangeMenu(Main_Menu_Manager.Menu_States.TUTORIAL);
     }
 
+
+    public void OpenPuzzleEditor()
+    {
+        SceneManager.LoadScene("PuzzleEditor");
+    }
+
     public void ContactMe()
     {
-        Application.OpenURL("www.victorsegurablanco.com");
+        Application.OpenURL("https://victorsegura99.github.io/Personal_Website/");
     }
 }

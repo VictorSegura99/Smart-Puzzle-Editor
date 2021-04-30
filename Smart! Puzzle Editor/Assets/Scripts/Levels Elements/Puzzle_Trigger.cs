@@ -38,7 +38,7 @@ public class Puzzle_Trigger : MonoBehaviour
 
     IEnumerator FadePuzzle()
     {
-        time_start = Time.time;
+        time_start = Time.realtimeSinceStartup;
 
         while (sprite.color.a > 0)
         {
@@ -48,7 +48,9 @@ public class Puzzle_Trigger : MonoBehaviour
             yield return null;
         }
 
-        UIManager.instance.ShowYouWinMenu();
+        Time.timeScale = 1;
+        LevelManager.instance.ChangeMode(LevelManager.LevelMode.Editor);
+        //UIManager.instance.ShowYouWinMenu();
         Destroy(gameObject);
     }
 }

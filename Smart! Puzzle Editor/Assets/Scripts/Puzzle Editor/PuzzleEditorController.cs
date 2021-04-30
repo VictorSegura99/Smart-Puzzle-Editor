@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PuzzleEditorController : MonoBehaviour
 {
@@ -87,6 +88,11 @@ public class PuzzleEditorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (mouseBlockedByUI || LevelManager.instance.mode != LevelManager.LevelMode.Editor)
         {
             return;
@@ -95,32 +101,33 @@ public class PuzzleEditorController : MonoBehaviour
         Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
 
         // Change Tools Keyboard Controls -------------------------------------------
-
-        if (Input.GetKeyDown(KeyCode.R))
+        if (!LevelManager.instance.levelNameField.isFocused)
         {
-            ChangeTool((int)Tools.Dropper);
-        }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ChangeTool((int)Tools.Dropper);
+            }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            ChangeTool((int)Tools.Eraser);
-        }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                ChangeTool((int)Tools.Eraser);
+            }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            ChangeTool((int)Tools.Brush);
-        }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                ChangeTool((int)Tools.Brush);
+            }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            ChangeTool((int)Tools.Arrow);
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                ChangeTool((int)Tools.Arrow);
+            }
         }
-
         // --------------------------------------------------------------------------
 
 
         // Change Tool to EyeDropper
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && !LevelManager.instance.levelNameField.isFocused)
         {
             ChangeTool((int)Tools.Dropper);
         }
@@ -560,14 +567,16 @@ public class PuzzleEditorController : MonoBehaviour
             if (GOToLink.elementLinked)
             {
                 LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
+
+                currentActivatorShowed = null;
+                GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : anotherLep.gameObject;
+                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+
                 anotherLep.elementLinked = null;
                 anotherLep.buttonText.text = "Link";
 
                 GOToLink.elementLinked = null;
                 GOToLink.buttonText.text = "Link";
-
-                currentActivatorShowed = null;
-                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(GOToLink.transform.position), V3Helper.V3ToV3Int(anotherLep.transform.position)));
             }
             // No element Linked, start linking
             else
@@ -609,9 +618,12 @@ public class PuzzleEditorController : MonoBehaviour
 
     public void DeleteLinkingObject(LinkElementPlaceholder LGO)
     {
+        GameObject activator = LGO.type == LinkElementPlaceholder.LinkElementType.Activator ? LGO.gameObject : LGO.elementLinked.gameObject;
+
         if (LGO.elementLinked && currentActivatorShowed)
         {
-            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(LGO.transform.position), V3Helper.V3ToV3Int(LGO.elementLinked.transform.position)));
+            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+
             currentActivatorShowed = null;
         }
 

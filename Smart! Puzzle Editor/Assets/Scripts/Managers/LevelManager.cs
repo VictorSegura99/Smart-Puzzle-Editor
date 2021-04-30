@@ -30,8 +30,7 @@ public class LevelManager : MonoBehaviour
     public Transform mainElementsPlay;
     [SerializeField]
     Text buttonText;
-    [SerializeField]
-    InputField levelNameField;
+    public InputField levelNameField;
 
     [Header("Placeholder Prefabs")]
     [SerializeField]
@@ -66,6 +65,8 @@ public class LevelManager : MonoBehaviour
                 break;
             case LevelMode.Editor:
                 buttonText.text = "PLAY MODE";
+                if (!buttonText.transform.parent.parent.gameObject.activeSelf)
+                    buttonText.transform.parent.parent.gameObject.SetActive(true);
 
                 reActivatePE.Invoke();
                 for (int i = 0; i < mainElementsPlay.childCount; ++i)
@@ -87,7 +88,6 @@ public class LevelManager : MonoBehaviour
         UIEditorManager.instance.saveLoadMenu.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.resetLevelMenu.SetActive(newMode == LevelMode.Editor);
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
-        buttonText.transform.parent.parent.gameObject.SetActive(newMode == LevelMode.Editor);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
 
         mode = newMode;
