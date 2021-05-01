@@ -123,6 +123,13 @@ public class LevelManager : MonoBehaviour
     {
         if (levelNameField.text != "")
         {
+            Level level = LevelBuilder.LoadLevel(levelNameField.text);
+
+            if (level == null)
+            {
+                return;
+            }
+
             // Clearing Elements -----------------------------------------
             for (int i = 0; i < mainElementsEditor.childCount; ++i)
             {
@@ -135,8 +142,6 @@ public class LevelManager : MonoBehaviour
             PuzzleEditorController.instance.pathLinks.ClearAllTiles();
             PuzzleEditorController.instance.sizeLimit.ClearAllTiles();
             // -----------------------------------------------------------
-
-            Level level = LevelBuilder.LoadLevel(levelNameField.text);
 
             // Elements
             Dictionary<GameObject, int> elementsToLink = new Dictionary<GameObject, int>();
