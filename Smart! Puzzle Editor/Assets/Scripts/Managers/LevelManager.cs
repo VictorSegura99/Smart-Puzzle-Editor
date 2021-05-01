@@ -306,13 +306,13 @@ public class LevelManager : MonoBehaviour
         switch (tilesSize)
         {
             case 8:
-                cam.assetsPPU = 16;
+                cam.assetsPPU = 18;
                 break;
             case 16:
-                cam.assetsPPU = 12;
+                cam.assetsPPU = 9;
                 break;
             case 24:
-                cam.assetsPPU = 8;
+                cam.assetsPPU = 6;
                 break;
         }
     }
