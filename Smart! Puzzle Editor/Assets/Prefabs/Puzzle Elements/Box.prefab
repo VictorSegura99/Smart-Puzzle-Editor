@@ -19467,7 +19467,7 @@ MonoBehaviour:
   - {fileID: 7093667828390041264}
   is_static: 0
   time_to_reset: 0
-  raycast_lenght: 1.25
+  raycast_lenght: 1
 --- !u!95 &311413847
 Animator:
   serializedVersion: 3

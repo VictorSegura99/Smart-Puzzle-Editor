@@ -15,7 +15,7 @@ public class BoxBehaviour : MonoBehaviour
     ParticleSystem[] particles;
     public bool is_static = false;
     public float time_to_reset = 1.5f;
-    public float raycast_lenght = 1.25f;
+    public float raycast_lenght = 1;
 
     // Internal Variables
     bool can_move = true;

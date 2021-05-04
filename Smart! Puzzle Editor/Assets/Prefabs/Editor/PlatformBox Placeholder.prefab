@@ -1046,7 +1046,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1079,7 +1079,6 @@ MonoBehaviour:
   canvas: {fileID: 9128330533170183784}
   addOffset: 1
   cursorOffset: {x: 0.5, y: 0.5, z: 0}
-  closingCanvas: {fileID: 3905257320830482971}
   type: 1
   elementLinked: {fileID: 0}
   buttonText: {fileID: 6754855609230156608}
