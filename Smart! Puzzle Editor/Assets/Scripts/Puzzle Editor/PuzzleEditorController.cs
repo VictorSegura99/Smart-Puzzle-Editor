@@ -503,6 +503,24 @@ public class PuzzleEditorController : MonoBehaviour
 
     public void LinkElement(LinkElementPlaceholder GOToLink)
     {
+        // Unlink
+        if (GOToLink.elementLinked)
+        {
+            LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
+
+            currentActivatorShowed = null;
+            GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : anotherLep.gameObject;
+            ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
+
+            anotherLep.elementLinked = null;
+            anotherLep.buttonText.text = "Link";
+
+            GOToLink.elementLinked = null;
+            GOToLink.buttonText.text = "Link";
+            return;
+        }
+
+        // Element pending to be linked
         if (currentLinkingObject)
         {
             // Different Link types, link
@@ -527,19 +545,7 @@ public class PuzzleEditorController : MonoBehaviour
                     GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : GOToLink.elementLinked.gameObject;
                     currentActivatorShowed = activator;
                     DrawLine(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
-                }
-                else
-                {
-                    currentLinkingObject.ShowCanvas(false);
-                    currentLinkingObject = null;
-
-                    LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
-                    anotherLep.ShowCanvas(true);
-                    anotherLep.elementLinked = null;
-                    anotherLep.buttonText.text = "Link";
-
-                    GOToLink.elementLinked = null;
-                    GOToLink.buttonText.text = "Link";
+                    return;
                 }
             }
             else
@@ -561,36 +567,16 @@ public class PuzzleEditorController : MonoBehaviour
                 }
             }
         }
-        else
+
+        // Start Linking
+        currentLinkingObject = GOToLink;
+        currentLinkingObject.buttonText.text = "Cancel";
+
+        foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
         {
-            // The element is linked, unlink
-            if (GOToLink.elementLinked)
-            {
-                LinkElementPlaceholder anotherLep = GOToLink.elementLinked.GetComponent<LinkElementPlaceholder>();
-
-                currentActivatorShowed = null;
-                GameObject activator = GOToLink.type == LinkElementPlaceholder.LinkElementType.Activator ? GOToLink.gameObject : anotherLep.gameObject;
-                ClearPath(TileMapPathfinding.FindPathCoordinates(V3Helper.V3ToV3Int(activator.transform.position), V3Helper.V3ToV3Int(activator.GetComponent<LinkElementPlaceholder>().elementLinked.transform.position)));
-
-                anotherLep.elementLinked = null;
-                anotherLep.buttonText.text = "Link";
-
-                GOToLink.elementLinked = null;
-                GOToLink.buttonText.text = "Link";
-            }
-            // No element Linked, start linking
-            else
-            {
-                currentLinkingObject = GOToLink;
-                currentLinkingObject.buttonText.text = "Cancel";
-
-                foreach (KeyValuePair<GameObject, LinkElementPlaceholder.LinkElementType> linkingGO in linkingObjects)
-                {
-                    LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
-                    if (LEP != GOToLink && !LEP.elementLinked && LEP.type != GOToLink.type)
-                        LEP.ShowCanvas(true);
-                }
-            }
+            LinkElementPlaceholder LEP = linkingGO.Key.GetComponent<LinkElementPlaceholder>();
+            if (LEP != GOToLink && !LEP.elementLinked && LEP.type != GOToLink.type)
+                LEP.ShowCanvas(true);
         }
     }
 
