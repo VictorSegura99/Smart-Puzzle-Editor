@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using UnityEngine.Tilemaps;
 
 public class BoxBehaviour : MonoBehaviour
 {
@@ -83,11 +84,21 @@ public class BoxBehaviour : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x + offset.x, transform.position.y + offset.y), direction);
             if (hit.collider != null && !hit.collider.isTrigger)
             {
+                Vector3 posCollided = Vector3.zero;
+                if (hit.collider.GetComponent<Tilemap>())
+                {
+                    posCollided = hit.point;
+                }
+                else
+                {
+                    posCollided = hit.collider.transform.position;
+                }
+
                 switch (side)
                 {
                     case Box_Trigger.Box_Trigger_Side.NORTH:
                         {
-                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= raycast_lenght)
+                            if (Mathf.Abs((transform.position.y - posCollided.y)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -96,7 +107,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.SOUTH:
                         {
-                            if (Mathf.Abs((transform.position.y - hit.transform.position.y)) <= raycast_lenght)
+                            if (Mathf.Abs((transform.position.y - posCollided.y)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -105,7 +116,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.WEST:
                         {
-                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= raycast_lenght)
+                            if (Mathf.Abs((transform.position.x - posCollided.x)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;
@@ -114,7 +125,7 @@ public class BoxBehaviour : MonoBehaviour
                         }
                     case Box_Trigger.Box_Trigger_Side.EAST:
                         {
-                            if (Mathf.Abs((transform.position.x - hit.transform.position.x)) <= raycast_lenght)
+                            if (Mathf.Abs((transform.position.x - posCollided.x)) <= raycast_lenght)
                             {
                                 StopMove();
                                 return;

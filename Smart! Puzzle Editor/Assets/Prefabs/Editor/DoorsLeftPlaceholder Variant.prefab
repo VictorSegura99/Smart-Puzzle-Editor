@@ -8,6 +8,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -5594439463848687459, guid: 9e61ed61694597d488341bf0f94272b9, type: 3}
+      propertyPath: PEType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -5594439463848687459, guid: 9e61ed61694597d488341bf0f94272b9, type: 3}
       propertyPath: addOffset
       value: 1
       objectReference: {fileID: 0}

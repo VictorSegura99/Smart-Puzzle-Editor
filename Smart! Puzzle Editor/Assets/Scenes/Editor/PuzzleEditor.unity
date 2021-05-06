@@ -11304,6 +11304,8 @@ MonoBehaviour:
   platformBoxPH: {fileID: 7334751108353525657, guid: 9c5e59db76eec304691b47b8da987acd, type: 3}
   platformCirclePH: {fileID: 1698939655746308922, guid: 2937cb16803112a478f922ffb1f10b4c, type: 3}
   doorsPH: {fileID: 7130828067479726867, guid: 9e61ed61694597d488341bf0f94272b9, type: 3}
+  VLDoorsPH: {fileID: 3126099932128109946, guid: b79e26e79b8aa0b4eb531c0527eb1207, type: 3}
+  VRDoorsPH: {fileID: 4623571493925343749, guid: 43945cd55d35b8f4b92ee1ec383f3cff, type: 3}
   movingBoxPH: {fileID: 2790189415419526926, guid: fdefa4f2de2de8140a199a5433cb55e6, type: 3}
 --- !u!4 &1885429905
 Transform:

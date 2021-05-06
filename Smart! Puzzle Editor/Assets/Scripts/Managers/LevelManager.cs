@@ -44,6 +44,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     GameObject doorsPH;
     [SerializeField]
+    GameObject VLDoorsPH;
+    [SerializeField]
+    GameObject VRDoorsPH;
+    [SerializeField]
     GameObject movingBoxPH;
 
     private void Awake()
@@ -170,6 +174,12 @@ public class LevelManager : MonoBehaviour
                         break;
                     case (int)PuzzleElementPlaceHolder.PuzzleElementType.MovingBox:
                         go = Instantiate(movingBoxPH, pos, movingBoxPH.transform.rotation, mainElementsEditor);
+                        break;
+                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalLeftDoors:
+                        go = Instantiate(VLDoorsPH, pos, VLDoorsPH.transform.rotation, mainElementsEditor);
+                        break;
+                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalRightDoors:
+                        go = Instantiate(VRDoorsPH, pos, VRDoorsPH.transform.rotation, mainElementsEditor);
                         break;
                 }
 
@@ -306,13 +316,16 @@ public class LevelManager : MonoBehaviour
         switch (tilesSize)
         {
             case 8:
-                cam.assetsPPU = 18;
+                cam.refResolutionX = 320;
+                cam.refResolutionY = 180;
                 break;
             case 16:
-                cam.assetsPPU = 9;
+                cam.refResolutionX = (int)(320 * 1.75f);
+                cam.refResolutionY = (int)(180 * 1.75f);
                 break;
             case 24:
-                cam.assetsPPU = 6;
+                cam.refResolutionX = 320 * 3;
+                cam.refResolutionY = 180 * 3;
                 break;
         }
     }

@@ -13,6 +13,8 @@ public class PuzzleElementPlaceHolder : MonoBehaviour
         PlatformCircle,
         Doors,
         MovingBox,
+        VerticalLeftDoors,
+        VerticalRightDoors,
 
         None = -1
     }

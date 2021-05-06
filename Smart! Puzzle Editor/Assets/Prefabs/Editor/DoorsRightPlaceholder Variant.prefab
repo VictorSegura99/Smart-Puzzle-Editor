@@ -120,6 +120,10 @@ PrefabInstance:
       value: -0.049999997
       objectReference: {fileID: 0}
     - target: {fileID: 8920337807449425652, guid: b79e26e79b8aa0b4eb531c0527eb1207, type: 3}
+      propertyPath: PEType
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8920337807449425652, guid: b79e26e79b8aa0b4eb531c0527eb1207, type: 3}
       propertyPath: addOffset
       value: 1
       objectReference: {fileID: 0}
