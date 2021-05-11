@@ -8,6 +8,28 @@ public static class LevelBuilder
 {
     static public void SaveLevel(string levelName, int levelSize, List<GameObject> gameObjects, Tilemap ground, Tilemap collidable)
     {
+        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Data")))
+        {
+            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Data"));
+        }
+
+        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle"), BuildLevel(levelSize, gameObjects, ground, collidable));
+    }
+
+    static public Level LoadLevel(string levelName)
+    {
+        string path = Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle");
+
+        if (File.Exists(path))
+        {
+            return BinarySaveSystem.LoadFile<Level>(path);
+        }
+
+        return null;
+    }
+
+    public static Level BuildLevel(int levelSize, List<GameObject> gameObjects, Tilemap ground, Tilemap collidable)
+    {
         Level levelTS = new Level();
 
         levelTS.size = levelSize;
@@ -62,25 +84,9 @@ public static class LevelBuilder
             }
         }
 
-        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Data")))
-        {
-            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Data"));
-        }
-
-        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle"), levelTS);
+        return levelTS;
     }
 
-    static public Level LoadLevel(string levelName)
-    {
-        string path = Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle");
-
-        if (File.Exists(path))
-        {
-            return BinarySaveSystem.LoadFile<Level>(path);
-        }
-
-        return null;
-    }
 
     public static int CheckTile(TileBase tile)
     {

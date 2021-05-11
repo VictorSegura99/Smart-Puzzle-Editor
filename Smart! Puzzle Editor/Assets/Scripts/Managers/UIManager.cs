@@ -147,8 +147,6 @@ public class UIManager : MonoBehaviour
 
     void ManageMenuInput()
     {
-        // TODO: Create GameManager
-        // {
         if (Input.GetKeyDown(KeyCode.R))
         {
             time_start = Time.realtimeSinceStartup;

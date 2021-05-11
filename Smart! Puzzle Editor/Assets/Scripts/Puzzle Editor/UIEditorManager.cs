@@ -23,6 +23,7 @@ public class UIEditorManager : MonoBehaviour
     public CanvasGroup mainPanel;
     public CanvasGroup toolsPanel;
     public GameObject saveLoadMenu;
+    public GameObject saveLoadOnlineMenu;
     public GameObject resetLevelMenu;
     [SerializeField]
     GameObject groupsMenu;
@@ -32,6 +33,7 @@ public class UIEditorManager : MonoBehaviour
     GameObject wallsMenu;
     [SerializeField]
     GameObject puzzleElementsMenu;
+
 
     [Header("Menus Pages")]
     [SerializeField]

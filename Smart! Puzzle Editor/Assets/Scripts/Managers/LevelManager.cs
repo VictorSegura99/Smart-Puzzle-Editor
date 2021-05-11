@@ -31,6 +31,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     Text buttonText;
     public InputField levelNameField;
+    public InputField levelNameOnlineField;
 
     [Header("Placeholder Prefabs")]
     [SerializeField]
@@ -90,6 +91,7 @@ public class LevelManager : MonoBehaviour
         UIEditorManager.instance.mainPanel.gameObject.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.toolsPanel.gameObject.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.saveLoadMenu.SetActive(newMode == LevelMode.Editor);
+        UIEditorManager.instance.saveLoadOnlineMenu.SetActive(newMode == LevelMode.Editor);
         UIEditorManager.instance.resetLevelMenu.SetActive(newMode == LevelMode.Editor);
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
@@ -134,108 +136,148 @@ public class LevelManager : MonoBehaviour
                 return;
             }
 
-            // Clearing Elements -----------------------------------------
+            ClearLevel();
+            ApplyLevel(level);
+        }
+    }
+
+    public void LoadThisLevel(Level level)
+    {
+        ClearLevel();
+        ApplyLevel(level);
+    }
+
+    public void PublishLevel()
+    {
+        if (levelNameOnlineField.text != "")
+        {
+            List<GameObject> gameElements = new List<GameObject>();
+
             for (int i = 0; i < mainElementsEditor.childCount; ++i)
             {
-                Destroy(mainElementsEditor.GetChild(i).gameObject);
+                gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
             }
 
-            PuzzleEditorController.instance.linkingObjects.Clear();
-            PuzzleEditorController.instance.baseTM.ClearAllTiles();
-            PuzzleEditorController.instance.collidable.ClearAllTiles();
-            PuzzleEditorController.instance.pathLinks.ClearAllTiles();
-            PuzzleEditorController.instance.sizeLimit.ClearAllTiles();
-            // -----------------------------------------------------------
+            Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+            
+            DataTransferer.instance.UploadFile(levelNameField.text, BinarySaveSystem.ObjectToByteArray(lvl));
+        }
+    }
 
-            // Elements
-            Dictionary<GameObject, int> elementsToLink = new Dictionary<GameObject, int>();
-            for (int i = 0; i < level.levelElements.Count; ++i)
+    public void DownloadLevel()
+    {
+        if (levelNameOnlineField.text != "")
+        {
+            DataTransferer.instance.DownloadLevel(levelNameOnlineField.text);
+        }
+    }
+
+    void ClearLevel()
+    {
+        // Clearing Elements -----------------------------------------
+        for (int i = 0; i < mainElementsEditor.childCount; ++i)
+        {
+            Destroy(mainElementsEditor.GetChild(i).gameObject);
+        }
+
+        PuzzleEditorController.instance.linkingObjects.Clear();
+        PuzzleEditorController.instance.baseTM.ClearAllTiles();
+        PuzzleEditorController.instance.collidable.ClearAllTiles();
+        PuzzleEditorController.instance.pathLinks.ClearAllTiles();
+        PuzzleEditorController.instance.sizeLimit.ClearAllTiles();
+        // -----------------------------------------------------------
+    }
+
+    void ApplyLevel(Level level)
+    {
+        // Elements
+        Dictionary<GameObject, int> elementsToLink = new Dictionary<GameObject, int>();
+        for (int i = 0; i < level.levelElements.Count; ++i)
+        {
+            ElementData ED = level.levelElements[i];
+            Vector3 pos = new Vector3(ED.posX, ED.posY, ED.posZ);
+            GameObject go = null;
+
+            switch (ED.type)
             {
-                ElementData ED = level.levelElements[i];
-                Vector3 pos = new Vector3(ED.posX, ED.posY, ED.posZ);
-                GameObject go = null;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.Puzzle:
+                    go = Instantiate(puzzlePH, pos, puzzlePH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.Player:
+                    go = Instantiate(playerPH, pos, playerPH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformBox:
+                    go = Instantiate(platformBoxPH, pos, platformBoxPH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformCircle:
+                    go = Instantiate(platformCirclePH, pos, platformCirclePH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.Doors:
+                    go = Instantiate(doorsPH, pos, doorsPH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.MovingBox:
+                    go = Instantiate(movingBoxPH, pos, movingBoxPH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalLeftDoors:
+                    go = Instantiate(VLDoorsPH, pos, VLDoorsPH.transform.rotation, mainElementsEditor);
+                    break;
+                case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalRightDoors:
+                    go = Instantiate(VRDoorsPH, pos, VRDoorsPH.transform.rotation, mainElementsEditor);
+                    break;
+            }
 
-                switch (ED.type)
+            if (go)
+                go.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
+
+            LinkElementPlaceholder LEP = go.GetComponent<LinkElementPlaceholder>();
+            if (LEP)
+            {
+                var linkingObjects = PuzzleEditorController.instance.linkingObjects;
+                if (!linkingObjects.ContainsKey(go))
                 {
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.Puzzle:
-                        go = Instantiate(puzzlePH, pos, puzzlePH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.Player:
-                        go = Instantiate(playerPH, pos, playerPH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformBox:
-                        go = Instantiate(platformBoxPH, pos, platformBoxPH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.PlatformCircle:
-                        go = Instantiate(platformCirclePH, pos, platformCirclePH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.Doors:
-                        go = Instantiate(doorsPH, pos, doorsPH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.MovingBox:
-                        go = Instantiate(movingBoxPH, pos, movingBoxPH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalLeftDoors:
-                        go = Instantiate(VLDoorsPH, pos, VLDoorsPH.transform.rotation, mainElementsEditor);
-                        break;
-                    case (int)PuzzleElementPlaceHolder.PuzzleElementType.VerticalRightDoors:
-                        go = Instantiate(VRDoorsPH, pos, VRDoorsPH.transform.rotation, mainElementsEditor);
-                        break;
+                    linkingObjects.Add(go, LEP.type);
                 }
 
-                if (go)
-                    go.GetComponent<PuzzleElementPlaceHolder>().ChangeState(PuzzleElementPlaceHolder.States.InLevel);
-
-                LinkElementPlaceholder LEP = go.GetComponent<LinkElementPlaceholder>();
-                if (LEP)
+                if (ED.elementLinkedPos != -1)
                 {
-                    var linkingObjects = PuzzleEditorController.instance.linkingObjects;
-                    if (!linkingObjects.ContainsKey(go))
+                    foreach (KeyValuePair<GameObject, int> previousElement in elementsToLink)
                     {
-                        linkingObjects.Add(go, LEP.type);
+                        if (i == previousElement.Value)
+                        {
+                            previousElement.Key.GetComponent<LinkElementPlaceholder>().elementLinked = go;
+                            LEP.elementLinked = previousElement.Key;
+
+                            elementsToLink.Remove(previousElement.Key);
+                            break;
+                        }
                     }
 
-                    if (ED.elementLinkedPos != -1)
+                    if (!LEP.elementLinked)
                     {
-                        foreach (KeyValuePair<GameObject, int> previousElement in elementsToLink)
-                        {
-                            if (i == previousElement.Value)
-                            {
-                                previousElement.Key.GetComponent<LinkElementPlaceholder>().elementLinked = go;
-                                LEP.elementLinked = previousElement.Key;
-
-                                elementsToLink.Remove(previousElement.Key);
-                                break;
-                            }
-                        }
-
-                        if (!LEP.elementLinked)
-                        {
-                            elementsToLink.Add(go, ED.elementLinkedPos);
-                        }
+                        elementsToLink.Add(go, ED.elementLinkedPos);
                     }
                 }
             }
+        }
 
-            // Tiles
-            AllTiles allTiles = PuzzleEditorController.instance.allTiles;
+        // Tiles
+        AllTiles allTiles = PuzzleEditorController.instance.allTiles;
 
-            PuzzleEditorController.instance.SetSize(level.size);
-            SetCameraSize(level.size);
+        PuzzleEditorController.instance.SetSize(level.size);
+        SetCameraSize(level.size);
 
-            for (int i = 0; i < level.groundTiles.Count; ++i)
-            {
-                TileData TD = level.groundTiles[i];
-                Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
-                PuzzleEditorController.instance.baseTM.SetTile(pos, GetTileFromInt(TD.id, allTiles));
-            }
+        for (int i = 0; i < level.groundTiles.Count; ++i)
+        {
+            TileData TD = level.groundTiles[i];
+            Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
+            PuzzleEditorController.instance.baseTM.SetTile(pos, GetTileFromInt(TD.id, allTiles));
+        }
 
-            for (int i = 0; i < level.collidableTiles.Count; ++i)
-            {
-                TileData TD = level.collidableTiles[i];
-                Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
-                PuzzleEditorController.instance.collidable.SetTile(pos, GetTileFromInt(TD.id, allTiles));
-            }
+        for (int i = 0; i < level.collidableTiles.Count; ++i)
+        {
+            TileData TD = level.collidableTiles[i];
+            Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
+            PuzzleEditorController.instance.collidable.SetTile(pos, GetTileFromInt(TD.id, allTiles));
         }
     }
 

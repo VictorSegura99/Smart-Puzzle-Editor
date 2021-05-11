@@ -101,7 +101,7 @@ public class PuzzleEditorController : MonoBehaviour
         Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
 
         // Change Tools Keyboard Controls -------------------------------------------
-        if (!LevelManager.instance.levelNameField.isFocused)
+        if (!LevelManager.instance.levelNameField.isFocused && !LevelManager.instance.levelNameOnlineField.isFocused)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
