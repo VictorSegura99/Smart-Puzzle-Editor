@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
 public class Main_Menu_Manager : MonoBehaviour
 {
@@ -10,6 +12,16 @@ public class Main_Menu_Manager : MonoBehaviour
     //    - Menus
     public GameObject main_menu;
     public GameObject tutorial_menu;
+
+    [Header("LogIn Menu")]
+    [SerializeField]
+    InputField nicknameField;
+    [SerializeField]
+    InputField passwordField;
+    [SerializeField]
+    Button LogInButton;
+    [SerializeField]
+    Text errorMessages;
 
     // Internal Variables
     public enum Menu_States
@@ -67,4 +79,51 @@ public class Main_Menu_Manager : MonoBehaviour
 
 
     // Buttons
+    public void LogIn()
+    {
+        StartCoroutine(BeginLogin());
+    }
+
+    IEnumerator BeginLogin()
+    {
+        LogInButton.interactable = false;
+
+        string url = DataTransferer.serverURL + "Login.php";
+
+        WWWForm w = new WWWForm();
+        w.AddField("username", nicknameField.text);
+        w.AddField("Password", passwordField.text);
+
+
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, w))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.error != null)
+            {
+                errorMessages.text = "404 not found";
+            }
+            else
+            {
+                if (www.isDone)
+                {
+                    errorMessages.gameObject.SetActive(true);
+
+                    if (www.downloadHandler.text.Contains("Error"))
+                    {
+                        errorMessages.text = www.downloadHandler.text;
+                        errorMessages.color = Color.red;
+                    }
+                    else
+                    {
+                        errorMessages.text = "Welcome!";
+                        errorMessages.color = Color.green;
+                    }
+                }
+            }
+        }
+
+        LogInButton.interactable = true;
+    }
 }
