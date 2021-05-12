@@ -23,6 +23,16 @@ public class Main_Menu_Manager : MonoBehaviour
     [SerializeField]
     Text errorMessages;
 
+    [Header("Register Menu")]
+    [SerializeField]
+    InputField nicknameField_register;
+    [SerializeField]
+    InputField passwordField_register;
+    [SerializeField]
+    Button RegisterButton;
+    [SerializeField]
+    Text errorMessages_register;
+
     // Internal Variables
     public enum Menu_States
     {
@@ -94,8 +104,6 @@ public class Main_Menu_Manager : MonoBehaviour
         w.AddField("username", nicknameField.text);
         w.AddField("Password", passwordField.text);
 
-
-
         using (UnityWebRequest www = UnityWebRequest.Post(url, w))
         {
             yield return www.SendWebRequest();
@@ -110,7 +118,7 @@ public class Main_Menu_Manager : MonoBehaviour
                 {
                     errorMessages.gameObject.SetActive(true);
 
-                    if (www.downloadHandler.text.Contains("Error"))
+                    if (www.downloadHandler.text.Contains("Error") && !www.downloadHandler.text.Contains("Success"))
                     {
                         errorMessages.text = www.downloadHandler.text;
                         errorMessages.color = Color.red;
@@ -125,5 +133,52 @@ public class Main_Menu_Manager : MonoBehaviour
         }
 
         LogInButton.interactable = true;
+    }
+
+    public void Register()
+    {
+        StartCoroutine(BeginRegister());
+    }
+
+    IEnumerator BeginRegister()
+    {
+        RegisterButton.interactable = false;
+
+        string url = DataTransferer.serverURL + "Register.php";
+
+        WWWForm w = new WWWForm();
+        w.AddField("username", nicknameField_register.text);
+        w.AddField("Password", passwordField_register.text);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, w))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.error != null)
+            {
+                errorMessages_register.text = "404 not found";
+            }
+            else
+            {
+                if (www.isDone)
+                {
+                    errorMessages_register.gameObject.SetActive(true);
+
+                    if (www.downloadHandler.text.Contains("Error") && !www.downloadHandler.text.Contains("Success"))
+                    {
+                        errorMessages_register.text = www.downloadHandler.text;
+                        errorMessages_register.color = Color.red;
+                        Debug.Log(errorMessages_register.text);
+                    }
+                    else
+                    {
+                        errorMessages_register.text = "Welcome!";
+                        errorMessages_register.color = Color.green;
+                    }
+                }
+            }
+        }
+
+        RegisterButton.interactable = true;
     }
 }
