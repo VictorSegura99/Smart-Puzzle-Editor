@@ -160,7 +160,7 @@ public class LevelManager : MonoBehaviour
 
             Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
             
-            DataTransferer.instance.UploadFile(levelNameField.text, BinarySaveSystem.ObjectToByteArray(lvl));
+            DataTransferer.instance.UploadFile(levelNameOnlineField.text, BinarySaveSystem.ObjectToByteArray(lvl));
         }
     }
 

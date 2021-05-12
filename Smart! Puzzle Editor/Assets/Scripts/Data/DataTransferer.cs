@@ -8,7 +8,7 @@ public class DataTransferer : MonoBehaviour
 {
     static public DataTransferer instance;
 
-    static public string serverURL = "http://localhost/unity/Smart/";
+    static public string serverURL = "https://smartpuzzleshoster.000webhostapp.com/";
 
     private void Awake()
     {
@@ -31,7 +31,7 @@ public class DataTransferer : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddBinaryData("myfile", content, name, "text/plain");
 
-        UnityWebRequest w = UnityWebRequest.Post(serverURL, form);
+        UnityWebRequest w = UnityWebRequest.Post(serverURL + "index.php", form);
         yield return w.SendWebRequest();
 
         if (w.error != null)
