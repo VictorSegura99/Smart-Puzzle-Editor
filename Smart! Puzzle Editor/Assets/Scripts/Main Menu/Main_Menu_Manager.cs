@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using System.IO;
 
 public class Main_Menu_Manager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class Main_Menu_Manager : MonoBehaviour
 
     [Header("LogIn Menu")]
     [SerializeField]
+    GameObject loginMenu;
+    [SerializeField]
     InputField nicknameField;
     [SerializeField]
     InputField passwordField;
@@ -25,26 +28,59 @@ public class Main_Menu_Manager : MonoBehaviour
 
     [Header("Register Menu")]
     [SerializeField]
+    GameObject registerMenu;
+    [SerializeField]
     InputField nicknameField_register;
     [SerializeField]
     InputField passwordField_register;
+    [SerializeField]
+    InputField repeatedPasswordField_register;
     [SerializeField]
     Button RegisterButton;
     [SerializeField]
     Text errorMessages_register;
 
+    [Header("Account Detected Menu")]
+    [SerializeField]
+    GameObject accountDetectedMenu;
+    [SerializeField]
+    Text accountText;
+    [SerializeField]
+    Button acceptButton;
+    [SerializeField]
+    Button logOutButton;
+
     // Internal Variables
+    string accountDataPath = "";
+    AccountFile accountFile = null;
+
     public enum Menu_States
     {
         MAIN,
         TUTORIAL,
+        REGISTER,
+        LOGIN,
+        ACCOUNTDETECTED
     }
-    Menu_States current_state = Menu_States.MAIN;
+    Menu_States current_state = Menu_States.LOGIN;
+
+    private void Awake()
+    {
+        accountDataPath = Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data");
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (File.Exists(accountDataPath))
+        {
+            accountFile = BinarySaveSystem.LoadFile<AccountFile>(accountDataPath);
+            ChangeMenu(Menu_States.ACCOUNTDETECTED);
+        }
+        else
+        {
+            ChangeMenu(current_state);
+        }
     }
 
     // Update is called once per frame
@@ -69,21 +105,38 @@ public class Main_Menu_Manager : MonoBehaviour
 
     public void ChangeMenu(Menu_States state_to_change)
     {
-        if (current_state != state_to_change)
-        {
-            current_state = state_to_change;
+        current_state = state_to_change;
 
-            switch (state_to_change)
-            {
-                case Menu_States.MAIN:
-                    main_menu.SetActive(true);
-                    tutorial_menu.SetActive(false);
-                    break;
-                case Menu_States.TUTORIAL:
-                    main_menu.SetActive(false);
-                    tutorial_menu.SetActive(true);
-                    break;
-            }
+        switch (state_to_change)
+        {
+            case Menu_States.MAIN:
+                main_menu.SetActive(true);
+                tutorial_menu.SetActive(false);
+                loginMenu.SetActive(false);
+                accountDetectedMenu.SetActive(false);
+                break;
+            case Menu_States.TUTORIAL:
+                main_menu.SetActive(false);
+                tutorial_menu.SetActive(true);
+                break;
+            case Menu_States.LOGIN:
+                LogInButton.interactable = true;
+                main_menu.SetActive(false);
+                registerMenu.SetActive(false);
+                loginMenu.SetActive(true);
+                accountDetectedMenu.SetActive(false);
+                break;
+            case Menu_States.REGISTER:
+                registerMenu.SetActive(true);
+                loginMenu.SetActive(false);
+                break;
+            case Menu_States.ACCOUNTDETECTED:
+                accountText.text = "Account Detected: " + accountFile.Username;
+                loginMenu.SetActive(false);
+                accountDetectedMenu.SetActive(true);
+                acceptButton.interactable = true;
+                logOutButton.interactable = true;
+                break;
         }
     }
 
@@ -91,18 +144,30 @@ public class Main_Menu_Manager : MonoBehaviour
     // Buttons
     public void LogIn()
     {
-        StartCoroutine(BeginLogin());
+        if (nicknameField.text != "" && passwordField.text != "")
+        {
+            LogInButton.interactable = false;
+            StartCoroutine(BeginLogin(nicknameField.text, passwordField.text));
+        }
+    }
+    
+    public void LogOut()
+    {
+        if (File.Exists(accountDataPath))
+        {
+            File.Delete(accountDataPath);
+        }
+
+        ChangeMenu(Menu_States.LOGIN);
     }
 
-    IEnumerator BeginLogin()
+    IEnumerator BeginLogin(string username, string password)
     {
-        LogInButton.interactable = false;
-
         string url = DataTransferer.serverURL + "Login.php";
 
         WWWForm w = new WWWForm();
-        w.AddField("username", nicknameField.text);
-        w.AddField("Password", passwordField.text);
+        w.AddField("username", username);
+        w.AddField("Password", password);
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, w))
         {
@@ -125,30 +190,42 @@ public class Main_Menu_Manager : MonoBehaviour
                     }
                     else
                     {
-                        errorMessages.text = "Welcome!";
-                        errorMessages.color = Color.green;
+                        ChangeMenu(Menu_States.MAIN);
+                        if (!File.Exists(accountDataPath))
+                            SaveAccountFile(username, password);
                     }
                 }
             }
         }
-
-        LogInButton.interactable = true;
     }
 
     public void Register()
     {
-        StartCoroutine(BeginRegister());
+        if (nicknameField_register.text == "" || passwordField_register.text == "")
+        {
+            return;
+        }
+
+        if (repeatedPasswordField_register.text != passwordField_register.text)
+        {
+            errorMessages_register.text = "Passwords don't match";
+            errorMessages_register.color = Color.red;
+            errorMessages_register.gameObject.SetActive(true);
+            return;
+        }
+
+        StartCoroutine(BeginRegister(nicknameField_register.text, passwordField_register.text));
     }
 
-    IEnumerator BeginRegister()
+    IEnumerator BeginRegister(string username, string password)
     {
         RegisterButton.interactable = false;
 
         string url = DataTransferer.serverURL + "Register.php";
 
         WWWForm w = new WWWForm();
-        w.AddField("username", nicknameField_register.text);
-        w.AddField("Password", passwordField_register.text);
+        w.AddField("username", username);
+        w.AddField("Password", password);
 
         using (UnityWebRequest www = UnityWebRequest.Post(url, w))
         {
@@ -174,11 +251,52 @@ public class Main_Menu_Manager : MonoBehaviour
                     {
                         errorMessages_register.text = "Welcome!";
                         errorMessages_register.color = Color.green;
+                        Invoke("GoToLogIn", 0.25f);
                     }
                 }
             }
         }
 
         RegisterButton.interactable = true;
+    }
+
+    void SaveAccountFile(string username, string password)
+    {
+        BinarySaveSystem.SaveFile(accountDataPath, new AccountFile(username, password));
+    }
+
+    public void EnterAccount()
+    {
+        acceptButton.interactable = false;
+        logOutButton.interactable = false;
+        StartCoroutine(BeginLogin(accountFile.Username, accountFile.Password));
+    }
+
+    public void GoToRegister()
+    {
+        nicknameField.text = "";
+        passwordField.text = "";
+        ChangeMenu(Menu_States.REGISTER);
+    }
+
+    void GoToLogIn()
+    {
+        nicknameField_register.text = "";
+        passwordField_register.text = "";
+        repeatedPasswordField_register.text = "";
+        ChangeMenu(Menu_States.LOGIN);
+    }
+}
+
+[System.Serializable]
+public class AccountFile
+{
+    public string Username;
+    public string Password;
+
+    public AccountFile(string username, string password)
+    {
+        Username = username;
+        Password = password;
     }
 }
