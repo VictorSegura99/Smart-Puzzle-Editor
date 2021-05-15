@@ -286,6 +286,12 @@ public class Main_Menu_Manager : MonoBehaviour
         repeatedPasswordField_register.text = "";
         ChangeMenu(Menu_States.LOGIN);
     }
+
+    public void ChangePasswordVisibility(InputField inputField)
+    {
+        inputField.contentType = inputField.contentType == InputField.ContentType.Password ? InputField.ContentType.Standard : InputField.ContentType.Password;
+        inputField.ForceLabelUpdate();
+    }
 }
 
 [System.Serializable]
