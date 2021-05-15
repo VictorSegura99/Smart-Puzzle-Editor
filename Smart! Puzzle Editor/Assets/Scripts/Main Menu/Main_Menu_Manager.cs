@@ -7,6 +7,7 @@ using System.IO;
 
 public class Main_Menu_Manager : MonoBehaviour
 {
+    static public string accountDataPath = "";
     // Components
 
     // Inspector Variables
@@ -51,7 +52,6 @@ public class Main_Menu_Manager : MonoBehaviour
     Button logOutButton;
 
     // Internal Variables
-    string accountDataPath = "";
     AccountFile accountFile = null;
 
     public enum Menu_States

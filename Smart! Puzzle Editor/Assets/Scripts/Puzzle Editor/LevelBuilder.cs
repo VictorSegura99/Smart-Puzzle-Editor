@@ -173,6 +173,12 @@ public static class LevelBuilder
 [System.Serializable]
 public class Level
 {
+    public int id;
+    public string name;
+    public string description;
+    public int likes;
+    public string creatorName;
+
     public int size;
     public List<ElementData> levelElements = new List<ElementData>();
     public List<TileData> groundTiles = new List<TileData>();

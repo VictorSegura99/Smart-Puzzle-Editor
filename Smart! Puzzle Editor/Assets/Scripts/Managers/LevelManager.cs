@@ -6,10 +6,13 @@ using UnityEngine.UI;
 using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class LevelManager : MonoBehaviour
 {
     static public LevelManager instance;
+
+    static public string username = "";
 
     public enum LevelMode
     {
@@ -54,6 +57,11 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        if (File.Exists(Main_Menu_Manager.accountDataPath))
+        {
+            username = BinarySaveSystem.LoadFile<AccountFile>(Main_Menu_Manager.accountDataPath).Username;
+        }
     }
 
     // Start is called before the first frame update
@@ -159,8 +167,10 @@ public class LevelManager : MonoBehaviour
             }
 
             Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
-            
-            DataTransferer.instance.UploadFile(levelNameOnlineField.text, BinarySaveSystem.ObjectToByteArray(lvl));
+            lvl.name = levelNameOnlineField.text;
+            lvl.description = "";
+
+            DataTransferer.instance.UploadLevel(lvl);
         }
     }
 
