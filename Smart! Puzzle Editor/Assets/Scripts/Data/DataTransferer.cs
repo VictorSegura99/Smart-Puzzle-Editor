@@ -45,14 +45,14 @@ public class DataTransferer : MonoBehaviour
         w.Dispose();
     }
 
-    public void DownloadLevel(string filename)
+    public void DownloadLevel(string id)
     {
-        StartCoroutine(StartDownloadLevel(filename));
+        StartCoroutine(StartDownloadLevel(id));
     }
 
-    IEnumerator StartDownloadLevel(string filename)
+    IEnumerator StartDownloadLevel(string id)
     {
-        string url = serverURL + "levels/" + filename;
+        string url = serverURL + "levels/" + id;
 
         UnityWebRequest w = UnityWebRequest.Get(url);
 
@@ -64,7 +64,9 @@ public class DataTransferer : MonoBehaviour
         }
         else
         {
-            LevelManager.instance.LoadThisLevel((Level)BinarySaveSystem.ByteArrayToObject(w.downloadHandler.data));
+            PuzzleLoader puzzleLoader = Instantiate(PuzzleSelectorManager.instance.puzzleLoader).GetComponent<PuzzleLoader>();
+            puzzleLoader.sceneToLoad = "PuzzleEditor";
+            puzzleLoader.levelToLoad = (Level)BinarySaveSystem.ByteArrayToObject(w.downloadHandler.data);
         }
         w.Dispose();
     }
@@ -86,6 +88,7 @@ public class DataTransferer : MonoBehaviour
         w.AddField("levelDescription", level.description);
         w.AddField("likes", level.likes);
         w.AddField("creatorName", level.creatorName);
+        w.AddField("levelSize", level.size);
 
         using (UnityWebRequest www = UnityWebRequest.Post(serverURL + "AddPuzzle.php", w))
         {

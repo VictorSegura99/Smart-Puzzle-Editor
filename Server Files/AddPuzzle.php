@@ -7,6 +7,7 @@ $levelName = $_POST["levelName"];
 $levelDescription = $_POST["levelDescription"];
 $levelLikes = $_POST["likes"];
 $creatorName = $_POST["creatorName"];
+$levelSize = $_POST["levelSize"];
 
 if (!$conn)
 {
@@ -23,7 +24,7 @@ else
     }
     else
     {
-        $sql2 = "INSERT INTO Levels (id, name, description, likes, creatorName) VALUES ('" . $levelID . "','" . $levelName . "', '" . $levelDescription . "', '" . $levelLikes . "', '" . $creatorName . "')";
+        $sql2 = "INSERT INTO Levels (id, name, description, likes, creatorName, size) VALUES ('" . $levelID . "','" . $levelName . "', '" . $levelDescription . "', '" . $levelLikes . "', '" . $creatorName . "', '" . $levelSize . "')";
         if ($conn->query($sql2) === TRUE)
         {
             echo "Level added successfully";

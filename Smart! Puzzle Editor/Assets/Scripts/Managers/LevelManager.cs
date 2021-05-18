@@ -54,6 +54,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     GameObject movingBoxPH;
 
+    [HideInInspector]
+    public bool isReady = false;
+
     private void Awake()
     {
         instance = this;
@@ -68,6 +71,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         ChangeMode(mode);
+        isReady = true;
     }
 
     public void ChangeMode(LevelMode newMode)
