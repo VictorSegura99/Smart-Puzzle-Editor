@@ -195,12 +195,12 @@ public class DataTransferer : MonoBehaviour
         w.Dispose();
     }
 
-    public void LikeLevel(int id, string currentUsername)
+    public void LikeLevel(int id, string currentUsername, LevelInfo level)
     {
-        StartCoroutine(LikeLevelProcess(id, currentUsername));
+        StartCoroutine(LikeLevelProcess(id, currentUsername, level));
     }
 
-    IEnumerator LikeLevelProcess(int id, string currentUsername)
+    IEnumerator LikeLevelProcess(int id, string currentUsername, LevelInfo level)
     {
         string url = serverURL + "CheckUserLike.php";
         
@@ -225,7 +225,6 @@ public class DataTransferer : MonoBehaviour
             {
                 string user = "";
                 string usersLiked = www.downloadHandler.text;
-                string newUsersList = "";
 
                 for (int i = 0; i < usersLiked.Length; ++i)
                 {
@@ -244,7 +243,7 @@ public class DataTransferer : MonoBehaviour
                             }
 
                             //Dislike
-                            StartCoroutine(AddLike(id, -1, new string(users.ToArray())));
+                            StartCoroutine(AddLike(id, -1, new string(users.ToArray()), level));
                             yield break;
                         }
 
@@ -258,12 +257,12 @@ public class DataTransferer : MonoBehaviour
                 usersLiked += currentUsername + ",";
 
                 // Like
-                StartCoroutine(AddLike(id, 1, usersLiked));
+                StartCoroutine(AddLike(id, 1, usersLiked, level));
             }
         }
     }
 
-    IEnumerator AddLike(int id, int likeChange, string newUsersList)
+    IEnumerator AddLike(int id, int likeChange, string newUsersList, LevelInfo level)
     {
         string url = serverURL + "AddLike.php";
         WWWForm w = new WWWForm();
@@ -287,7 +286,7 @@ public class DataTransferer : MonoBehaviour
             }
             else
             {
-                PuzzleSelectorManager.instance.UpdateLikeCount(int.Parse(vv.downloadHandler.text));
+                PuzzleSelectorManager.instance.UpdateLikeCount(int.Parse(vv.downloadHandler.text), level);
             }
         }
     }

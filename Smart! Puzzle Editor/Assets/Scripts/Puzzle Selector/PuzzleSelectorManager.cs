@@ -188,11 +188,17 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     public void LikeLevel()
     {
-        DataTransferer.instance.LikeLevel(int.Parse(lastLevelShown.id), currentUsername);
+        if (lastLevelShown != null)
+            DataTransferer.instance.LikeLevel(int.Parse(lastLevelShown.id), currentUsername, lastLevelShown);
     }
 
-    public void UpdateLikeCount(int likeCount)
+    public void UpdateLikeCount(int likeCount, LevelInfo level)
     {
+        if (level != lastLevelShown)
+        {
+            return;
+        }
+
         string likesS = likeCount < 10 ? "0" + likeCount.ToString() : likeCount.ToString();
         likes.text = likesS;
         lastLevelShown.likesNumber = likeCount;
