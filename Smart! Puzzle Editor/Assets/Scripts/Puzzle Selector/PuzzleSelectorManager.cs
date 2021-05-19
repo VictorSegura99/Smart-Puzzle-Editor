@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class PuzzleSelectorManager : MonoBehaviour
 {
@@ -48,10 +49,16 @@ public class PuzzleSelectorManager : MonoBehaviour
     Text likes;
 
     LevelInfo lastLevelShown;
+    string currentUsername = "";
 
     private void Awake()
     {
         instance = this;
+
+        if (File.Exists(Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data")))
+        {
+            currentUsername = BinarySaveSystem.LoadFile<AccountFile>(Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data")).Username;
+        }
     }
 
     private void Start()
@@ -177,6 +184,18 @@ public class PuzzleSelectorManager : MonoBehaviour
             ls.ApplyInfo(levelInfo);
             levelInfo = new LevelInfo();
         }
+    }
+
+    public void LikeLevel()
+    {
+        DataTransferer.instance.LikeLevel(int.Parse(lastLevelShown.id), currentUsername);
+    }
+
+    public void UpdateLikeCount(int likeCount)
+    {
+        string likesS = likeCount < 10 ? "0" + likeCount.ToString() : likeCount.ToString();
+        likes.text = likesS;
+        lastLevelShown.likesNumber = likeCount;
     }
 }
 

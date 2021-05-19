@@ -194,4 +194,101 @@ public class DataTransferer : MonoBehaviour
         }
         w.Dispose();
     }
+
+    public void LikeLevel(int id, string currentUsername)
+    {
+        StartCoroutine(LikeLevelProcess(id, currentUsername));
+    }
+
+    IEnumerator LikeLevelProcess(int id, string currentUsername)
+    {
+        string url = serverURL + "CheckUserLike.php";
+        
+        WWWForm w = new WWWForm();
+        w.AddField("id", id);
+        
+        using (UnityWebRequest www = UnityWebRequest.Post(url, w))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.error != null)
+            {
+                Debug.Log("404 not found");
+                yield break;
+            }
+            else if (www.downloadHandler.text.Contains("Error"))
+            {
+                Debug.Log(www.downloadHandler.text);
+                yield break;
+            }
+            else
+            {
+                string user = "";
+                string usersLiked = www.downloadHandler.text;
+                string newUsersList = "";
+
+                for (int i = 0; i < usersLiked.Length; ++i)
+                {
+                    if (usersLiked[i] == ',')
+                    {
+                        if (user == currentUsername)
+                        {
+                            int l = user.Length + 1;
+                            int j = i - user.Length;
+                            List<char> users = new List<char>(usersLiked);
+
+                            while (l > 0)
+                            {
+                                users.Remove(users[j]);
+                                --l;
+                            }
+
+                            //Dislike
+                            StartCoroutine(AddLike(id, -1, new string(users.ToArray())));
+                            yield break;
+                        }
+
+                        user = "";
+                        continue;
+                    }
+
+                    user += usersLiked[i];
+                }
+
+                usersLiked += currentUsername + ",";
+
+                // Like
+                StartCoroutine(AddLike(id, 1, usersLiked));
+            }
+        }
+    }
+
+    IEnumerator AddLike(int id, int likeChange, string newUsersList)
+    {
+        string url = serverURL + "AddLike.php";
+        WWWForm w = new WWWForm();
+        w.AddField("id", id);
+        w.AddField("likeChange", likeChange);
+        w.AddField("usersList", newUsersList);
+
+        using (UnityWebRequest vv = UnityWebRequest.Post(url, w))
+        {
+            yield return vv.SendWebRequest();
+
+            if (vv.error != null)
+            {
+                Debug.Log("404 not found");
+                yield break;
+            }
+            else if (vv.downloadHandler.text.Contains("Error"))
+            {
+                Debug.Log(vv.downloadHandler.text);
+                yield break;
+            }
+            else
+            {
+                PuzzleSelectorManager.instance.UpdateLikeCount(int.Parse(vv.downloadHandler.text));
+            }
+        }
+    }
 }
