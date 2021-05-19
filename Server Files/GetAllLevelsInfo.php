@@ -17,7 +17,7 @@ else
         echo $result->num_rows . "/";
         while ($row = $result->fetch_assoc())
         {
-            echo $row["id"] . "," . $row["name"] . "," . $row["description"] . "," . $row["likes"]. "," . $row["creatorName"] . "," . $row["size"] . "/";
+            echo $row["id"] . "|" . $row["name"] . "|" . $row["description"] . "|" . $row["likes"]. "|" . $row["creatorName"] . "|" . $row["size"] . "/";
         }
     }
     else

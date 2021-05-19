@@ -115,12 +115,14 @@ public class PuzzleSelectorManager : MonoBehaviour
         int lastChar = 2;
         LevelInfo levelInfo = new LevelInfo();
 
+        char levelSeparator = '|';
+
         for (int i = 0; i < levels; ++i)
         {
             while (levelsData[lastChar] != '/')
             {
                 string data = "";
-                while (levelsData[lastChar] != ',')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
@@ -130,7 +132,7 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != ',')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
@@ -140,7 +142,7 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != ',')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
@@ -150,7 +152,7 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != ',')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
@@ -160,7 +162,7 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != ',')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
