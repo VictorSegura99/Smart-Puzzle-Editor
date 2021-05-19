@@ -11,20 +11,20 @@ public class LevelSummary : MonoBehaviour
     [SerializeField]
     Text likes;
 
-    [SerializeField]
-    LevelInfo level;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        levelName.text = level.levelname;
-
-        string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
-        likes.text = likesS;
-    }
+    LevelInfo level = new LevelInfo();
 
     public void SummaryClicked()
     {
         PuzzleSelectorManager.instance.ApplyLevelInfo(level);
+    }
+
+    public void ApplyInfo(LevelInfo info)
+    {
+        level = info;
+
+        levelName.text = level.levelname;
+
+        string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
+        likes.text = likesS;
     }
 }

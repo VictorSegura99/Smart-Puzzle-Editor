@@ -171,4 +171,27 @@ public class DataTransferer : MonoBehaviour
             StartCoroutine(StartUploadingLevel(level));
         }
     }
+
+    public void GetLevels()
+    {
+        StartCoroutine(GetAllLevelsInfo());
+    }
+
+    IEnumerator GetAllLevelsInfo()
+    {
+        string url = serverURL + "GetAllLevelsInfo.php";
+        UnityWebRequest w = UnityWebRequest.Get(url);
+
+        yield return w.SendWebRequest();
+
+        if (w.error != null)
+        {
+            Debug.Log("Error: " + w.error);
+        }
+        else
+        {
+            PuzzleSelectorManager.instance.ApplyAllLevelsData(w.downloadHandler.text);
+        }
+        w.Dispose();
+    }
 }

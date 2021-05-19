@@ -17,6 +17,12 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     [Header("Game Objects")]
     public GameObject puzzleLoader;
+    [SerializeField]
+    GameObject levelSummary;
+    [SerializeField]
+    Transform communityPanel;
+    [SerializeField]
+    Transform savedPanel;
 
     [Header("Buttons")]
     [SerializeField]
@@ -51,6 +57,7 @@ public class PuzzleSelectorManager : MonoBehaviour
     private void Start()
     {
         ChangePuzzleSelectedShowing((int)PuzzlesSelected.Community);
+        DataTransferer.instance.GetLevels();
     }
 
     public void ChangePuzzleSelectedShowing(int selectedType)
@@ -94,6 +101,83 @@ public class PuzzleSelectorManager : MonoBehaviour
     {
         DataTransferer.instance.DownloadLevel(lastLevelShown.id);
     }
+
+    public void ApplyAllLevelsData(string levelsData)
+    {
+        int levels = int.Parse(levelsData[0].ToString());
+        int lastChar = 2;
+        LevelInfo levelInfo = new LevelInfo();
+
+        for (int i = 0; i < levels; ++i)
+        {
+            while (levelsData[lastChar] != '/')
+            {
+                string data = "";
+                while (levelsData[lastChar] != ',')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.id = data;
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != ',')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.levelname = data;
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != ',')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.description = data;
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != ',')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.likesNumber = int.Parse(data);
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != ',')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.username = data;
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != '/')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.size = int.Parse(data);
+            }
+
+            ++lastChar;
+            LevelSummary ls = Instantiate(levelSummary, communityPanel).GetComponent<LevelSummary>();
+            ls.ApplyInfo(levelInfo);
+            levelInfo = new LevelInfo();
+        }
+    }
 }
 
 [System.Serializable]
@@ -105,6 +189,8 @@ public class LevelInfo
     public string description;
     public int likesNumber;
     public int size;
+
+    public LevelInfo() { }
 
     public LevelInfo(string id, string LevelName, string Username, string Description, int LikesNumber, int size)
     {
