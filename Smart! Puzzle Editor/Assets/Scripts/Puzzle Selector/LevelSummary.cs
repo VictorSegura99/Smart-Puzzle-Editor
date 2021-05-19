@@ -15,7 +15,7 @@ public class LevelSummary : MonoBehaviour
 
     public void SummaryClicked()
     {
-        PuzzleSelectorManager.instance.ApplyLevelInfo(level);
+        PuzzleSelectorManager.instance.ApplyLevelInfo(level, this);
     }
 
     public void ApplyInfo(LevelInfo info)

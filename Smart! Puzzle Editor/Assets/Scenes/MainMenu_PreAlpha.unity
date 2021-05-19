@@ -1898,6 +1898,7 @@ MonoBehaviour:
   levelSummary: {fileID: 4834904346300470444, guid: a88fb964baff96e43b1e474c1dc38d72, type: 3}
   communityPanel: {fileID: 778752952}
   savedPanel: {fileID: 0}
+  heartLike: {fileID: 460046391}
   communityButton: {fileID: 24240956}
   savedButton: {fileID: 626053753}
   selectedButtonSprite: {fileID: 21300000, guid: 8e0f89d97665e5f48b9d686ab01c2a44, type: 3}

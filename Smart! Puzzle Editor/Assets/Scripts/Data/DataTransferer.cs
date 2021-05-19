@@ -286,7 +286,9 @@ public class DataTransferer : MonoBehaviour
             }
             else
             {
-                PuzzleSelectorManager.instance.UpdateLikeCount(int.Parse(vv.downloadHandler.text), level);
+                level.usersLiked = newUsersList;
+                level.likesNumber = int.Parse(vv.downloadHandler.text);
+                PuzzleSelectorManager.instance.UpdateLikeCount(level);
             }
         }
     }

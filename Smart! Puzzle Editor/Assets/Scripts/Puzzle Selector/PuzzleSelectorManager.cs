@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-
+using TMPro;
 public class PuzzleSelectorManager : MonoBehaviour
 {
     static public PuzzleSelectorManager instance;
@@ -24,6 +24,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     Transform communityPanel;
     [SerializeField]
     Transform savedPanel;
+    [SerializeField]
+    TextMeshProUGUI heartLike;
 
     [Header("Buttons")]
     [SerializeField]
@@ -91,7 +93,7 @@ public class PuzzleSelectorManager : MonoBehaviour
         currentPuzzlesShowing = newType;
     }
 
-    public void ApplyLevelInfo(LevelInfo level)
+    public void ApplyLevelInfo(LevelInfo level, LevelSummary ls)
     {
         levelname.text = level.levelname;
         size.text = "Size: " + level.size + "x" + level.size;
@@ -100,6 +102,27 @@ public class PuzzleSelectorManager : MonoBehaviour
 
         string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
         likes.text = likesS;
+        ls.ApplyInfo(level);
+
+        string user = "";
+        string usersLiked = level.usersLiked;
+        heartLike.color = Color.white;
+
+        for (int i = 0; i < usersLiked.Length; ++i)
+        {
+            if (usersLiked[i] == ',')
+            {
+                if (user == currentUsername)
+                {
+                    heartLike.color = Color.green;
+                }
+
+                user = "";
+                continue;
+            }
+
+            user += usersLiked[i];
+        }
 
         lastLevelShown = level;
     }
@@ -172,17 +195,28 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != '/')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
                 }
 
                 levelInfo.size = int.Parse(data);
+                data = "";
+                ++lastChar;
+
+                while (levelsData[lastChar] != '/')
+                {
+                    data += levelsData[lastChar];
+                    ++lastChar;
+                }
+
+                levelInfo.usersLiked = data;
             }
 
             ++lastChar;
             LevelSummary ls = Instantiate(levelSummary, communityPanel).GetComponent<LevelSummary>();
+            levelInfo.levelSummary = ls;
             ls.ApplyInfo(levelInfo);
             levelInfo = new LevelInfo();
         }
@@ -194,16 +228,14 @@ public class PuzzleSelectorManager : MonoBehaviour
             DataTransferer.instance.LikeLevel(int.Parse(lastLevelShown.id), currentUsername, lastLevelShown);
     }
 
-    public void UpdateLikeCount(int likeCount, LevelInfo level)
+    public void UpdateLikeCount(LevelInfo level)
     {
         if (level != lastLevelShown)
         {
             return;
         }
 
-        string likesS = likeCount < 10 ? "0" + likeCount.ToString() : likeCount.ToString();
-        likes.text = likesS;
-        lastLevelShown.likesNumber = likeCount;
+        ApplyLevelInfo(level, level.levelSummary);
     }
 }
 
@@ -216,10 +248,12 @@ public class LevelInfo
     public string description;
     public int likesNumber;
     public int size;
+    public string usersLiked;
+    public LevelSummary levelSummary;
 
     public LevelInfo() { }
 
-    public LevelInfo(string id, string LevelName, string Username, string Description, int LikesNumber, int size)
+    public LevelInfo(string id, string LevelName, string Username, string Description, int LikesNumber, int size, string usersLiked)
     {
         this.id = id;
         levelname = LevelName;
@@ -227,5 +261,6 @@ public class LevelInfo
         description = Description;
         likesNumber = LikesNumber;
         this.size = size;
+        this.usersLiked = usersLiked;
     }
 }
