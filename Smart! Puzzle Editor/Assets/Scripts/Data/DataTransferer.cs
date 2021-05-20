@@ -292,4 +292,47 @@ public class DataTransferer : MonoBehaviour
             }
         }
     }
+
+    public void DeleteLevel(string id)
+    {
+        StartCoroutine(DeleteLevelProcess(id));
+    }
+
+    IEnumerator DeleteLevelProcess(string id)
+    {
+        string fileURL = serverURL + "DeleteLevelFile.php";
+        string dataURL = serverURL + "DeleteLevelData.php";
+
+        WWWForm w = new WWWForm();
+        w.AddField("id", id);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(dataURL, w))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.error != null)
+            {
+                Debug.Log("404 not found");
+                yield break;
+            }
+            else if (www.downloadHandler.text.Contains("Error"))
+            {
+                Debug.Log(www.downloadHandler.text);
+                yield break;
+            }
+        }
+
+        UnityWebRequest wL = UnityWebRequest.Post(fileURL, w);
+        yield return wL.SendWebRequest();
+
+        if (wL.error != null)
+        {
+            Debug.Log("Error: " + wL.error);
+        }
+        else
+        {
+            Debug.Log(wL.result);
+        }
+        wL.Dispose();
+    }
 }

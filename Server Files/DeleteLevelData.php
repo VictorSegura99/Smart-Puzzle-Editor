@@ -3,11 +3,6 @@
 $conn = mysqli_connect("localhost", "id16796074_levelsusers", "6sIHl9OtNu@Wo%~]", "id16796074_levels");
 
 $levelID = $_POST["id"];
-$levelName = $_POST["levelName"];
-$levelDescription = $_POST["levelDescription"];
-$levelLikes = $_POST["likes"];
-$creatorName = $_POST["creatorName"];
-$levelSize = $_POST["levelSize"];
 
 if (!$conn)
 {
@@ -18,13 +13,13 @@ else
     $sql = "SELECT id FROM Levels WHERE id = '" . $levelID . "'";
     $result = $conn->query($sql);
 
-    if ($result->num_rows > 0)
+    if ($result->num_rows < 1)
     {
-        echo "Error: Id already existing";
+        echo "Error: Id doesn't exist.";
     }
     else
     {
-        $sql2 = "INSERT INTO Levels (id, name, description, likes, creatorName, size, usersLiked) VALUES ('" . $levelID . "','" . $levelName . "', '" . $levelDescription . "', '" . $levelLikes . "', '" . $creatorName . "', '" . $levelSize . "' , '')";
+        $sql2 = "DELETE FROM Levels WHERE id = '" . $levelID . "'";
         if ($conn->query($sql2) === TRUE)
         {
             echo "Level added successfully";

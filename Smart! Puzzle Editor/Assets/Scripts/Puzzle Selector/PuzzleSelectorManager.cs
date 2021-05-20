@@ -26,6 +26,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     Transform savedPanel;
     [SerializeField]
     TextMeshProUGUI heartLike;
+    [SerializeField]
+    GameObject deleteButton;
 
     [Header("Buttons")]
     [SerializeField]
@@ -124,6 +126,7 @@ public class PuzzleSelectorManager : MonoBehaviour
             user += usersLiked[i];
         }
 
+        deleteButton.SetActive(level.username == currentUsername);
         lastLevelShown = level;
     }
 
@@ -236,6 +239,12 @@ public class PuzzleSelectorManager : MonoBehaviour
         }
 
         ApplyLevelInfo(level, level.levelSummary);
+    }
+
+    public void DeleteLevel()
+    {
+        Destroy(lastLevelShown.levelSummary.gameObject);
+        DataTransferer.instance.DeleteLevel(lastLevelShown.id);
     }
 }
 
