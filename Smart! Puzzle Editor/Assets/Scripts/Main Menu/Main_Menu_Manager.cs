@@ -292,6 +292,19 @@ public class Main_Menu_Manager : MonoBehaviour
         inputField.contentType = inputField.contentType == InputField.ContentType.Password ? InputField.ContentType.Standard : InputField.ContentType.Password;
         inputField.ForceLabelUpdate();
     }
+
+    public void BlockStrangeChars(InputField inputField)
+    {
+        if (inputField.text.Length < 1)
+        {
+            return;
+        }
+
+        if (inputField.text[inputField.text.Length - 1] == '/' || inputField.text[inputField.text.Length - 1] == '|')
+        {
+            inputField.text = inputField.text.Remove(inputField.text.Length - 1);
+        }
+    }
 }
 
 [System.Serializable]
