@@ -17,6 +17,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     }
 
     [Header("Game Objects")]
+    [SerializeField]
+    GameObject puzzleInfo;
     public GameObject puzzleLoader;
     [SerializeField]
     GameObject levelSummary;
@@ -28,6 +30,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     TextMeshProUGUI heartLike;
     [SerializeField]
     GameObject deleteButton;
+    [SerializeField]
+    GameObject editButton;
 
     [Header("Buttons")]
     [SerializeField]
@@ -69,6 +73,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     {
         ChangePuzzleSelectedShowing((int)PuzzlesSelected.Community);
         DataTransferer.instance.GetLevels();
+        LoadSavedLevels();
+        ApplyLevelInfo(null, null, true);
     }
 
     public void ChangePuzzleSelectedShowing(int selectedType)
@@ -92,54 +98,83 @@ public class PuzzleSelectorManager : MonoBehaviour
                 break;
         }
 
+        communityPanel.gameObject.SetActive(newType == PuzzlesSelected.Community);
+        savedPanel.gameObject.SetActive(newType == PuzzlesSelected.Saved);
+
         currentPuzzlesShowing = newType;
     }
 
-    public void ApplyLevelInfo(LevelInfo level, LevelSummary ls)
+    public void ApplyLevelInfo(LevelInfo level, LevelSummary ls, bool setActiveFalse = false)
     {
+        if ((lastLevelShown != null && level == null) || setActiveFalse)
+        {
+            lastLevelShown = null;
+
+            puzzleInfo.SetActive(false);            
+            return;
+        }
+        else if (lastLevelShown == null && level != null)
+        {
+            puzzleInfo.SetActive(true);
+        }
+
         levelname.text = level.levelname;
         size.text = "Size: " + level.size + "x" + level.size;
         username.text = "MADE BY " + level.username;
         description.text = level.description;
 
-        string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
-        likes.text = likesS;
-        ls.ApplyInfo(level);
-
-        string user = "";
-        string usersLiked = level.usersLiked;
-        heartLike.color = Color.white;
-
-        for (int i = 0; i < usersLiked.Length; ++i)
+        if (level.type == LevelInfo.LevelType.Online)
         {
-            if (usersLiked[i] == ',')
+            string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
+            likes.text = likesS;
+            ls.ApplyInfo(level);
+
+            string user = "";
+            string usersLiked = level.usersLiked;
+            heartLike.color = Color.white;
+
+            for (int i = 0; i < usersLiked.Length; ++i)
             {
-                if (user == currentUsername)
+                if (usersLiked[i] == ',')
                 {
-                    heartLike.color = Color.green;
+                    if (user == currentUsername)
+                    {
+                        heartLike.color = Color.green;
+                    }
+
+                    user = "";
+                    continue;
                 }
 
-                user = "";
-                continue;
+                user += usersLiked[i];
             }
-
-            user += usersLiked[i];
         }
 
-        deleteButton.SetActive(level.username == currentUsername);
+        editButton.SetActive(level.type == LevelInfo.LevelType.Local);
+        deleteButton.SetActive(level.username == currentUsername || level.type == LevelInfo.LevelType.Local);
         lastLevelShown = level;
     }
 
     public void PlayLevel()
     {
-        DataTransferer.instance.DownloadLevel(lastLevelShown.id);
+        switch (lastLevelShown.type)
+        {
+            case LevelInfo.LevelType.Online:
+                DataTransferer.instance.DownloadLevel(lastLevelShown.id);
+                break;
+            case LevelInfo.LevelType.Local:
+                PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
+                pl.loadMode = LevelManager.LevelMode.Play;
+                pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
+                break;
+        }
     }
 
     public void ApplyAllLevelsData(string levelsData)
     {
         int levels = int.Parse(levelsData[0].ToString());
         int lastChar = 2;
-        LevelInfo levelInfo = new LevelInfo();
+        LevelInfo levelInfo = new LevelInfo(LevelInfo.LevelType.Online);
 
         char levelSeparator = '|';
 
@@ -221,7 +256,7 @@ public class PuzzleSelectorManager : MonoBehaviour
             LevelSummary ls = Instantiate(levelSummary, communityPanel).GetComponent<LevelSummary>();
             levelInfo.levelSummary = ls;
             ls.ApplyInfo(levelInfo);
-            levelInfo = new LevelInfo();
+            levelInfo = new LevelInfo(LevelInfo.LevelType.Online);
         }
     }
 
@@ -244,13 +279,59 @@ public class PuzzleSelectorManager : MonoBehaviour
     public void DeleteLevel()
     {
         Destroy(lastLevelShown.levelSummary.gameObject);
+        ApplyLevelInfo(null, null, true);
         DataTransferer.instance.DeleteLevel(lastLevelShown.id);
+    }
+
+    public void LoadSavedLevels()
+    {
+        string path = Path.Combine(Application.persistentDataPath, "Data");
+        if (!Directory.Exists(path))
+        {
+            return;
+        }
+
+        var levels = Directory.GetFiles(path);
+
+        for (int i = 0; i < levels.Length; ++i)
+        {
+            if (Path.GetExtension(levels[i]) == ".data")
+            {
+                continue;
+            }
+
+            LevelInfo levelInfo = new LevelInfo(LevelInfo.LevelType.Local);
+            LevelSummary ls = Instantiate(levelSummary, savedPanel).GetComponent<LevelSummary>();
+            levelInfo.levelSummary = ls;
+
+            Level level = BinarySaveSystem.LoadFile<Level>(levels[i]);
+
+            levelInfo.levelname = level.name;
+            levelInfo.size = level.size;
+            levelInfo.username = level.creatorName;
+            levelInfo.description = level.description;
+
+            ls.ApplyInfo(levelInfo);
+        }
+    }
+
+    public void EditLevel()
+    {
+        PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
+        pl.loadMode = LevelManager.LevelMode.Editor;
+        pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
     }
 }
 
 [System.Serializable]
 public class LevelInfo
 {
+    public enum LevelType
+    {
+        Online,
+        Local
+    }
+
     public string id;
     public string levelname;
     public string username;
@@ -259,10 +340,16 @@ public class LevelInfo
     public int size;
     public string usersLiked;
     public LevelSummary levelSummary;
+    public LevelType type;
 
     public LevelInfo() { }
 
-    public LevelInfo(string id, string LevelName, string Username, string Description, int LikesNumber, int size, string usersLiked)
+    public LevelInfo(LevelType type)
+    {
+        this.type = type;
+    }
+
+    public LevelInfo(LevelType type, string id, string LevelName, string Username, string Description, int LikesNumber, int size, string usersLiked)
     {
         this.id = id;
         levelname = LevelName;
@@ -271,5 +358,6 @@ public class LevelInfo
         likesNumber = LikesNumber;
         this.size = size;
         this.usersLiked = usersLiked;
+        this.type = type;
     }
 }

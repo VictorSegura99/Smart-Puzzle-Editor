@@ -65,7 +65,7 @@ public class DataTransferer : MonoBehaviour
         else
         {
             PuzzleLoader puzzleLoader = Instantiate(PuzzleSelectorManager.instance.puzzleLoader).GetComponent<PuzzleLoader>();
-            puzzleLoader.sceneToLoad = "PuzzleEditor";
+            puzzleLoader.loadMode = LevelManager.LevelMode.Play;
             puzzleLoader.levelToLoad = (Level)BinarySaveSystem.ByteArrayToObject(w.downloadHandler.data);
         }
         w.Dispose();
@@ -73,20 +73,18 @@ public class DataTransferer : MonoBehaviour
 
     public void UploadLevel(Level level)
     {
-        level.id = Random.Range(0, 1000000);
-        level.likes = 0;
-        level.creatorName = LevelManager.username;
+        int id = Random.Range(0, 1000000);
 
-        StartCoroutine(CheckLevelID(level));
+        StartCoroutine(CheckLevelID(level, id));
     }
 
-    IEnumerator StartUploadingLevel(Level level)
+    IEnumerator StartUploadingLevel(Level level, int id)
     {
         WWWForm w = new WWWForm();
-        w.AddField("id", level.id);
+        w.AddField("id", id);
         w.AddField("levelName", level.name);
         w.AddField("levelDescription", level.description);
-        w.AddField("likes", level.likes);
+        w.AddField("likes", 0);
         w.AddField("creatorName", level.creatorName);
         w.AddField("levelSize", level.size);
 
@@ -107,7 +105,7 @@ public class DataTransferer : MonoBehaviour
         }
 
         WWWForm form = new WWWForm();
-        form.AddBinaryData("myfile", BinarySaveSystem.ObjectToByteArray(level), level.id.ToString(), "text/plain");
+        form.AddBinaryData("myfile", BinarySaveSystem.ObjectToByteArray(level), id.ToString(), "text/plain");
 
         UnityWebRequest wL = UnityWebRequest.Post(serverURL + "index.php", form);
         yield return wL.SendWebRequest();
@@ -123,7 +121,7 @@ public class DataTransferer : MonoBehaviour
         wL.Dispose();
     }
 
-    IEnumerator CheckLevelID(Level level)
+    IEnumerator CheckLevelID(Level level, int id)
     {
         UnityWebRequest w = UnityWebRequest.Get(serverURL + "GetLevelsID.php");
         yield return w.SendWebRequest();
@@ -139,7 +137,7 @@ public class DataTransferer : MonoBehaviour
             if (ids == "0 results")
             {
                 Debug.Log("0 results funciona");
-                StartCoroutine(StartUploadingLevel(level));
+                StartCoroutine(StartUploadingLevel(level, id));
                 yield break;
             }
 
@@ -160,15 +158,15 @@ public class DataTransferer : MonoBehaviour
 
             for (int i = 0; i < numbers.Count; ++i)
             {
-                if (int.Parse(numbers[i]) == level.id)
+                if (int.Parse(numbers[i]) == id)
                 {
-                    level.id = Random.Range(0, 1000000);
-                    StartCoroutine(CheckLevelID(level));
+                    id = Random.Range(0, 1000000);
+                    StartCoroutine(CheckLevelID(level, id));
                     yield break;
                 }
             }
 
-            StartCoroutine(StartUploadingLevel(level));
+            StartCoroutine(StartUploadingLevel(level, id));
         }
     }
 

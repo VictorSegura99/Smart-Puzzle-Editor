@@ -26,5 +26,7 @@ public class LevelSummary : MonoBehaviour
 
         string likesS = level.likesNumber < 10 ? "0" + level.likesNumber.ToString() : level.likesNumber.ToString();
         likes.text = likesS;
+
+        likes.transform.parent.gameObject.SetActive(info.type == LevelInfo.LevelType.Online);
     }
 }

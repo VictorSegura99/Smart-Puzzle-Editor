@@ -61,9 +61,9 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
 
-        if (File.Exists(Main_Menu_Manager.accountDataPath))
+        if (File.Exists(Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data")))
         {
-            username = BinarySaveSystem.LoadFile<AccountFile>(Main_Menu_Manager.accountDataPath).Username;
+            username = BinarySaveSystem.LoadFile<AccountFile>(Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data")).Username;
         }
     }
 
@@ -133,7 +133,12 @@ public class LevelManager : MonoBehaviour
                 gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
             }
 
-            LevelBuilder.SaveLevel(levelNameField.text, PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+            Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+            lvl.name = levelNameField.text;
+            lvl.description = "No Description.";
+            lvl.creatorName = username;
+
+            LevelBuilder.SaveLevel(lvl);
         }
     }
 
@@ -173,6 +178,7 @@ public class LevelManager : MonoBehaviour
             Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
             lvl.name = levelNameOnlineField.text;
             lvl.description = "";
+            lvl.creatorName = username;
 
             DataTransferer.instance.UploadLevel(lvl);
         }

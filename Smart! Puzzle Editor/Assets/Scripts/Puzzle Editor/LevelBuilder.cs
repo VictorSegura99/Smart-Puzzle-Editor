@@ -6,19 +6,19 @@ using System.IO;
 
 public static class LevelBuilder
 {
-    static public void SaveLevel(string levelName, int levelSize, List<GameObject> gameObjects, Tilemap ground, Tilemap collidable)
+    static public void SaveLevel(Level level)
     {
         if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Data")))
         {
             Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Data"));
         }
 
-        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle"), BuildLevel(levelSize, gameObjects, ground, collidable));
+        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", level.name), level);
     }
 
     static public Level LoadLevel(string levelName)
     {
-        string path = Path.Combine(Application.persistentDataPath, "Data", levelName + ".puzzle");
+        string path = Path.Combine(Application.persistentDataPath, "Data", levelName);
 
         if (File.Exists(path))
         {
@@ -172,11 +172,9 @@ public static class LevelBuilder
 
 [System.Serializable]
 public class Level
-{
-    public int id;
+{ 
     public string name;
     public string description;
-    public int likes;
     public string creatorName;
 
     public int size;

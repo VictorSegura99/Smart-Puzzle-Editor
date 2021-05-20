@@ -6,14 +6,14 @@ using UnityEngine.SceneManagement;
 public class PuzzleLoader : MonoBehaviour
 {
     [HideInInspector]
-    public string sceneToLoad = "";
-    [HideInInspector]
     public Level levelToLoad;
+    [HideInInspector]
+    public LevelManager.LevelMode loadMode;
 
     private void Start()
     {
         DontDestroyOnLoad(gameObject);
-        SceneManager.LoadScene(sceneToLoad);
+        SceneManager.LoadScene("PuzzleEditor");
     }
 
     // Update is called once per frame
@@ -22,7 +22,7 @@ public class PuzzleLoader : MonoBehaviour
         if (LevelManager.instance && LevelManager.instance.isReady)
         {
             LevelManager.instance.LoadThisLevel(levelToLoad);
-            LevelManager.instance.ChangeMode(LevelManager.LevelMode.Play);
+            LevelManager.instance.ChangeMode(loadMode);
             Destroy(gameObject);
         }
     }
