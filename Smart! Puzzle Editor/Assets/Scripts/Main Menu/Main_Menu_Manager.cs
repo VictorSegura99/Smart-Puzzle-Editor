@@ -7,6 +7,7 @@ using System.IO;
 
 public class Main_Menu_Manager : MonoBehaviour
 {
+    public static Main_Menu_Manager instance;
     static public string accountDataPath = "";
     // Components
 
@@ -14,6 +15,8 @@ public class Main_Menu_Manager : MonoBehaviour
     //    - Menus
     public GameObject main_menu;
     public GameObject tutorial_menu;
+    [SerializeField]
+    GameObject puzzleSelector;
 
     [Header("LogIn Menu")]
     [SerializeField]
@@ -60,12 +63,16 @@ public class Main_Menu_Manager : MonoBehaviour
         TUTORIAL,
         REGISTER,
         LOGIN,
-        ACCOUNTDETECTED
+        ACCOUNTDETECTED,
+        Selector
     }
+
     Menu_States current_state = Menu_States.LOGIN;
 
     private void Awake()
     {
+        instance = this;
+
         accountDataPath = Path.Combine(Application.persistentDataPath, "Data", "playerAccount.data");
     }
 
@@ -114,6 +121,7 @@ public class Main_Menu_Manager : MonoBehaviour
                 tutorial_menu.SetActive(false);
                 loginMenu.SetActive(false);
                 accountDetectedMenu.SetActive(false);
+                puzzleSelector.SetActive(false);
                 break;
             case Menu_States.TUTORIAL:
                 main_menu.SetActive(false);
@@ -136,6 +144,10 @@ public class Main_Menu_Manager : MonoBehaviour
                 accountDetectedMenu.SetActive(true);
                 acceptButton.interactable = true;
                 logOutButton.interactable = true;
+                break;
+            case Menu_States.Selector:
+                main_menu.SetActive(false);
+                puzzleSelector.SetActive(true);
                 break;
         }
     }

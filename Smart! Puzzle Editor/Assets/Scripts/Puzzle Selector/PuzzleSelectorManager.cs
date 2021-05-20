@@ -32,6 +32,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     GameObject deleteButton;
     [SerializeField]
     GameObject editButton;
+    [SerializeField]
+    GameObject likeGO;
 
     [Header("Buttons")]
     [SerializeField]
@@ -122,6 +124,8 @@ public class PuzzleSelectorManager : MonoBehaviour
         size.text = "Size: " + level.size + "x" + level.size;
         username.text = "MADE BY " + level.username;
         description.text = level.description;
+
+        likeGO.SetActive(level.type == LevelInfo.LevelType.Online);
 
         if (level.type == LevelInfo.LevelType.Online)
         {

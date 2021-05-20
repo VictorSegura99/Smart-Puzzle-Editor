@@ -11,19 +11,6 @@ public class MainMenu_Buttons : MonoBehaviour
 
     // Internal Variables
 
-
- 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void ExitGame()
     {
         Application.Quit();
@@ -31,13 +18,22 @@ public class MainMenu_Buttons : MonoBehaviour
 
     public void OpenTutorialMenu()
     {
-        GameObject.Find("Canvas").GetComponent<Main_Menu_Manager>().ChangeMenu(Main_Menu_Manager.Menu_States.TUTORIAL);
+        Main_Menu_Manager.instance.ChangeMenu(Main_Menu_Manager.Menu_States.TUTORIAL);
     }
-
+    
+    public void OpenPuzzleSelector()
+    {
+        Main_Menu_Manager.instance.ChangeMenu(Main_Menu_Manager.Menu_States.Selector);
+    }
 
     public void OpenPuzzleEditor()
     {
         SceneManager.LoadScene("PuzzleEditor");
+    }
+
+    public void ReturnMainMenu()
+    {
+        Main_Menu_Manager.instance.ChangeMenu(Main_Menu_Manager.Menu_States.MAIN);
     }
 
     public void ContactMe()
