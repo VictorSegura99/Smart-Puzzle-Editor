@@ -110,14 +110,17 @@ public class DataTransferer : MonoBehaviour
         UnityWebRequest wL = UnityWebRequest.Post(serverURL + "index.php", form);
         yield return wL.SendWebRequest();
 
+        LevelManager.instance.ShowPublishLevelMenu(false);
+
         if (wL.error != null)
         {
-            Debug.Log("Error: " + wL.error);
+            LevelManager.instance.ShowSuccessMenu(wL.error);
         }
         else
         {
-            Debug.Log(wL.result);
+            LevelManager.instance.ShowSuccessMenu();
         }
+
         wL.Dispose();
     }
 

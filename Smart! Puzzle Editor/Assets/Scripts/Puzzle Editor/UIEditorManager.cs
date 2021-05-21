@@ -22,8 +22,6 @@ public class UIEditorManager : MonoBehaviour
     public GameObject selectingSizeMenu;
     public CanvasGroup mainPanel;
     public CanvasGroup toolsPanel;
-    public GameObject saveLoadMenu;
-    public GameObject saveLoadOnlineMenu;
     public GameObject resetLevelMenu;
     [SerializeField]
     GameObject groupsMenu;
@@ -33,7 +31,6 @@ public class UIEditorManager : MonoBehaviour
     GameObject wallsMenu;
     [SerializeField]
     GameObject puzzleElementsMenu;
-
 
     [Header("Menus Pages")]
     [SerializeField]
@@ -143,6 +140,19 @@ public class UIEditorManager : MonoBehaviour
         if (toolsPanel.interactable != !block)
         {
             toolsPanel.interactable = !block;
+        }
+    }
+
+    public void BlockStrangeChars(InputField inputField)
+    {
+        if (inputField.text.Length < 1)
+        {
+            return;
+        }
+
+        if (inputField.text[inputField.text.Length - 1] == '/' || inputField.text[inputField.text.Length - 1] == '|')
+        {
+            inputField.text = inputField.text.Remove(inputField.text.Length - 1);
         }
     }
 }

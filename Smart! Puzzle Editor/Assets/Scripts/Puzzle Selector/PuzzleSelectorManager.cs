@@ -282,9 +282,20 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     public void DeleteLevel()
     {
+        if (lastLevelShown.type == LevelInfo.LevelType.Online)
+        {
+            DataTransferer.instance.DeleteLevel(lastLevelShown.id);
+        }
+        else if (lastLevelShown.type == LevelInfo.LevelType.Local)
+        {
+            if (File.Exists(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname)))
+            {
+                File.Delete(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
+            }
+        }
+
         Destroy(lastLevelShown.levelSummary.gameObject);
         ApplyLevelInfo(null, null, true);
-        DataTransferer.instance.DeleteLevel(lastLevelShown.id);
     }
 
     public void LoadSavedLevels()

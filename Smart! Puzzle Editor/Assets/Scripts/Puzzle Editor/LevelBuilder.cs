@@ -14,6 +14,8 @@ public static class LevelBuilder
         }
 
         BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", level.name), level);
+        LevelManager.instance.ShowSaveLevelMenu(false);
+        LevelManager.instance.ShowSuccessMenu();
     }
 
     static public Level LoadLevel(string levelName)

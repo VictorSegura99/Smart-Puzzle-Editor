@@ -101,7 +101,7 @@ public class PuzzleEditorController : MonoBehaviour
         Vector3Int mousePos = HLTilemap.WorldToCell(cam.ScreenToWorldPoint(Input.mousePosition));
 
         // Change Tools Keyboard Controls -------------------------------------------
-        if (!LevelManager.instance.levelNameField.isFocused && !LevelManager.instance.levelNameOnlineField.isFocused)
+        if (!LevelManager.instance.levelName.isFocused && !LevelManager.instance.levelDescription.isFocused)
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
@@ -127,7 +127,7 @@ public class PuzzleEditorController : MonoBehaviour
 
 
         // Change Tool to EyeDropper
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && !LevelManager.instance.levelNameField.isFocused)
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && !LevelManager.instance.levelName.isFocused && !LevelManager.instance.levelDescription.isFocused)
         {
             ChangeTool((int)Tools.Dropper);
         }

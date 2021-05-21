@@ -24,6 +24,10 @@ public class LevelManager : MonoBehaviour
     public LevelMode mode = LevelMode.SelectingSize;
 
     [SerializeField]
+    Transform canvas;
+    [SerializeField]
+    CanvasGroup editorMenus;
+    [SerializeField]
     PixelPerfectCamera cam;
     [HideInInspector]
     public UnityEvent replacingCallbacks;
@@ -33,8 +37,26 @@ public class LevelManager : MonoBehaviour
     public Transform mainElementsPlay;
     [SerializeField]
     Text buttonText;
-    public InputField levelNameField;
-    public InputField levelNameOnlineField;
+
+    [Header("Puzzle Settings")]
+    [SerializeField]
+    GameObject puzzleSettings;
+    public InputField levelName;
+    public InputField levelDescription;
+    [SerializeField]
+    GameObject errorMessage;
+    [SerializeField]
+    GameObject saveLevelMenu;
+    [SerializeField]
+    GameObject publishLevelMenu;
+    [SerializeField]
+    CanvasGroup saveLevelButtons;
+    [SerializeField]
+    CanvasGroup publishLevelButtons;
+    [SerializeField]
+    GameObject successMenu;
+    [SerializeField]
+    Text successMenuText;
 
     [Header("Placeholder Prefabs")]
     [SerializeField]
@@ -100,13 +122,11 @@ public class LevelManager : MonoBehaviour
         }
 
         UIEditorManager.instance.selectingSizeMenu.SetActive(newMode == LevelMode.SelectingSize);
-        UIEditorManager.instance.mainPanel.gameObject.SetActive(newMode == LevelMode.Editor);
-        UIEditorManager.instance.toolsPanel.gameObject.SetActive(newMode == LevelMode.Editor);
-        UIEditorManager.instance.saveLoadMenu.SetActive(newMode == LevelMode.Editor);
-        UIEditorManager.instance.saveLoadOnlineMenu.SetActive(newMode == LevelMode.Editor);
-        UIEditorManager.instance.resetLevelMenu.SetActive(newMode == LevelMode.Editor);
-        UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
+
+        editorMenus.gameObject.SetActive(newMode == LevelMode.Editor);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
+
+        UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
 
         mode = newMode;
     }
@@ -124,38 +144,21 @@ public class LevelManager : MonoBehaviour
 
     public void SaveLevel()
     {
-        if (levelNameField.text != "")
+        saveLevelButtons.interactable = false;
+
+        List<GameObject> gameElements = new List<GameObject>();
+
+        for (int i = 0; i < mainElementsEditor.childCount; ++i)
         {
-            List<GameObject> gameElements = new List<GameObject>();
-
-            for (int i = 0; i < mainElementsEditor.childCount; ++i)
-            {
-                gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
-            }
-
-            Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
-            lvl.name = levelNameField.text;
-            lvl.description = "No Description.";
-            lvl.creatorName = username;
-
-            LevelBuilder.SaveLevel(lvl);
+            gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
         }
-    }
 
-    public void LoadLevel()
-    {
-        if (levelNameField.text != "")
-        {
-            Level level = LevelBuilder.LoadLevel(levelNameField.text);
+        Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+        lvl.name = levelName.text;
+        lvl.description = levelDescription.text;
+        lvl.creatorName = username;
 
-            if (level == null)
-            {
-                return;
-            }
-
-            ClearLevel();
-            ApplyLevel(level);
-        }
+        LevelBuilder.SaveLevel(lvl);
     }
 
     public void LoadThisLevel(Level level)
@@ -166,30 +169,21 @@ public class LevelManager : MonoBehaviour
 
     public void PublishLevel()
     {
-        if (levelNameOnlineField.text != "")
+        publishLevelButtons.interactable = false;
+
+        List<GameObject> gameElements = new List<GameObject>();
+
+        for (int i = 0; i < mainElementsEditor.childCount; ++i)
         {
-            List<GameObject> gameElements = new List<GameObject>();
-
-            for (int i = 0; i < mainElementsEditor.childCount; ++i)
-            {
-                gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
-            }
-
-            Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
-            lvl.name = levelNameOnlineField.text;
-            lvl.description = "";
-            lvl.creatorName = username;
-
-            DataTransferer.instance.UploadLevel(lvl);
+            gameElements.Add(mainElementsEditor.GetChild(i).gameObject);
         }
-    }
 
-    public void DownloadLevel()
-    {
-        if (levelNameOnlineField.text != "")
-        {
-            DataTransferer.instance.DownloadLevel(levelNameOnlineField.text);
-        }
+        Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+        lvl.name = levelName.text;
+        lvl.description = levelDescription.text;
+        lvl.creatorName = username;
+
+        DataTransferer.instance.UploadLevel(lvl);
     }
 
     void ClearLevel()
@@ -395,5 +389,81 @@ public class LevelManager : MonoBehaviour
     public void ResetLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ErrorMessage(string message)
+    {
+        ErrorGoingUpAnimation error = Instantiate(errorMessage, canvas).GetComponent<ErrorGoingUpAnimation>();
+        error.errormessage.text = message;
+    }
+
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu_PreAlpha");
+    }
+
+    public void ShowSaveLevelMenu(bool affectEditor = true)
+    {
+        if (levelName.text == "")
+        {
+            ErrorMessage("Please, add a name to the level.");
+            return;
+        }
+
+        if (levelDescription.text == "")
+        {
+            ErrorMessage("Please, add a description to the level.");
+            return;
+        }
+
+        saveLevelButtons.interactable = !saveLevelMenu.activeSelf;
+
+        if (affectEditor)
+            editorMenus.interactable = saveLevelMenu.activeSelf;
+
+        saveLevelMenu.SetActive(!saveLevelMenu.activeSelf);
+    }
+
+    public void ShowPublishLevelMenu(bool affectEditor = true)
+    {
+        if (levelName.text == "")
+        {
+            ErrorMessage("Please, add a name to the level.");
+            return;
+        }
+
+        if (levelDescription.text == "")
+        {
+            ErrorMessage("Please, add a description to the level.");
+            return;
+        }
+
+        publishLevelButtons.interactable = !publishLevelMenu.activeSelf;
+
+        if (affectEditor)
+            editorMenus.interactable = publishLevelMenu.activeSelf;
+
+        publishLevelMenu.SetActive(!publishLevelMenu.activeSelf);
+    }
+
+    public void ShowSuccessMenu(string error = "")
+    {
+        if (error != "")
+        {
+            successMenuText.text = error;
+        }
+        else if (successMenuText.text != "Success!")
+        {
+            successMenuText.text = "Success!";
+        }
+
+
+        successMenu.SetActive(true);
+    }
+
+    public void ReturnEditor()
+    {
+        successMenu.SetActive(false);
+        editorMenus.interactable = true;
     }
 }
