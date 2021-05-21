@@ -8,6 +8,7 @@ TagManager:
   - Portal
   - Tilemap
   - Placeholder
+  - Music
   layers:
   - Default
   - TransparentFX

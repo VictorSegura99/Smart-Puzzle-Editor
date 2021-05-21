@@ -7,12 +7,15 @@ public class MusicSource : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        GameObject go = GameObject.FindGameObjectWithTag("Music");
+        if (go && go != gameObject)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            gameObject.tag = "Music";
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }
