@@ -9,7 +9,7 @@ public class Main_Menu_Manager : MonoBehaviour
 {
     public static Main_Menu_Manager instance;
     static public string accountDataPath = "";
-    // Components
+    static bool firstTime = true;
 
     // Inspector Variables
     //    - Menus
@@ -82,12 +82,19 @@ public class Main_Menu_Manager : MonoBehaviour
         if (File.Exists(accountDataPath))
         {
             accountFile = BinarySaveSystem.LoadFile<AccountFile>(accountDataPath);
+            
+            if (!firstTime)
+            {
+                ChangeMenu(Menu_States.Selector);
+                return;
+            }
+
             ChangeMenu(Menu_States.ACCOUNTDETECTED);
+
+            return;
         }
-        else
-        {
-            ChangeMenu(current_state);
-        }
+
+        ChangeMenu(current_state);
     }
 
     // Update is called once per frame
@@ -112,6 +119,9 @@ public class Main_Menu_Manager : MonoBehaviour
 
     public void ChangeMenu(Menu_States state_to_change)
     {
+        if (firstTime)
+            firstTime = false;
+
         current_state = state_to_change;
 
         switch (state_to_change)

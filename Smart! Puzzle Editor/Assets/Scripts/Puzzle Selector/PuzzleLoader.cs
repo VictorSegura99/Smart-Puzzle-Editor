@@ -20,6 +20,7 @@ public class PuzzleLoader : MonoBehaviour
         if (LevelManager.instance && LevelManager.instance.isReady)
         {
             LevelManager.instance.LoadThisLevel(levelToLoad);
+            LevelManager.instance.finishMode = loadMode;
             LevelManager.instance.ChangeMode(loadMode);
             Destroy(gameObject);
         }

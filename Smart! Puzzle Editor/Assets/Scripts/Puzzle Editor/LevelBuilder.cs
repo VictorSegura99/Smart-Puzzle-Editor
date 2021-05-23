@@ -8,19 +8,19 @@ public static class LevelBuilder
 {
     static public void SaveLevel(Level level)
     {
-        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Data")))
+        if (!Directory.Exists(Path.Combine(Application.persistentDataPath, "Levels")))
         {
-            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Data"));
+            Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Levels"));
         }
 
-        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Data", level.name), level);
+        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Levels", level.name), level);
         LevelManager.instance.ShowSaveLevelMenu(false);
         LevelManager.instance.ShowSuccessMenu();
     }
 
     static public Level LoadLevel(string levelName)
     {
-        string path = Path.Combine(Application.persistentDataPath, "Data", levelName);
+        string path = Path.Combine(Application.persistentDataPath, "Levels", levelName);
 
         if (File.Exists(path))
         {

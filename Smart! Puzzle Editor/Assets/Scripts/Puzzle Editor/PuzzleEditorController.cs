@@ -88,11 +88,6 @@ public class PuzzleEditorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         if (mouseBlockedByUI || LevelManager.instance.mode != LevelManager.LevelMode.Editor)
         {
             return;

@@ -169,7 +169,7 @@ public class PuzzleSelectorManager : MonoBehaviour
             case LevelInfo.LevelType.Local:
                 PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
                 pl.loadMode = LevelManager.LevelMode.Play;
-                pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
+                pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
                 break;
         }
     }
@@ -288,9 +288,9 @@ public class PuzzleSelectorManager : MonoBehaviour
         }
         else if (lastLevelShown.type == LevelInfo.LevelType.Local)
         {
-            if (File.Exists(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname)))
+            if (File.Exists(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname)))
             {
-                File.Delete(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
+                File.Delete(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
             }
         }
 
@@ -300,7 +300,7 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     public void LoadSavedLevels()
     {
-        string path = Path.Combine(Application.persistentDataPath, "Data");
+        string path = Path.Combine(Application.persistentDataPath, "Levels");
         if (!Directory.Exists(path))
         {
             return;
@@ -334,7 +334,7 @@ public class PuzzleSelectorManager : MonoBehaviour
     {
         PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
         pl.loadMode = LevelManager.LevelMode.Editor;
-        pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Data", lastLevelShown.levelname));
+        pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
     }
 }
 

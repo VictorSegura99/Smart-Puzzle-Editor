@@ -7,6 +7,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.U2D;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System;
 
 public class LevelManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class LevelManager : MonoBehaviour
     public LevelMode mode = LevelMode.SelectingSize;
 
     [SerializeField]
+    GameObject puzzleLoader;
+    [SerializeField]
     Transform canvas;
     [SerializeField]
     CanvasGroup editorMenus;
@@ -37,6 +40,8 @@ public class LevelManager : MonoBehaviour
     public Transform mainElementsPlay;
     [SerializeField]
     Text buttonText;
+    [SerializeField]
+    GameObject playModeButton;
 
     [Header("Puzzle Settings")]
     [SerializeField]
@@ -47,6 +52,9 @@ public class LevelManager : MonoBehaviour
     GameObject errorMessage;
     [SerializeField]
     GameObject saveLevelMenu;
+    [SerializeField]
+    GameObject restartConfirmationMenu;
+
     [SerializeField]
     GameObject publishLevelMenu;
     [SerializeField]
@@ -78,6 +86,10 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public bool isReady = false;
+    [HideInInspector]
+    public LevelMode finishMode = LevelMode.Editor;
+
+    Level levelLoaded = null;
 
     private void Awake()
     {
@@ -104,8 +116,6 @@ public class LevelManager : MonoBehaviour
                 break;
             case LevelMode.Editor:
                 buttonText.text = "PLAY MODE";
-                if (!buttonText.transform.parent.parent.gameObject.activeSelf)
-                    buttonText.transform.parent.parent.gameObject.SetActive(true);
 
                 reActivatePE.Invoke();
                 for (int i = 0; i < mainElementsPlay.childCount; ++i)
@@ -125,6 +135,7 @@ public class LevelManager : MonoBehaviour
 
         editorMenus.gameObject.SetActive(newMode == LevelMode.Editor);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
+        playModeButton.SetActive(finishMode == LevelMode.Editor && (newMode == LevelMode.Editor || newMode == LevelMode.Play));
 
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
 
@@ -165,6 +176,7 @@ public class LevelManager : MonoBehaviour
     {
         ClearLevel();
         ApplyLevel(level);
+        levelLoaded = level;
     }
 
     public void PublishLevel()
@@ -293,6 +305,9 @@ public class LevelManager : MonoBehaviour
             Vector3Int pos = new Vector3Int(TD.posX, TD.posY, TD.posZ);
             PuzzleEditorController.instance.collidable.SetTile(pos, GetTileFromInt(TD.id, allTiles));
         }
+
+        levelName.text = level.name;
+        levelDescription.text = level.description;
     }
 
     TileBase GetTileFromInt(int id, AllTiles allTiles)
@@ -386,8 +401,22 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public void RestartLevel()
+    {
+        Time.timeScale = 1;
+        PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
+        pl.loadMode = finishMode;
+        pl.levelToLoad = levelLoaded;
+    }
+
     public void ResetLevel()
     {
+        if (levelLoaded != null)
+        {
+            RestartLevel();
+            return;
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -446,6 +475,12 @@ public class LevelManager : MonoBehaviour
         publishLevelMenu.SetActive(!publishLevelMenu.activeSelf);
     }
 
+    public void ShowRestartConfirmationMenu()
+    {
+        editorMenus.interactable = restartConfirmationMenu.activeSelf;
+        restartConfirmationMenu.SetActive(!restartConfirmationMenu.activeSelf);
+    }
+
     public void ShowSuccessMenu(string error = "")
     {
         if (error != "")
@@ -466,4 +501,21 @@ public class LevelManager : MonoBehaviour
         successMenu.SetActive(false);
         editorMenus.interactable = true;
     }
+
+    public void LevelWon()
+    {
+        switch (finishMode)
+        {
+            case LevelMode.SelectingSize:
+                break;
+            case LevelMode.Editor:
+                ChangeMode(LevelMode.Editor);
+                Time.timeScale = 1;
+                break;
+            case LevelMode.Play:
+                UIManager.instance.ShowYouWinMenu();
+                break;
+        }
+    }
+
 }

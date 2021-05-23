@@ -5,11 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuButtons : MonoBehaviour
 {
-    // Components
-
-    // Inspector Variables
-    public string next_scene;
-
     // Internal Variables
     UIManager manager;
 
@@ -31,7 +26,7 @@ public class PauseMenuButtons : MonoBehaviour
 
     public void ResetPuzzle()
     {
-        ChangeScene(SceneManager.GetActiveScene().name);
+        LevelManager.instance.RestartLevel();
     }
 
     public void ExitToMenu()
@@ -44,11 +39,6 @@ public class PauseMenuButtons : MonoBehaviour
         Application.Quit();
     }
 
-    public void NextScene()
-    {
-        ChangeScene(next_scene);
-    }
-
     void ChangeScene(string scene_name)
     {
         if (Time.timeScale != 1)
@@ -56,6 +46,6 @@ public class PauseMenuButtons : MonoBehaviour
             Time.timeScale = 1;
         }
 
-
+        SceneManager.LoadScene(scene_name);
     }
 }

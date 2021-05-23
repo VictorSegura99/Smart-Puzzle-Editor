@@ -12,7 +12,6 @@ public class UIManager : MonoBehaviour
 
     // Components
     Animator youwin_anim;
-    Player_Controller player;
 
     // Elements to change Alpha in PuzzleContinue Fade
     Text[] text_to_fade;
@@ -34,12 +33,6 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     float seconds_fade_puzzlemenu_continue = 1.0f;
     float puzzlemenu_timer_start = 0.0f;
-
-    // Timer for Hold R to Reset
-    float time_start = 0.0f;
-    float time_to_hold = 1.0f;
-    bool R_hold = false;
-
 
     // Enums
     enum Active_Menu
@@ -147,35 +140,6 @@ public class UIManager : MonoBehaviour
 
     void ManageMenuInput()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            time_start = Time.realtimeSinceStartup;
-            R_hold = true;
-        }
-
-        if (Input.GetKeyUp(KeyCode.R))
-        {
-            R_hold = false;
-        }
-
-        if (R_hold)
-        {
-            if (time_start + time_to_hold <= Time.realtimeSinceStartup)
-            {
-                time_start = Time.realtimeSinceStartup; if (Time.timeScale != 1)
-                {
-                    Time.timeScale = 1;
-                }
-
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-            }
-        }
-
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //{
-        //    Application.Quit();
-        //}
-
         // INPUT:
         controller_last_frame_state = controller_current_state;
         controller_current_state = GamePad.GetState(0);

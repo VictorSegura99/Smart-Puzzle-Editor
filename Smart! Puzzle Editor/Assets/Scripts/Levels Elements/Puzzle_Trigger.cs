@@ -48,9 +48,8 @@ public class Puzzle_Trigger : MonoBehaviour
             yield return null;
         }
 
-        Time.timeScale = 1;
-        LevelManager.instance.ChangeMode(LevelManager.LevelMode.Editor);
-        //UIManager.instance.ShowYouWinMenu();
+        Time.timeScale = 0;
+        LevelManager.instance.LevelWon();
         Destroy(gameObject);
     }
 }
