@@ -169,6 +169,8 @@ public class LevelManager : MonoBehaviour
         lvl.description = levelDescription.text;
         lvl.creatorName = username;
 
+        levelLoaded = lvl;
+
         LevelBuilder.SaveLevel(lvl);
     }
 
@@ -194,6 +196,8 @@ public class LevelManager : MonoBehaviour
         lvl.name = levelName.text;
         lvl.description = levelDescription.text;
         lvl.creatorName = username;
+
+        levelLoaded = lvl;
 
         DataTransferer.instance.UploadLevel(lvl);
     }
