@@ -19,7 +19,8 @@ public class LevelManager : MonoBehaviour
     {
         SelectingSize,
         Editor,
-        Play
+        Play,
+        Publishing
     }
 
     public LevelMode mode = LevelMode.SelectingSize;
@@ -54,6 +55,10 @@ public class LevelManager : MonoBehaviour
     GameObject saveLevelMenu;
     [SerializeField]
     GameObject restartConfirmationMenu;
+    [SerializeField]
+    GameObject publishRequerimentMenu;
+    [SerializeField]
+    GameObject cancelPublishTryButton;
 
     [SerializeField]
     GameObject publishLevelMenu;
@@ -136,7 +141,7 @@ public class LevelManager : MonoBehaviour
         editorMenus.gameObject.SetActive(newMode == LevelMode.Editor);
         PuzzleEditorController.instance.sizeLimit.gameObject.SetActive(newMode == LevelMode.Editor);
         playModeButton.SetActive(finishMode == LevelMode.Editor && (newMode == LevelMode.Editor || newMode == LevelMode.Play));
-
+        cancelPublishTryButton.SetActive(finishMode == LevelMode.Publishing && newMode == LevelMode.Play);
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
 
         mode = newMode;
@@ -459,18 +464,6 @@ public class LevelManager : MonoBehaviour
 
     public void ShowPublishLevelMenu(bool affectEditor = true)
     {
-        if (levelName.text == "")
-        {
-            ErrorMessage("Please, add a name to the level.");
-            return;
-        }
-
-        if (levelDescription.text == "")
-        {
-            ErrorMessage("Please, add a description to the level.");
-            return;
-        }
-
         publishLevelButtons.interactable = !publishLevelMenu.activeSelf;
 
         if (affectEditor)
@@ -500,7 +493,7 @@ public class LevelManager : MonoBehaviour
         successMenu.SetActive(true);
     }
 
-    public void ReturnEditor()
+    public void ReturnEditorSuccess()
     {
         successMenu.SetActive(false);
         editorMenus.interactable = true;
@@ -519,7 +512,45 @@ public class LevelManager : MonoBehaviour
             case LevelMode.Play:
                 UIManager.instance.ShowYouWinMenu();
                 break;
+            case LevelMode.Publishing:
+                finishMode = LevelMode.Editor;
+                ShowPublishLevelMenu();
+                ChangeMode(LevelMode.Editor);
+                Time.timeScale = 1;
+                break;
         }
     }
 
+    public void ShowPublishRequirementMenu()
+    {
+        if (levelName.text == "")
+        {
+            ErrorMessage("Please, add a name to the level.");
+            return;
+        }
+
+        if (levelDescription.text == "")
+        {
+            ErrorMessage("Please, add a description to the level.");
+            return;
+        }
+
+        editorMenus.interactable = publishRequerimentMenu.activeSelf;
+        publishRequerimentMenu.SetActive(!publishRequerimentMenu.activeSelf);
+    }
+
+    public void StartPublishingTry()
+    {
+        publishRequerimentMenu.SetActive(false);
+        finishMode = LevelMode.Publishing;
+        ChangeMode(LevelMode.Play);
+        playModeButton.SetActive(false);
+        editorMenus.interactable = true;
+    }
+
+    public void CancelTry()
+    {
+        finishMode = LevelMode.Editor;
+        ChangeMode(LevelMode.Editor);
+    }
 }
