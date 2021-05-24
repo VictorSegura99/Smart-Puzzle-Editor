@@ -322,7 +322,7 @@ public class Main_Menu_Manager : MonoBehaviour
             return;
         }
 
-        if (inputField.text[inputField.text.Length - 1] == '/' || inputField.text[inputField.text.Length - 1] == '|')
+        if (inputField.text[inputField.text.Length - 1] == '/' || inputField.text[inputField.text.Length - 1] == '|' || inputField.text[inputField.text.Length - 1] == 'ª')
         {
             inputField.text = inputField.text.Remove(inputField.text.Length - 1);
         }

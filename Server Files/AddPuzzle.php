@@ -24,7 +24,7 @@ else
     }
     else
     {
-        $sql2 = "INSERT INTO Levels (id, name, description, likes, creatorName, size, usersLiked) VALUES ('" . $levelID . "','" . $levelName . "', '" . $levelDescription . "', '" . $levelLikes . "', '" . $creatorName . "', '" . $levelSize . "' , '')";
+        $sql2 = "INSERT INTO Levels (id, name, description, likes, creatorName, size, usersLiked, comments) VALUES ('" . $levelID . "','" . $levelName . "', '" . $levelDescription . "', '" . $levelLikes . "', '" . $creatorName . "', '" . $levelSize . "' , '', '')";
         if ($conn->query($sql2) === TRUE)
         {
             echo "Level added successfully";

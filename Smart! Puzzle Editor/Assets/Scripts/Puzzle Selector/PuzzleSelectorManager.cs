@@ -34,6 +34,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     GameObject editButton;
     [SerializeField]
     GameObject likeGO;
+    [SerializeField]
+    GameObject comment;
 
     [Header("Buttons")]
     [SerializeField]
@@ -57,6 +59,10 @@ public class PuzzleSelectorManager : MonoBehaviour
     Text description;
     [SerializeField]
     Text likes;
+    [SerializeField]
+    RectTransform commentsContent;
+    [SerializeField]
+    GameObject commentsGO;
 
     LevelInfo lastLevelShown;
     string currentUsername = "";
@@ -126,6 +132,7 @@ public class PuzzleSelectorManager : MonoBehaviour
         description.text = level.description;
 
         likeGO.SetActive(level.type == LevelInfo.LevelType.Online);
+        commentsGO.SetActive(level.type == LevelInfo.LevelType.Online);
 
         if (level.type == LevelInfo.LevelType.Online)
         {
@@ -152,11 +159,31 @@ public class PuzzleSelectorManager : MonoBehaviour
 
                 user += usersLiked[i];
             }
+
+            for (int i = 0; i < commentsContent.childCount; ++i)
+            {
+                Destroy(commentsContent.GetChild(i).gameObject);
+            }
+
+            for (int i = 0; i < level.comments.Count; ++i)
+            {
+                CommentStructure cs = Instantiate(comment, commentsContent).GetComponent<CommentStructure>();
+                cs.SetCommentInfo(level.comments[i].Key, level.comments[i].Value);
+            }
+
+            Invoke(nameof(SetCommentsSize), 0.1f);
         }
 
         editButton.SetActive(level.type == LevelInfo.LevelType.Local);
         deleteButton.SetActive(level.username == currentUsername || level.type == LevelInfo.LevelType.Local);
         lastLevelShown = level;
+    }
+
+    public void SetCommentsSize()
+    {
+        Vector2 size = commentsContent.sizeDelta;
+        size.y = commentsContent.GetComponent<VerticalLayoutGroup>().preferredHeight;
+        commentsContent.sizeDelta = size;
     }
 
     public void PlayLevel()
@@ -247,13 +274,41 @@ public class PuzzleSelectorManager : MonoBehaviour
                 data = "";
                 ++lastChar;
 
-                while (levelsData[lastChar] != '/')
+                while (levelsData[lastChar] != levelSeparator)
                 {
                     data += levelsData[lastChar];
                     ++lastChar;
                 }
 
                 levelInfo.usersLiked = data;
+                data = "";
+                ++lastChar;
+
+                levelInfo.comments = new List<KeyValuePair<string, string>>();
+                string comment = "";
+
+                while (levelsData[lastChar] != '/')
+                {
+                    ++lastChar;
+
+                    while (levelsData[lastChar] != 'ª')
+                    {
+                        comment += levelsData[lastChar];
+                        ++lastChar;
+                    }
+
+                    ++lastChar;
+
+                    while (levelsData[lastChar] != '|' && levelsData[lastChar] != '/')
+                    {
+                        data += levelsData[lastChar];
+                        ++lastChar;
+                    }
+
+                    levelInfo.comments.Add(new KeyValuePair<string, string>(data, comment));
+                    data = "";
+                    comment = "";
+                }
             }
 
             ++lastChar;
@@ -355,7 +410,10 @@ public class LevelInfo
     public int size;
     public string usersLiked;
     public LevelSummary levelSummary;
+    public List<KeyValuePair<string, string>> comments;
     public LevelType type;
+
+    
 
     public LevelInfo() { }
 
