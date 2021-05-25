@@ -44,6 +44,14 @@ public class PuzzleSelectorManager : MonoBehaviour
     GameObject commentMenu;
     [SerializeField]
     InputField commentField;
+    [SerializeField]
+    VerticalLayoutGroup communityContent;
+    [SerializeField]
+    Image scrollbarCommunity;
+    [SerializeField]
+    Image scrollbarLocal;
+    [SerializeField]
+    VerticalLayoutGroup communityLocal;
 
     [Header("Buttons")]
     [SerializeField]
@@ -73,6 +81,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     GameObject commentsGO;
     [SerializeField]
     Image scrollbar;
+    [SerializeField]
+    GameObject commentGOButton;
 
     LevelInfo lastLevelShown;
     string currentUsername = "";
@@ -89,7 +99,6 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     private void Start()
     {
-        ChangePuzzleSelectedShowing((int)PuzzlesSelected.Community);
         DataTransferer.instance.GetLevels();
         LoadSavedLevels();
         ApplyLevelInfo(null, null, true);
@@ -143,6 +152,7 @@ public class PuzzleSelectorManager : MonoBehaviour
 
         likeGO.SetActive(level.type == LevelInfo.LevelType.Online);
         commentsGO.SetActive(level.type == LevelInfo.LevelType.Online);
+        commentGOButton.SetActive(level.type == LevelInfo.LevelType.Online);
 
         if (level.type == LevelInfo.LevelType.Online)
         {
@@ -197,6 +207,24 @@ public class PuzzleSelectorManager : MonoBehaviour
         Vector2 size = commentsContent.sizeDelta;
         size.y = commentsContent.GetComponent<VerticalLayoutGroup>().preferredHeight;
         commentsContent.sizeDelta = size;
+    }
+
+    public void SetCommunityLevelsSize()
+    {
+        RectTransform cRT = communityContent.GetComponent<RectTransform>();
+        Vector2 size = cRT.sizeDelta;
+        size.y = communityContent.preferredHeight;
+        cRT.sizeDelta = size;
+    }
+
+    public void SetLocalLevelsSize()
+    {
+        RectTransform cRT = communityLocal.GetComponent<RectTransform>();
+        Vector2 size = cRT.sizeDelta;
+        size.y = communityLocal.preferredHeight;
+        cRT.sizeDelta = size;
+
+        ChangePuzzleSelectedShowing((int)PuzzlesSelected.Community);
     }
 
     public void PlayLevel()
@@ -325,11 +353,16 @@ public class PuzzleSelectorManager : MonoBehaviour
             }
 
             ++lastChar;
-            LevelSummary ls = Instantiate(levelSummary, communityPanel).GetComponent<LevelSummary>();
+            LevelSummary ls = Instantiate(levelSummary, communityContent.transform).GetComponent<LevelSummary>();
             levelInfo.levelSummary = ls;
             ls.ApplyInfo(levelInfo);
             levelInfo = new LevelInfo(LevelInfo.LevelType.Online);
         }
+
+
+        communityContent.padding.right = levels > 12 ? 60 : 15;
+        scrollbarCommunity.enabled = levels > 12;
+        Invoke(nameof(SetCommunityLevelsSize), 0.1f);
     }
 
     public void LikeLevel()
@@ -384,7 +417,7 @@ public class PuzzleSelectorManager : MonoBehaviour
             }
 
             LevelInfo levelInfo = new LevelInfo(LevelInfo.LevelType.Local);
-            LevelSummary ls = Instantiate(levelSummary, savedPanel).GetComponent<LevelSummary>();
+            LevelSummary ls = Instantiate(levelSummary, communityLocal.transform).GetComponent<LevelSummary>();
             levelInfo.levelSummary = ls;
 
             Level level = BinarySaveSystem.LoadFile<Level>(levels[i]);
@@ -396,6 +429,10 @@ public class PuzzleSelectorManager : MonoBehaviour
 
             ls.ApplyInfo(levelInfo);
         }
+
+        communityLocal.padding.right = levels.Length > 12 ? 60 : 15;
+        scrollbarLocal.enabled = levels.Length > 12;
+        Invoke(nameof(SetLocalLevelsSize), 0.1f);
     }
 
     public void EditLevel()
