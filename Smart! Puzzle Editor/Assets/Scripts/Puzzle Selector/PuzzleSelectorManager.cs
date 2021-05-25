@@ -35,7 +35,15 @@ public class PuzzleSelectorManager : MonoBehaviour
     [SerializeField]
     GameObject likeGO;
     [SerializeField]
-    GameObject comment;
+    GameObject commentPrefab;
+    [SerializeField]
+    CanvasGroup selectorGroup;
+    [SerializeField]
+    CanvasGroup commentButtons;
+    [SerializeField]
+    GameObject commentMenu;
+    [SerializeField]
+    InputField commentField;
 
     [Header("Buttons")]
     [SerializeField]
@@ -63,6 +71,8 @@ public class PuzzleSelectorManager : MonoBehaviour
     RectTransform commentsContent;
     [SerializeField]
     GameObject commentsGO;
+    [SerializeField]
+    Image scrollbar;
 
     LevelInfo lastLevelShown;
     string currentUsername = "";
@@ -167,9 +177,12 @@ public class PuzzleSelectorManager : MonoBehaviour
 
             for (int i = 0; i < level.comments.Count; ++i)
             {
-                CommentStructure cs = Instantiate(comment, commentsContent).GetComponent<CommentStructure>();
+                CommentStructure cs = Instantiate(commentPrefab, commentsContent).GetComponent<CommentStructure>();
                 cs.SetCommentInfo(level.comments[i].Key, level.comments[i].Value);
             }
+
+            scrollbar.enabled = level.comments.Count > 2;
+            commentsContent.GetComponent<VerticalLayoutGroup>().padding.right = level.comments.Count > 2 ? 50 : 20;
 
             Invoke(nameof(SetCommentsSize), 0.1f);
         }
@@ -390,6 +403,41 @@ public class PuzzleSelectorManager : MonoBehaviour
         PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
         pl.loadMode = LevelManager.LevelMode.Editor;
         pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
+    }
+
+    public void ShowCommentMenu()
+    {
+        commentMenu.SetActive(!commentMenu.activeSelf);
+        commentButtons.interactable = commentMenu.activeSelf;
+        selectorGroup.interactable = !commentMenu.activeSelf;
+    }
+
+    public void PublishComment()
+    {
+        DataTransferer.instance.PublishComment(lastLevelShown.id, commentField.text, currentUsername);
+    }
+
+    public void CreateComment(bool abort = false)
+    {
+        ShowCommentMenu();
+
+        if (abort)
+        {
+            commentField.text = "";
+            return;
+        }
+
+        CommentStructure cs = Instantiate(commentPrefab, commentsContent).GetComponent<CommentStructure>();
+        cs.SetCommentInfo(currentUsername, commentField.text);
+
+        lastLevelShown.comments.Add(new KeyValuePair<string, string>(currentUsername, commentField.text));
+
+        scrollbar.enabled = lastLevelShown.comments.Count > 2;
+        commentsContent.GetComponent<VerticalLayoutGroup>().padding.right = lastLevelShown.comments.Count > 2 ? 50 : 20;
+
+        Invoke(nameof(SetCommentsSize), 0.1f);
+
+        commentField.text = "";
     }
 }
 

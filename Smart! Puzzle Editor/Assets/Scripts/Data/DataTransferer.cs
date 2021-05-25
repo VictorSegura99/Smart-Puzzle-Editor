@@ -336,4 +336,33 @@ public class DataTransferer : MonoBehaviour
         }
         wL.Dispose();
     }
+
+    public void PublishComment(string id, string comment, string username)
+    {
+        StartCoroutine(StartPublishingComment(id, comment, username));
+    }
+
+    IEnumerator StartPublishingComment(string id, string comment, string username)
+    {
+        string url = serverURL + "PublishComment.php";
+
+        WWWForm w = new WWWForm();
+        w.AddField("id", id);
+        w.AddField("username", username);
+        w.AddField("comment", comment);
+
+        using (UnityWebRequest www = UnityWebRequest.Post(url, w))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.error != null || www.downloadHandler.text.Contains("Error"))
+            {
+                PuzzleSelectorManager.instance.CreateComment(true);
+            }
+            else
+            {
+                PuzzleSelectorManager.instance.CreateComment();
+            }
+        }
+    }
 }
