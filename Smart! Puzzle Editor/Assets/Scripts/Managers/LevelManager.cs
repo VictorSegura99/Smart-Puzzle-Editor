@@ -43,6 +43,8 @@ public class LevelManager : MonoBehaviour
     Text buttonText;
     [SerializeField]
     GameObject playModeButton;
+    [SerializeField]
+    GameObject pauseButton;
 
     [Header("Puzzle Settings")]
     [SerializeField]
@@ -88,6 +90,16 @@ public class LevelManager : MonoBehaviour
     GameObject VRDoorsPH;
     [SerializeField]
     GameObject movingBoxPH;
+
+    [Header("Information Panel")]
+    [SerializeField]
+    GameObject informationPanel;
+    [SerializeField]
+    Text levelname;
+    [SerializeField]
+    Text creatorName;
+    [SerializeField]
+    Text description;
 
     [HideInInspector]
     public bool isReady = false;
@@ -143,6 +155,8 @@ public class LevelManager : MonoBehaviour
         playModeButton.SetActive(finishMode == LevelMode.Editor && (newMode == LevelMode.Editor || newMode == LevelMode.Play));
         cancelPublishTryButton.SetActive(finishMode == LevelMode.Publishing && newMode == LevelMode.Play);
         UIManager.instance.gameObject.SetActive(newMode == LevelMode.Play);
+        pauseButton.SetActive(finishMode == LevelMode.Play && newMode == LevelMode.Play);
+        informationPanel.SetActive(finishMode == LevelMode.Play && newMode == LevelMode.Play);
 
         mode = newMode;
     }
@@ -317,6 +331,7 @@ public class LevelManager : MonoBehaviour
 
         levelName.text = level.name;
         levelDescription.text = level.description;
+        ApplyLevelInfo(level.name, level.creatorName, level.description);
     }
 
     TileBase GetTileFromInt(int id, AllTiles allTiles)
@@ -552,5 +567,12 @@ public class LevelManager : MonoBehaviour
     {
         finishMode = LevelMode.Editor;
         ChangeMode(LevelMode.Editor);
+    }
+
+    public void ApplyLevelInfo(string levelname, string creatorname, string description)
+    {
+        this.levelname.text = levelname;
+        creatorName.text = creatorname;
+        this.description.text = description;
     }
 }
