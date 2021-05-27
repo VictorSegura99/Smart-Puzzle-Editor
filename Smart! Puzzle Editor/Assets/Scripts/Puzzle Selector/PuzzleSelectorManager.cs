@@ -84,6 +84,10 @@ public class PuzzleSelectorManager : MonoBehaviour
     [SerializeField]
     GameObject commentGOButton;
 
+    [Header("Delete Confirmation Menu")]
+    [SerializeField]
+    GameObject deleteConfirmationMenu;
+
     LevelInfo lastLevelShown;
     string currentUsername = "";
 
@@ -383,6 +387,8 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     public void DeleteLevel()
     {
+        ShowDeleteConfirmationMenu();
+
         if (lastLevelShown.type == LevelInfo.LevelType.Online)
         {
             DataTransferer.instance.DeleteLevel(lastLevelShown.id);
@@ -475,6 +481,12 @@ public class PuzzleSelectorManager : MonoBehaviour
         Invoke(nameof(SetCommentsSize), 0.1f);
 
         commentField.text = "";
+    }
+
+    public void ShowDeleteConfirmationMenu()
+    {
+        deleteConfirmationMenu.SetActive(!deleteConfirmationMenu.activeSelf);
+        selectorGroup.interactable = !deleteConfirmationMenu.activeSelf;
     }
 }
 

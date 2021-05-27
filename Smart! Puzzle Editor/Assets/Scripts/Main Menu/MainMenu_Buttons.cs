@@ -36,6 +36,11 @@ public class MainMenu_Buttons : MonoBehaviour
         Main_Menu_Manager.instance.ChangeMenu(Main_Menu_Manager.Menu_States.MAIN);
     }
 
+    public void ReturnLogIn()
+    {
+        Main_Menu_Manager.instance.ChangeMenu(Main_Menu_Manager.Menu_States.LOGIN);
+    }
+
     public void ContactMe()
     {
         Application.OpenURL("https://victorsegura99.github.io/Personal_Website/");
