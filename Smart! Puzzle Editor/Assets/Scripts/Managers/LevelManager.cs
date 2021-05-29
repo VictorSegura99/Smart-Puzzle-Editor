@@ -184,6 +184,8 @@ public class LevelManager : MonoBehaviour
         }
 
         Level lvl = LevelBuilder.BuildLevel(PuzzleEditorController.instance.levelSize, gameElements, PuzzleEditorController.instance.baseTM, PuzzleEditorController.instance.collidable);
+        if (levelLoaded.name == levelName.text)
+            lvl.id = levelLoaded.id;
         lvl.name = levelName.text;
         lvl.description = levelDescription.text;
         lvl.creatorName = username;

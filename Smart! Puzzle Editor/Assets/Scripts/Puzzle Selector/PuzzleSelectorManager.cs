@@ -241,7 +241,7 @@ public class PuzzleSelectorManager : MonoBehaviour
             case LevelInfo.LevelType.Local:
                 PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
                 pl.loadMode = LevelManager.LevelMode.Play;
-                pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
+                pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.id));
                 break;
         }
     }
@@ -395,9 +395,9 @@ public class PuzzleSelectorManager : MonoBehaviour
         }
         else if (lastLevelShown.type == LevelInfo.LevelType.Local)
         {
-            if (File.Exists(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname)))
+            if (File.Exists(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.id)))
             {
-                File.Delete(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
+                File.Delete(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.id));
             }
         }
 
@@ -428,6 +428,7 @@ public class PuzzleSelectorManager : MonoBehaviour
 
             Level level = BinarySaveSystem.LoadFile<Level>(levels[i]);
 
+            levelInfo.id = Path.GetFileName(levels[i]);
             levelInfo.levelname = level.name;
             levelInfo.size = level.size;
             levelInfo.username = level.creatorName;
@@ -445,7 +446,7 @@ public class PuzzleSelectorManager : MonoBehaviour
     {
         PuzzleLoader pl = Instantiate(puzzleLoader).GetComponent<PuzzleLoader>();
         pl.loadMode = LevelManager.LevelMode.Editor;
-        pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.levelname));
+        pl.levelToLoad = BinarySaveSystem.LoadFile<Level>(Path.Combine(Application.persistentDataPath, "Levels", lastLevelShown.id));
     }
 
     public void ShowCommentMenu()

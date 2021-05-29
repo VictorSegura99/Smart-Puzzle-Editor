@@ -13,7 +13,27 @@ public static class LevelBuilder
             Directory.CreateDirectory(Path.Combine(Application.persistentDataPath, "Levels"));
         }
 
-        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Levels", level.name), level);
+        if (level.id == -1)
+        {
+            int id = Random.Range(0, 1000000);
+
+            string[] paths = Directory.GetFiles(Path.Combine(Application.persistentDataPath, "Levels"));
+            List<string> ids = new List<string>();
+
+            for (int i = 0; i < paths.Length; ++i)
+            {
+                ids.Add(Path.GetFileName(paths[i]));
+            }
+
+            while (!CheckIds(ids, id))
+            {
+                id = Random.Range(0, 1000000);
+            }
+
+            level.id = id;
+        }
+
+        BinarySaveSystem.SaveFile(Path.Combine(Application.persistentDataPath, "Levels", level.id.ToString()), level);
         LevelManager.instance.ShowSaveLevelMenu(false);
         LevelManager.instance.ShowSuccessMenu();
     }
@@ -170,11 +190,25 @@ public static class LevelBuilder
 
         return (int)i;
     }
+
+    static bool CheckIds(List<string> ids, int id)
+    {
+        for (int i = 0; i < ids.Count; ++i)
+        {
+            if (ids[i] == id.ToString())
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 [System.Serializable]
 public class Level
-{ 
+{
+    public int id = -1;
     public string name;
     public string description;
     public string creatorName;
