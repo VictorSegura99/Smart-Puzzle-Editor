@@ -219,6 +219,8 @@ public class Main_Menu_Manager : MonoBehaviour
                 }
             }
         }
+
+        LogInButton.interactable = true;
     }
 
     public void Register()
