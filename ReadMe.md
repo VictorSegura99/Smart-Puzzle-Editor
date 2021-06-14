@@ -10,6 +10,7 @@ Controls / Creating Level:
 Controls / Playing Level:
 - WASD for moving the character.
 
+---------------------------------
 
 Website: https://victorsegura99.github.io/Personal_Website
 
