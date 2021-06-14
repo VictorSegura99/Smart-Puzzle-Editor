@@ -12,11 +12,25 @@ Controls / Playing Level:
 
 ---------------------------------
 
+Main Systems Implemented:
+
+- LogIn and Register through Server
+- Online Puzzle Platform
+- Feedback System: Comments and Likes
+- Puzzle Editor
+- Puzzle Mechanics: Moving Boxes, Character moving, opening doors.
+
+---------------------------------
+
+Contact Me: 
+
 Website: https://victorsegura99.github.io/Personal_Website
 
 Github: https://github.com/VictorSegura99
 
 LinkedIn: https://www.linkedin.com/in/victorsegurablanco/
+
+---------------------------------
 
 Assets Used:
 
