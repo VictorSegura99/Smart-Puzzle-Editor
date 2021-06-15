@@ -1,5 +1,6 @@
 Smart! Puzzle Editor is a 2D Puzzle Videogame developed by Víctor Segura Blanco for the Final Degree Project of Videogame's Development Degree in CITM-UPC. 
-The game consist of a platform where players can create and share their puzzles online and interacting and playing with each other puzzles.
+
+Smart! Puzzle Editor is a Level Editor that allows users to create their own puzzles and share them online in a social platform and interact with other players and puzzles and play levels online made by other users.
 
 Controls / Creating Level:
 - Q: Change tool to Arrow.
