@@ -1,6 +1,6 @@
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=rKTO56eCHUQ
 " target="_blank"><img src="http://img.youtube.com/vi/rKTO56eCHUQ/0.jpg" 
-alt="Trailer Video" width="1280" height="720" border="0" /></a>
+alt="Trailer Video" width="848" height="480" border="0" /></a>
 
 Smart! Puzzle Editor is a 2D Puzzle Videogame developed by Víctor Segura Blanco for the Final Degree Project of Videogame's Development Degree in CITM-UPC. 
 
