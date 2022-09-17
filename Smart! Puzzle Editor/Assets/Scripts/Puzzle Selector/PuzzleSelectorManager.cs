@@ -248,8 +248,17 @@ public class PuzzleSelectorManager : MonoBehaviour
 
     public void ApplyAllLevelsData(string levelsData)
     {
-        int levels = int.Parse(levelsData[0].ToString());
-        int lastChar = 2;
+        int c = 0;
+        string levelsNumber = "";
+
+        while (levelsData[c] != '/')
+        {
+            levelsNumber += levelsData[c];
+            ++c;
+        }
+
+        int levels = int.Parse(levelsNumber);
+        int lastChar = ++c;
         LevelInfo levelInfo = new LevelInfo(LevelInfo.LevelType.Online);
 
         char levelSeparator = '|';
